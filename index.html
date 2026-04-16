@@ -86,9 +86,35 @@ tr:last-child td { border-bottom: none; }
 .ev-item { display: flex; justify-content: space-between; align-items: center; font-size: 13px; padding: 4px 0; border-bottom: 1px solid var(--border); }
 .ev-item:last-child { border-bottom: none; }
 .ev-empty { font-size: 12px; color: var(--text3); padding: 4px 0; }
+
+.auth-overlay { position: fixed; inset: 0; z-index: 1000; display: flex; align-items: center; justify-content: center; background: rgba(10, 6, 8, 0.92); padding: 1rem; }
+.auth-card { width: 100%; max-width: 420px; background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.4rem; box-shadow: 0 10px 30px rgba(0,0,0,.35); }
+.auth-title { font-family: 'Barlow Condensed', sans-serif; font-size: 26px; font-weight: 800; text-transform: uppercase; letter-spacing: .04em; margin-bottom: .4rem; }
+.auth-sub { color: var(--text2); font-size: 14px; margin-bottom: 1rem; }
+.auth-error { color: #ff9c9c; font-size: 13px; min-height: 18px; margin-top: .5rem; }
+.app-hidden { display: none; }
+.info-banner { background: rgba(64, 120, 224, .12); border: 1px solid rgba(64, 120, 224, .35); color: #cfe0ff; border-radius: 8px; padding: .8rem 1rem; font-size: 13px; margin-bottom: .9rem; }
+.status-row { display:flex; align-items:center; justify-content:space-between; gap:.75rem; padding: .5rem 1rem; background: var(--bg3); border-bottom: 1px solid var(--border); font-size: 12px; color: var(--text2); }
+.status-pill { display:inline-flex; align-items:center; gap:6px; padding: 4px 10px; border-radius: 999px; border: 1px solid var(--border); background: rgba(255,255,255,.02); }
+.status-dot { width:8px; height:8px; border-radius:50%; background:#e0b34a; }
+.status-dot.live { background:#70c97e; }
+
 </style>
 </head>
 <body>
+<div id="auth-overlay" class="auth-overlay">
+  <div class="auth-card">
+    <div class="auth-title">Accesso Admin</div>
+    <div class="auth-sub">Inserisci la password per modificare risultati e classifiche.</div>
+    <div class="info-banner">Password richiesta: <strong>POLI</strong></div>
+    <input type="password" id="admin-password" placeholder="Password" autofocus onkeydown="if(event.key==='Enter') checkPassword()">
+    <div style="display:flex;gap:.6rem; margin-top: .8rem;">
+      <button class="btn btn-accent" onclick="checkPassword()">Entra</button>
+    </div>
+    <div id="auth-error" class="auth-error"></div>
+  </div>
+</div>
+<div id="app-shell" class="app-hidden">
 <div class="header">
   <div class="header-icon">⚽</div>
   <div>
@@ -105,6 +131,7 @@ tr:last-child td { border-bottom: none; }
   <button class="nav-btn" onclick="showTab('marcatori',this)">Marcatori & Cartellini</button>
   <button class="nav-btn" onclick="showTab('banco',this)">🍺 Coppa Banco</button>
 </nav>
+<div class="status-row"><span class="status-pill"><span id="sync-dot" class="status-dot"></span><span id="sync-label">In attesa di sincronizzazione</span></span><span>Admin online condiviso</span></div>
 <main class="main">
   <div id="squadre" class="section active"></div>
   <div id="gironi" class="section"></div>
@@ -114,6 +141,9 @@ tr:last-child td { border-bottom: none; }
   <div id="banco" class="section"></div>
 </main>
 <div class="modal-bg" id="modal-bg"><div class="modal" id="modal-inner"></div></div>
+</div>
+<script src="https://www.gstatic.com/firebasejs/12.2.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/12.2.0/firebase-database-compat.js"></script>
 <script>
 const GIRONI=['A','B','C'];
 const PAIRS=[[0,1],[2,3],[0,2],[1,3],[0,3],[1,2]];
@@ -130,8 +160,68 @@ const initState=()=>({
     C:[{name:'',players:[]},{name:'',players:[]},{name:'',players:[]},{name:'',players:[]}]
   },matches:{},koTeams:{},banco:{}
 });
-let S=JSON.parse(localStorage.getItem('torneo_ceo')||'null')||initState();
-const save=()=>localStorage.setItem('torneo_ceo',JSON.stringify(S));
+const FIREBASE_CONFIG = {
+  apiKey: "AIzaSyCAanAjLnNDFsq5JJ7gYDv3ycpfrLahiOI",
+  authDomain: "torneo-chievo.firebaseapp.com",
+  databaseURL: "https://torneo-chievo-default-rtdb.firebaseio.com",
+  projectId: "torneo-chievo",
+  storageBucket: "torneo-chievo.firebasestorage.app",
+  messagingSenderId: "1006116681466",
+  appId: "1:1006116681466:web:9080aa5572363be37c3b43"
+};
+const ADMIN_PASSWORD = 'POLI';
+let appReady = false;
+let hasLoadedInitialState = false;
+const app = firebase.initializeApp(FIREBASE_CONFIG);
+const db = firebase.database();
+const stateRef = db.ref('torneo_ceo');
+let S=initState();
+function cloneState(v){ return JSON.parse(JSON.stringify(v)); }
+function getSafeState(v){ return v && typeof v === 'object' ? v : initState(); }
+function save(){ if(!appReady) return; stateRef.set(cloneState(S)); }
+function showCurrentTab(){ const activeBtn = document.querySelector('.nav-btn.active'); const activeSection = document.querySelector('.section.active'); if(activeSection && renders[activeSection.id]) { renders[activeSection.id](); } else { renderSquadre(); } }
+function startFirebaseSync(){
+  stateRef.on('value', snap => {
+    const data = snap.val();
+    S = getSafeState(data);
+    if(!hasLoadedInitialState){
+      hasLoadedInitialState = true;
+      renderSquadre();
+    } else {
+      showCurrentTab();
+    }
+    const dot = document.getElementById('sync-dot');
+    const label = document.getElementById('sync-label');
+    if(dot) dot.classList.add('live');
+    if(label) label.textContent = 'Sincronizzato live';
+  }, err => {
+    const label = document.getElementById('sync-label');
+    if(label) label.textContent = 'Errore sincronizzazione';
+    console.error(err);
+  });
+}
+function checkPassword(){
+  const input = document.getElementById('admin-password');
+  const error = document.getElementById('auth-error');
+  if(!input) return;
+  if((input.value || '').trim() !== ADMIN_PASSWORD){
+    if(error) error.textContent = 'Password non corretta';
+    input.value = '';
+    input.focus();
+    return;
+  }
+  sessionStorage.setItem('torneo_admin_ok', '1');
+  document.getElementById('auth-overlay').style.display = 'none';
+  document.getElementById('app-shell').classList.remove('app-hidden');
+  if(!appReady){ appReady = true; startFirebaseSync(); }
+}
+window.addEventListener('load', () => {
+  if(sessionStorage.getItem('torneo_admin_ok') === '1'){
+    document.getElementById('auth-overlay').style.display = 'none';
+    document.getElementById('app-shell').classList.remove('app-hidden');
+    if(!appReady){ appReady = true; startFirebaseSync(); }
+  }
+});
 const mkey=(phase,idx)=>`${phase}_${idx}`;
 const mdata=key=>S.matches[key]||(S.matches[key]={evA:[],evB:[],dt:''},S.matches[key]);
 const sqName=(g,i)=>S.squadre[g][i].name||`Squadra ${g}${i+1}`;
@@ -417,7 +507,6 @@ function bancoAdd(team,rowIdx){if(!S.banco)S.banco={};const qty=parseInt(documen
 function bancoDelta(team,delta){if(!S.banco)S.banco={};S.banco[team]=Math.max(0,(S.banco[team]||0)+delta);save();renderBanco();}
 
 const renders={squadre:renderSquadre,gironi:renderGironi,ko:renderKO,classifiche:renderClassifiche,marcatori:renderMarcatori,banco:renderBanco};
-renderSquadre();
 </script>
 </body>
 </html>
