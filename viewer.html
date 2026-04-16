@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Torneo Sagra del CEO — Live</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;900&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --accent: #9b2d5a;
+  --accent-light: #c2406f;
+  --accent-dark: #6b1a3a;
+  --yellow: #f0c050;
+  --red: #e04040;
+  --bg: #1a0d12;
+  --bg2: #261018;
+  --bg3: #331520;
+  --border: #4a2030;
+  --text: #f5e8ec;
+  --text2: #c49aaa;
+  --text3: #7a4458;
+  --white: #ffffff;
+  --radius: 10px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Barlow', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+.header { background: var(--bg2); border-bottom: 2px solid var(--accent-dark); padding: 1rem 1.5rem; display: flex; align-items: center; gap: 1rem; }
+.header-icon { font-size: 2rem; line-height: 1; }
+.header-title { font-family: 'Barlow Condensed', sans-serif; font-size: 1.9rem; font-weight: 900; text-transform: uppercase; letter-spacing: .04em; color: var(--white); line-height: 1; }
+.header-sub { font-size: 12px; color: var(--text3); letter-spacing: .05em; text-transform: uppercase; margin-top: 2px; }
+.header-badge { margin-left: auto; font-family: 'Barlow Condensed', sans-serif; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; color: #70c97e; background: rgba(40,120,60,.2); border: 1px solid rgba(40,120,60,.4); border-radius: 20px; padding: 4px 12px; white-space: nowrap; display: flex; align-items: center; gap: 5px; }
+.live-dot { width: 7px; height: 7px; border-radius: 50%; background: #70c97e; animation: pulse 1.5s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
+.nav { background: var(--bg2); border-bottom: 1px solid var(--border); display: flex; overflow-x: auto; padding: 0 1rem; gap: 2px; }
+.nav-btn { font-family: 'Barlow Condensed', sans-serif; font-size: 15px; font-weight: 600; text-transform: uppercase; letter-spacing: .05em; padding: 12px 18px; border: none; background: none; color: var(--text3); cursor: pointer; border-bottom: 3px solid transparent; white-space: nowrap; transition: color .15s; }
+.nav-btn:hover { color: var(--text2); }
+.nav-btn.active { color: var(--accent-light); border-bottom-color: var(--accent-light); }
+.main { padding: 1.25rem; max-width: 900px; margin: 0 auto; }
+.section { display: none; } .section.active { display: block; }
+.card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.25rem; margin-bottom: .75rem; }
+.card-title { font-family: 'Barlow Condensed', sans-serif; font-size: 18px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--accent-light); margin-bottom: 1rem; display: flex; align-items: center; gap: 6px; }
+.grid3 { display: grid; grid-template-columns: repeat(3,1fr); gap: .75rem; }
+@media(max-width:640px){ .grid3 { grid-template-columns: 1fr; } }
+.match-block { padding: 12px 0; border-bottom: 1px solid var(--border); }
+.match-block:last-child { border-bottom: none; }
+.match-dt-label { font-size: 11px; color: var(--accent-light); margin-bottom: 7px; font-style: italic; display: flex; align-items: center; gap: 5px; }
+.match-row { display: grid; grid-template-columns: 1fr auto 1fr; gap: 12px; align-items: center; margin-bottom: 8px; }
+.team-name { font-weight: 600; font-size: 14px; color: var(--text); }
+.team-name.right { text-align: right; }
+.score-display { display: flex; align-items: center; gap: 8px; justify-content: center; }
+.score-box { min-width: 42px; height: 42px; display: flex; align-items: center; justify-content: center; font-family: 'Barlow Condensed', sans-serif; font-size: 26px; font-weight: 900; color: var(--white); background: var(--bg3); border: 1px solid var(--border); border-radius: 6px; }
+.score-sep { font-size: 18px; color: var(--text3); font-weight: 700; }
+.cards-info-row { display: flex; justify-content: space-between; margin-bottom: 4px; }
+.cards-info { font-size: 12px; color: var(--text2); }
+.winner-label { text-align: center; font-size: 12px; color: var(--text2); margin-top: 4px; }
+.winner-label strong { color: var(--accent-light); }
+.ev-list-view { margin-top: 6px; }
+.ev-item-view { font-size: 12px; color: var(--text2); padding: 2px 0; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th { font-family: 'Barlow Condensed', sans-serif; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .05em; color: var(--text3); padding: 6px 10px; border-bottom: 1px solid var(--border); text-align: left; }
+td { padding: 7px 10px; border-bottom: 1px solid var(--border); }
+tr:last-child td { border-bottom: none; }
+.tr-gold td { background: rgba(155,45,90,.15); }
+.tr-silver td { background: rgba(255,255,255,.03); }
+.badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-family: 'Barlow Condensed', sans-serif; font-weight: 600; text-transform: uppercase; }
+.badge-qf { background: rgba(155,45,90,.25); color: var(--accent-light); border: 1px solid var(--accent-dark); }
+.no-data { text-align: center; padding: 2rem; color: var(--text3); font-size: 14px; }
+.refresh-bar { background: var(--bg3); border-bottom: 1px solid var(--border); padding: 6px 1.5rem; font-size: 12px; color: var(--text3); display: flex; align-items: center; justify-content: space-between; }
+.refresh-bar button { font-size: 11px; padding: 3px 10px; border: 1px solid var(--border); border-radius: 4px; background: none; color: var(--text2); cursor: pointer; }
+.refresh-bar button:hover { border-color: var(--accent-light); color: var(--accent-light); }
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="header-icon">⚽</div>
+  <div>
+    <div class="header-title">Torneo Sagra del CEO</div>
+    <div class="header-sub">Risultati in tempo reale</div>
+  </div>
+  <div class="header-badge"><div class="live-dot"></div> Live</div>
+</div>
+<div class="refresh-bar">
+  <span id="last-update">—</span>
+  <button onclick="loadAndRender()">↻ Aggiorna</button>
+</div>
+<nav class="nav">
+  <button class="nav-btn active" onclick="showTab('gironi',this)">Gironi</button>
+  <button class="nav-btn" onclick="showTab('ko',this)">Eliminazione Diretta</button>
+  <button class="nav-btn" onclick="showTab('classifiche',this)">Classifiche</button>
+  <button class="nav-btn" onclick="showTab('marcatori',this)">Marcatori & Cartellini</button>
+  <button class="nav-btn" onclick="showTab('banco',this)">🍺 Coppa Banco</button>
+</nav>
+<main class="main">
+  <div id="gironi" class="section active"></div>
+  <div id="ko" class="section"></div>
+  <div id="classifiche" class="section"></div>
+  <div id="marcatori" class="section"></div>
+  <div id="banco" class="section"></div>
+</main>
+
+<script>
+const GIRONI=['A','B','C'];
+const PAIRS=[[0,1],[2,3],[0,2],[1,3],[0,3],[1,2]];
+const KO_PHASES=[
+  {phase:'QF',label:'Quarti di Finale',n:4,hints:['1°A vs 2°B','1°B vs 2°C','1°C vs 2°A','Wildcard']},
+  {phase:'SF',label:'Semifinali',n:2,hints:['Vin. QF1 vs Vin. QF2','Vin. QF3 vs Vin. QF4']},
+  {phase:'F3',label:'Finale 3°/4° Posto',n:1,hints:['Perd. SF1 vs Perd. SF2']},
+  {phase:'F',label:'Finale',n:1,hints:['Vin. SF1 vs Vin. SF2']}
+];
+
+let S=null;
+const mkey=(phase,idx)=>`${phase}_${idx}`;
+const mdata=key=>(S?.matches&&S.matches[key])||{evA:[],evB:[],dt:''};
+const sqName=(g,i)=>S?.squadre[g][i]?.name||`Squadra ${g}${i+1}`;
+const calcScore=m=>({
+  goA:(m.evA||[]).filter(e=>e.t==='gol').length,
+  goB:(m.evB||[]).filter(e=>e.t==='gol').length,
+  giA:(m.evA||[]).filter(e=>e.t==='giallo').length,
+  giB:(m.evB||[]).filter(e=>e.t==='giallo').length,
+  roA:(m.evA||[]).filter(e=>e.t==='rosso').length,
+  roB:(m.evB||[]).filter(e=>e.t==='rosso').length
+});
+const fmtDt=v=>{if(!v)return'';const d=new Date(v);return d.toLocaleString('it-IT',{weekday:'short',day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});};
+
+function loadAndRender(){
+  S=JSON.parse(localStorage.getItem('torneo_ceo')||'null');
+  document.getElementById('last-update').textContent='Aggiornato: '+new Date().toLocaleTimeString('it-IT');
+  const active=document.querySelector('.section.active');
+  if(active) renders[active.id]&&renders[active.id]();
+}
+
+function showTab(t,el){
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  if(el)el.classList.add('active');
+  document.getElementById(t).classList.add('active');
+  loadAndRender();
+}
+
+function renderGironi(){
+  const el=document.getElementById('gironi');el.innerHTML='';
+  if(!S){el.innerHTML=`<div class="no-data">Nessun dato disponibile</div>`;return;}
+  GIRONI.forEach(g=>{
+    const c=document.createElement('div');c.className='card';
+    let html=`<div class="card-title">Girone ${g}</div>`;
+    PAIRS.forEach(([a,b],i)=>{
+      const key=mkey(`G${g}`,i);const m=mdata(key);const sc=calcScore(m);
+      const ta=sqName(g,a),tb=sqName(g,b);
+      const eventsA=(m.evA||[]).map(e=>`<div class="ev-item-view">${e.t==='gol'?'⚽':e.t==='giallo'?'🟨':'🟥'} ${e.p}</div>`).join('');
+      const eventsB=(m.evB||[]).map(e=>`<div class="ev-item-view">${e.t==='gol'?'⚽':e.t==='giallo'?'🟨':'🟥'} ${e.p}</div>`).join('');
+      html+=`<div class="match-block">
+        ${m.dt?`<div class="match-dt-label">📅 ${fmtDt(m.dt)}</div>`:''}
+        <div class="match-row">
+          <span class="team-name">${ta}</span>
+          <div class="score-display">
+            <div class="score-box">${sc.goA}</div>
+            <span class="score-sep">–</span>
+            <div class="score-box">${sc.goB}</div>
+          </div>
+          <span class="team-name right">${tb}</span>
+        </div>
+        <div class="cards-info-row">
+          <div><span class="cards-info">🟨 ${sc.giA} &nbsp; 🟥 ${sc.roA}</span><div class="ev-list-view">${eventsA}</div></div>
+          <div style="text-align:right"><span class="cards-info">🟨 ${sc.giB} &nbsp; 🟥 ${sc.roB}</span><div class="ev-list-view">${eventsB}</div></div>
+        </div>
+      </div>`;
+    });
+    c.innerHTML=html;el.appendChild(c);
+  });
+}
+
+function renderKO(){
+  const el=document.getElementById('ko');el.innerHTML='';
+  if(!S){el.innerHTML=`<div class="no-data">Nessun dato disponibile</div>`;return;}
+  KO_PHASES.forEach(ph=>{
+    const c=document.createElement('div');c.className='card';
+    let html=`<div class="card-title">${ph.label}</div>`;
+    for(let i=0;i<ph.n;i++){
+      const key=mkey(ph.phase,i);const m=mdata(key);const sc=calcScore(m);
+      const kt=S.koTeams&&S.koTeams[key];const parts=ph.hints[i].split(' vs ');
+      const ta=kt?.a||parts[0]||'';const tb=kt?.b||parts[1]||'';
+      const winner=sc.goA!==sc.goB?`<div class="winner-label">Avanza: <strong>${sc.goA>sc.goB?ta:tb}</strong></div>`:'';
+      const eventsA=(m.evA||[]).map(e=>`<div class="ev-item-view">${e.t==='gol'?'⚽':e.t==='giallo'?'🟨':'🟥'} ${e.p}</div>`).join('');
+      const eventsB=(m.evB||[]).map(e=>`<div class="ev-item-view">${e.t==='gol'?'⚽':e.t==='giallo'?'🟨':'🟥'} ${e.p}</div>`).join('');
+      html+=`<div class="match-block">
+        ${m.dt?`<div class="match-dt-label">📅 ${fmtDt(m.dt)}</div>`:''}
+        <div class="match-row">
+          <span class="team-name" style="font-size:13px">${ta||'—'}</span>
+          <div class="score-display">
+            <div class="score-box">${sc.goA}</div>
+            <span class="score-sep">–</span>
+            <div class="score-box">${sc.goB}</div>
+          </div>
+          <span class="team-name right" style="font-size:13px">${tb||'—'}</span>
+        </div>
+        <div class="cards-info-row">
+          <div><span class="cards-info">🟨 ${sc.giA} &nbsp; 🟥 ${sc.roA}</span><div class="ev-list-view">${eventsA}</div></div>
+          <div style="text-align:right"><span class="cards-info">🟨 ${sc.giB} &nbsp; 🟥 ${sc.roB}</span><div class="ev-list-view">${eventsB}</div></div>
+        </div>
+        ${winner}
+      </div>`;
+    }
+    c.innerHTML=html;el.appendChild(c);
+  });
+}
+
+function getStandings(g){
+  const st={};
+  S.squadre[g].forEach((_,i)=>{const n=sqName(g,i);st[n]={pts:0,pg:0,gs:0,gc:0,gd:0,gi:0,ro:0};});
+  PAIRS.forEach(([a,b],i)=>{
+    const key=mkey(`G${g}`,i);const m=mdata(key);const sc=calcScore(m);
+    const ta=sqName(g,a),tb=sqName(g,b);
+    st[ta].pg++;st[tb].pg++;
+    st[ta].gs+=sc.goA;st[ta].gc+=sc.goB;st[ta].gd+=sc.goA-sc.goB;
+    st[tb].gs+=sc.goB;st[tb].gc+=sc.goA;st[tb].gd+=sc.goB-sc.goA;
+    st[ta].gi+=sc.giA;st[ta].ro+=sc.roA;st[tb].gi+=sc.giB;st[tb].ro+=sc.roB;
+    if(sc.goA>sc.goB)st[ta].pts+=3;else if(sc.goA<sc.goB)st[tb].pts+=3;else{st[ta].pts+=1;st[tb].pts+=1;}
+  });
+  return Object.entries(st).sort((a,b)=>b[1].pts-a[1].pts||b[1].gd-a[1].gd||b[1].gs-a[1].gs).map(([n,s])=>({n,...s}));
+}
+function renderClassifiche(){
+  const el=document.getElementById('classifiche');el.innerHTML='';
+  if(!S){el.innerHTML=`<div class="no-data">Nessun dato disponibile</div>`;return;}
+  GIRONI.forEach(g=>{
+    const st=getStandings(g);
+    const c=document.createElement('div');c.className='card';
+    let h=`<div class="card-title">Girone ${g}</div><table><thead><tr><th>#</th><th>Squadra</th><th>Pts</th><th>PG</th><th>GF</th><th>GS</th><th>±</th><th>🟨</th><th>🟥</th></tr></thead><tbody>`;
+    st.forEach((t,i)=>{
+      const cls=i===0?'tr-gold':i===1?'tr-silver':'';
+      h+=`<tr class="${cls}"><td>${i+1}</td><td>${t.n}${i<2?` <span class="badge badge-qf">QF</span>`:''}</td><td><strong>${t.pts}</strong></td><td>${t.pg}</td><td>${t.gs}</td><td>${t.gc}</td><td>${t.gd>0?'+'+t.gd:t.gd}</td><td>${t.gi}</td><td>${t.ro}</td></tr>`;
+    });
+    h+=`</tbody></table>`;c.innerHTML=h;el.appendChild(c);
+  });
+}
+
+function renderMarcatori(){
+  const el=document.getElementById('marcatori');el.innerHTML='';
+  if(!S){el.innerHTML=`<div class="no-data">Nessun dato disponibile</div>`;return;}
+  const players={},teamCards={};
+  const allKeys=[...GIRONI.flatMap(g=>PAIRS.map((_,i)=>mkey(`G${g}`,i))),...KO_PHASES.flatMap(ph=>Array.from({length:ph.n},(_,i)=>mkey(ph.phase,i)))];
+  allKeys.forEach(key=>{
+    const m=S.matches&&S.matches[key];if(!m)return;
+    const kt=S.koTeams&&S.koTeams[key];const parts=key.split('_');const phase=parts[0];const idx=parseInt(parts[1]);
+    let ta='',tb='';
+    if(phase.startsWith('G')){const g=phase[1];const p=PAIRS[idx];if(p){ta=sqName(g,p[0]);tb=sqName(g,p[1]);}}
+    else{ta=kt?.a||'';tb=kt?.b||'';}
+    [[m.evA||[],ta],[m.evB||[],tb]].forEach(([evs,team])=>{
+      if(team&&!teamCards[team])teamCards[team]={gi:0,ro:0};
+      evs.forEach(e=>{
+        const pk=`${e.p}|||${team||'?'}`;
+        if(!players[pk])players[pk]={name:e.p,team:team||'?',gol:0,gi:0,ro:0};
+        if(e.t==='gol')players[pk].gol++;
+        if(e.t==='giallo'){players[pk].gi++;if(team)teamCards[team].gi++;}
+        if(e.t==='rosso'){players[pk].ro++;if(team)teamCards[team].ro++;}
+      });
+    });
+  });
+  const sorted=Object.values(players).sort((a,b)=>b.gol-a.gol||b.gi-a.gi);
+  const c1=document.createElement('div');c1.className='card';
+  let h1=`<div class="card-title">Classifica Marcatori</div><table><thead><tr><th>#</th><th>Giocatore</th><th>Squadra</th><th>⚽</th><th>🟨</th><th>🟥</th></tr></thead><tbody>`;
+  if(!sorted.length)h1+=`<tr><td colspan="6" style="color:var(--text3)">Nessun dato ancora</td></tr>`;
+  sorted.forEach((p,i)=>{h1+=`<tr class="${i===0?'tr-gold':''}"><td>${i+1}</td><td><strong>${p.name}</strong></td><td style="color:var(--text2)">${p.team}</td><td>${p.gol}</td><td>${p.gi}</td><td>${p.ro}</td></tr>`;});
+  h1+=`</tbody></table>`;c1.innerHTML=h1;el.appendChild(c1);
+  const c2=document.createElement('div');c2.className='card';
+  const tc=Object.entries(teamCards).sort((a,b)=>(b[1].gi+b[1].ro)-(a[1].gi+a[1].ro));
+  let h2=`<div class="card-title">Cartellini per Squadra</div><table><thead><tr><th>Squadra</th><th>🟨 Gialli</th><th>🟥 Rossi</th><th>Totale</th></tr></thead><tbody>`;
+  if(!tc.length)h2+=`<tr><td colspan="4" style="color:var(--text3)">Nessun dato ancora</td></tr>`;
+  tc.forEach(([n,s])=>{h2+=`<tr><td>${n}</td><td>${s.gi}</td><td>${s.ro}</td><td><strong>${s.gi+s.ro}</strong></td></tr>`;});
+  h2+=`</tbody></table>`;c2.innerHTML=h2;el.appendChild(c2);
+}
+
+function renderBanco(){
+  const el=document.getElementById('banco');el.innerHTML='';
+  if(!S||!S.banco){el.innerHTML=`<div class="no-data">Nessun dato disponibile</div>`;return;}
+  const teams=GIRONI.flatMap(g=>S.squadre[g].map((_,i)=>sqName(g,i)));
+  const sorted=[...teams].sort((a,b)=>(S.banco[b]||0)-(S.banco[a]||0));
+  const c=document.createElement('div');c.className='card';
+  let html=`<div class="card-title">🍺 Coppa Banco — Classifica Consumazioni</div>
+  <table><thead><tr><th style="width:36px">#</th><th>Squadra</th><th style="text-align:center">🍺 Consumazioni</th></tr></thead><tbody>`;
+  sorted.forEach((team,i)=>{
+    const count=S.banco[team]||0;
+    const medal=i===0?'🥇':i===1?'🥈':i===2?'🥉':`${i+1}`;
+    const rowCls=i===0?'tr-gold':i===1?'tr-silver':'';
+    html+=`<tr class="${rowCls}"><td style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700">${medal}</td><td><strong>${team}</strong></td><td style="text-align:center"><span style="font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:900;color:var(--yellow)">${count}</span></td></tr>`;
+  });
+  html+=`</tbody></table><div style="margin-top:1rem;text-align:center;font-size:12px;color:var(--text3)">Totale consumazioni torneo: <strong style="color:var(--text2)">${Object.values(S.banco).reduce((a,b)=>a+b,0)}</strong></div>`;
+  c.innerHTML=html;el.appendChild(c);
+}
+
+const renders={gironi:renderGironi,ko:renderKO,classifiche:renderClassifiche,marcatori:renderMarcatori,banco:renderBanco};
+
+// ⚠️ NOTA: il viewer legge dal localStorage dello stesso browser/dispositivo.
+// Per condividere i dati su altri dispositivi, è necessario un backend (es. Firebase).
+// Sul campo: usa index.html sull'admin, e tieni viewer.html aperto su un secondo schermo/tablet
+// puntando allo stesso browser sul computer principale.
+
+loadAndRender();
+// Auto-refresh ogni 30 secondi
+setInterval(loadAndRender, 30000);
+</script>
+</body>
+</html>
