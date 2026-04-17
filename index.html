@@ -545,6 +545,24 @@ const calcScore=m=>({
 });
 const fmtDt=v=>{if(!v)return'';const d=new Date(v);return d.toLocaleString('it-IT',{weekday:'short',day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});};
 
+
+function bancoKey(team){
+  return String(team || '')
+    .trim()
+    .replace(/[.#$/\[\]]/g, '_')
+    .replace(/\s+/g, ' ');
+}
+function bancoGet(team){
+  if(!S.banco || typeof S.banco !== 'object') S.banco = {};
+  const key = bancoKey(team);
+  return Number(S.banco[key] || 0);
+}
+function bancoSet(team, value){
+  if(!S.banco || typeof S.banco !== 'object') S.banco = {};
+  const key = bancoKey(team);
+  S.banco[key] = Math.max(0, Number(value) || 0);
+}
+
 function showTab(t,el){
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
   document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
@@ -781,15 +799,14 @@ function renderMarcatori(){
 function getAllTeams(){return GIRONI.flatMap(g=>toArr(S.squadre[g]).map((_,i)=>sqName(g,i)));}
 function renderBanco(){
   const el=document.getElementById('banco');el.innerHTML='';
-  if(!S.banco)S.banco={};
+  if(!S.banco || typeof S.banco !== 'object')S.banco={};
   const teams=getAllTeams();
-  teams.forEach(t=>{if(S.banco[t]===undefined)S.banco[t]=0;});
-  const sorted=[...teams].sort((a,b)=>(S.banco[b]||0)-(S.banco[a]||0));
+  const sorted=[...teams].sort((a,b)=>bancoGet(b)-bancoGet(a));
   const c=document.createElement('div');c.className='card';
   let html=`<div class="card-title">🍺 Coppa Banco — Classifica Consumazioni</div>
   <table><thead><tr><th style="width:36px">#</th><th>Squadra</th><th style="text-align:center">🍺 Tot.</th><th style="text-align:center;width:200px">Aggiungi</th></tr></thead><tbody>`;
   sorted.forEach((team,i)=>{
-    const count=S.banco[team]||0;
+    const count=bancoGet(team);
     const medal=i===0?'🥇':i===1?'🥈':i===2?'🥉':`${i+1}`;
     const rowCls=i===0?'tr-gold':i===1?'tr-silver':'';
     html+=`<tr class="${rowCls}">
@@ -807,11 +824,11 @@ function renderBanco(){
       </td>
     </tr>`;
   });
-  html+=`</tbody></table><div style="margin-top:1rem;text-align:center;font-size:12px;color:var(--text3)">Totale consumazioni torneo: <strong style="color:var(--text2)">${Object.values(S.banco).reduce((a,b)=>a+b,0)}</strong></div>`;
+  html+=`</tbody></table><div style="margin-top:1rem;text-align:center;font-size:12px;color:var(--text3)">Totale consumazioni torneo: <strong style="color:var(--text2)">${teams.reduce((sum,team)=>sum+bancoGet(team),0)}</strong></div>`;
   c.innerHTML=html;el.appendChild(c);
 }
-function bancoAdd(team,rowIdx){if(!S.banco)S.banco={};const qty=parseInt(document.getElementById(`banco-qty-${rowIdx}`)?.value||'1');S.banco[team]=(S.banco[team]||0)+qty;save();renderBanco();}
-function bancoDelta(team,delta){if(!S.banco)S.banco={};S.banco[team]=Math.max(0,(S.banco[team]||0)+delta);save();renderBanco();}
+function bancoAdd(team,rowIdx){const qty=parseInt(document.getElementById(`banco-qty-${rowIdx}`)?.value||'1');bancoSet(team, bancoGet(team)+qty);save().then(renderBanco);}
+function bancoDelta(team,delta){bancoSet(team, bancoGet(team)+delta);save().then(renderBanco);}
 
 const renders={squadre:renderSquadre,gironi:renderGironi,ko:renderKO,classifiche:renderClassifiche,marcatori:renderMarcatori,banco:renderBanco};
 </script>
