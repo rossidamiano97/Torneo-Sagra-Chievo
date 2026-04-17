@@ -472,36 +472,17 @@ function mergePresetIntoState(base){
   });
   return out;
 }
-function stateLooksUninitialized(state){
-  if(!state || !state.squadre) return true;
-  const names = GIRONI.flatMap(g => toArr(state.squadre[g]).map(sq => (sq && sq.name ? String(sq.name).trim() : '')));
-  const hasRealName = names.some(n => n && !/^Squadra\s+[ABC]\d$/i.test(n));
-  const hasPlayers = GIRONI.some(g => toArr(state.squadre[g]).some(sq => toArr(sq && sq.players).length > 0));
-  const hasSchedule = Object.keys(SCHEDULE_PRESET).some(k => state.matches && state.matches[k] && state.matches[k].dt);
-  return !hasRealName || !hasPlayers || !hasSchedule;
-}
-function importTeamsAndCalendar(force=false){
-  const next = mergePresetIntoState(S);
-  if(force || stateLooksUninitialized(S)){
-    S = next;
-    save();
-    showCurrentTab();
-    alert(force ? 'Squadre, giocatori e calendario importati.' : 'Squadre, giocatori e calendario precompilati.');
-    return true;
-  }
-  return false;
-}
-
 function getSafeState(v){ return normalizeState(v); }
-function save(){ if(!appReady) return; stateRef.set(cloneState(normalizeState(S))); }
+function save(){ if(!appReady) return Promise.resolve(); return stateRef.set(cloneState(normalizeState(S))); }
 function showCurrentTab(){ const activeSection = document.querySelector('.section.active'); if(activeSection && renders[activeSection.id]) { renders[activeSection.id](); } else { renderSquadre(); } }
 function startFirebaseSync(){
   stateRef.on('value', snap => {
     const data = snap.val();
-    S = getSafeState(data);
-    if(stateLooksUninitialized(S)){
-      S = mergePresetIntoState(S);
+    if(data === null){
+      S = mergePresetIntoState(initState());
       save();
+    } else {
+      S = getSafeState(data);
     }
     if(!hasLoadedInitialState){
       hasLoadedInitialState = true;
@@ -576,9 +557,6 @@ function renderSquadre(){
   const el=document.getElementById('squadre');
   el.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center;gap:1rem;margin-bottom:1rem;flex-wrap:wrap">
     <div style="font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:700;text-transform:uppercase;color:var(--text)">Squadre & Rose</div>
-    <div style="display:flex;gap:.6rem;flex-wrap:wrap">
-      <button class="btn btn-accent" onclick="saveSquadre()">SALVA MODIFICHE</button>
-    </div>
   </div><div class="grid3" id="sq-grid"></div>`;
   const grid=document.getElementById('sq-grid');
   GIRONI.forEach(g=>{
@@ -587,7 +565,7 @@ function renderSquadre(){
     toArr(S.squadre[g]).forEach((sq,si)=>{
       html+=`<div style="margin-bottom:14px">
         <div style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Squadra ${si+1}</div>
-        <input type="text" id="sqn-${g}-${si}" value="${sq.name}" placeholder="Nome squadra" style="margin-bottom:6px">
+        <input type="text" id="sqn-${g}-${si}" value="${sq.name}" placeholder="Nome squadra" style="margin-bottom:6px" onchange="updateTeamName('${g}',${si},this.value)">
         <div id="players-${g}-${si}"></div>
         <button class="btn" style="width:100%;font-size:12px;margin-top:4px" onclick="addPlayer('${g}',${si})">+ Aggiungi giocatore</button>
       </div>`;
@@ -608,12 +586,11 @@ function renderPlayers(g,si){
 function addPlayer(g,si){if(!S.squadre[g])S.squadre[g]=[];if(!S.squadre[g][si])S.squadre[g][si]={name:'',players:[]};S.squadre[g][si].players.push('');save();renderSquadre();}
 function removePlayer(g,si,pi){if(S.squadre[g]&&S.squadre[g][si])S.squadre[g][si].players.splice(pi,1);save();renderSquadre();}
 function updatePlayer(g,si,pi,v){if(S.squadre[g]&&S.squadre[g][si])S.squadre[g][si].players[pi]=v;save();}
-function saveSquadre(){
-  GIRONI.forEach(g=>toArr(S.squadre[g]).forEach((sq,si)=>{
-    const el=document.getElementById(`sqn-${g}-${si}`);
-    if(el)sq.name=el.value.trim()||`Squadra ${g}${si+1}`;
-  }));
-  save();showCurrentTab();alert('Squadre salvate!');
+function updateTeamName(g,si,v){
+  if(!S.squadre[g])S.squadre[g]=[];
+  if(!S.squadre[g][si])S.squadre[g][si]={name:'',players:[]};
+  S.squadre[g][si].name=(v||'').trim()||`Squadra ${g}${si+1}`;
+  save();
 }
 
 function dtBlock(key){
@@ -626,7 +603,7 @@ function dtBlock(key){
 }
 
 function renderGironi(){
-  const el=document.getElementById('gironi');el.innerHTML='<div style="display:flex;justify-content:flex-end;margin-bottom:1rem"><button class="btn" onclick="importTeamsAndCalendar(true)">Reimposta calendario</button></div>';
+  const el=document.getElementById('gironi');el.innerHTML='';
   GIRONI.forEach(g=>{
     const c=document.createElement('div');c.className='card';
     let html=`<div class="card-title">Girone ${g}</div>`;
@@ -691,8 +668,8 @@ function renderKO(){
     c.innerHTML=html;el.appendChild(c);
   });
 }
-function setMatchDt(key,val){mdata(key).dt=val;save();showCurrentTab();}
-function setKOTeam(key,side,val){if(!S.koTeams[key])S.koTeams[key]={a:'',b:''};S.koTeams[key][side]=val;save();showCurrentTab();}
+function setMatchDt(key,val){mdata(key).dt=val;showCurrentTab();save();}
+function setKOTeam(key,side,val){if(!S.koTeams[key])S.koTeams[key]={a:'',b:''};S.koTeams[key][side]=val;showCurrentTab();save();}
 
 let CM=null;
 function openMatchModal(key,g,ia,ib,tab){CM={key,ta:sqName(g,ia),tb:sqName(g,ib),pA:sqPlayers(g,ia),pB:sqPlayers(g,ib),tab};showModal();}
