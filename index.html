@@ -449,7 +449,8 @@ function normalizeState(v){
     out.matches[k] = {
       evA: toArr(m.evA).filter(Boolean),
       evB: toArr(m.evB).filter(Boolean),
-      dt: m.dt || ''
+      dt: m.dt || '',
+      played: !!m.played
     };
   });
   Object.keys(out.koTeams).forEach(k => {
@@ -526,11 +527,12 @@ const mkey=(phase,idx)=>`${phase}_${idx}`;
 const mdata=key=>{
   if(!S || typeof S !== 'object') S = initState();
   if(!S.matches || typeof S.matches !== 'object') S.matches = {};
-  if(!S.matches[key] || typeof S.matches[key] !== 'object') S.matches[key] = {evA:[],evB:[],dt:''};
+  if(!S.matches[key] || typeof S.matches[key] !== 'object') S.matches[key] = {evA:[],evB:[],dt:'',played:false};
   const m=S.matches[key];
   if(!Array.isArray(m.evA)) m.evA=toArr(m.evA);
   if(!Array.isArray(m.evB)) m.evB=toArr(m.evB);
   if(typeof m.dt !== 'string') m.dt = m.dt ? String(m.dt) : '';
+  m.played = !!m.played;
   return m;
 };
 const sqName=(g,i)=>(S && S.squadre && S.squadre[g] && S.squadre[g][i] && S.squadre[g][i].name)||`Squadra ${g}${i+1}`;
@@ -543,6 +545,8 @@ const calcScore=m=>({
   roA:(m.evA||[]).filter(e=>e.t==='rosso').length,
   roB:(m.evB||[]).filter(e=>e.t==='rosso').length
 });
+const isPlayed=m=>!!(m && m.played);
+const scoreCell=(m,v)=>isPlayed(m)?String(v):'–';
 const fmtDt=v=>{if(!v)return'';const d=new Date(v);return d.toLocaleString('it-IT',{weekday:'short',day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});};
 
 
@@ -613,10 +617,14 @@ function updateTeamName(g,si,v){
 
 function dtBlock(key){
   const m=mdata(key);const dtVal=m.dt||'';
-  return `<div class="match-datetime">
+  return `<div class="match-datetime" style="flex-wrap:wrap">
     <span style="font-size:13px">📅</span>
-    <input type="datetime-local" value="${dtVal}" style="flex:1;font-size:12px;padding:5px 8px;color:var(--text2)" onchange="setMatchDt('${key}',this.value)">
+    <input type="datetime-local" value="${dtVal}" style="flex:1;min-width:220px;font-size:12px;padding:5px 8px;color:var(--text2)" onchange="setMatchDt('${key}',this.value)">
     ${dtVal?`<span class="dt-display">${fmtDt(dtVal)}</span>`:''}
+    <label style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text2);margin-left:auto">
+      <input type="checkbox" ${m.played?'checked':''} onchange="setMatchPlayed('${key}',this.checked)">
+      Giocata
+    </label>
   </div>`;
 }
 
@@ -633,9 +641,9 @@ function renderGironi(){
         <div class="match-row">
           <span class="team-name">${ta}</span>
           <div class="score-display">
-            <div class="score-box">${sc.goA}</div>
+            <div class="score-box">${scoreCell(m, sc.goA)}</div>
             <span class="score-sep">–</span>
-            <div class="score-box">${sc.goB}</div>
+            <div class="score-box">${scoreCell(m, sc.goB)}</div>
           </div>
           <span class="team-name right">${tb}</span>
         </div>
@@ -659,7 +667,7 @@ function renderKO(){
       const key=mkey(ph.phase,i);const m=mdata(key);const sc=calcScore(m);
       const kt=(S.koTeams&&S.koTeams[key])||{};const parts=ph.hints[i].split(' vs ');
       const ta=kt?.a||parts[0]||'';const tb=kt?.b||parts[1]||'';
-      const winner=sc.goA!==sc.goB?`<div class="winner-label">Avanza: <strong>${sc.goA>sc.goB?ta:tb}</strong></div>`:'';
+      const winner=(m.played && sc.goA!==sc.goB)?`<div class="winner-label">Avanza: <strong>${sc.goA>sc.goB?ta:tb}</strong></div>`:'';
       html+=`<div class="match-block">
         ${dtBlock(key)}
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px">
@@ -669,9 +677,9 @@ function renderKO(){
         <div class="match-row" style="margin-bottom:8px">
           <span class="team-name" style="font-size:13px">${ta||'—'}</span>
           <div class="score-display">
-            <div class="score-box">${sc.goA}</div>
+            <div class="score-box">${scoreCell(m, sc.goA)}</div>
             <span class="score-sep">–</span>
-            <div class="score-box">${sc.goB}</div>
+            <div class="score-box">${scoreCell(m, sc.goB)}</div>
           </div>
           <span class="team-name right" style="font-size:13px">${tb||'—'}</span>
         </div>
@@ -687,6 +695,7 @@ function renderKO(){
   });
 }
 function setMatchDt(key,val){mdata(key).dt=val;showCurrentTab();save();}
+function setMatchPlayed(key,val){mdata(key).played=!!val;showCurrentTab();save();}
 function setKOTeam(key,side,val){if(!S.koTeams[key])S.koTeams[key]={a:'',b:''};S.koTeams[key][side]=val;showCurrentTab();save();}
 
 let CM=null;
@@ -737,7 +746,7 @@ function getStandings(g){
   const st={};
   toArr(S.squadre[g]).forEach((_,i)=>{const n=sqName(g,i);st[n]={pts:0,pg:0,gs:0,gc:0,gd:0,gi:0,ro:0};});
   PAIRS.forEach(([a,b],i)=>{
-    const key=mkey(`G${g}`,i);const m=mdata(key);const sc=calcScore(m);
+    const key=mkey(`G${g}`,i);const m=mdata(key);if(!m.played)return;const sc=calcScore(m);
     const ta=sqName(g,a),tb=sqName(g,b);
     st[ta].pg++;st[tb].pg++;
     st[ta].gs+=sc.goA;st[ta].gc+=sc.goB;st[ta].gd+=sc.goA-sc.goB;
@@ -766,7 +775,7 @@ function renderMarcatori(){
   const players={},teamCards={};
   const allKeys=[...GIRONI.flatMap(g=>PAIRS.map((_,i)=>mkey(`G${g}`,i))),...KO_PHASES.flatMap(ph=>Array.from({length:ph.n},(_,i)=>mkey(ph.phase,i)))];
   allKeys.forEach(key=>{
-    const m=S.matches[key];if(!m)return;
+    const m=S.matches[key];if(!m||!m.played)return;
     const kt=(S.koTeams&&S.koTeams[key])||{};const parts=key.split('_');const phase=parts[0];const idx=parseInt(parts[1]);
     let ta='',tb='';
     if(phase.startsWith('G')){const g=phase[1];const p=PAIRS[idx];if(p){ta=sqName(g,p[0]);tb=sqName(g,p[1]);}}
