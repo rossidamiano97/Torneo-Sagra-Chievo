@@ -153,11 +153,266 @@ const KO_PHASES=[
   {phase:'F3',label:'Finale 3°/4° Posto',n:1,hints:['Perd. SF1 vs Perd. SF2']},
   {phase:'F',label:'Finale',n:1,hints:['Vin. SF1 vs Vin. SF2']}
 ];
-const DEFAULT_SQUADRE = {"A": [{"name": "CIVICO 93", "players": ["GERVASINI TOMMASO", "TOMMASI PAOLO", "BRAGGIO RICCARDO", "GUARISE BRIAN", "PIETROPOLI FEDERICO", "LUPI PIETRO", "MASSOCCO LORENZO", "MERCI MARCO", "SANI FILIPPO", "CAPRIOTTI ALBERTO"]}, {"name": "TARTUFON FC", "players": ["DAMOLI TOMMASO", "PEPE LUCA", "INGRASSIA LORENZO", "CARRUBBA DAVIDE", "FILIPPO PIGHI", "LANDI PIETRO", "BATTISTELLO JACOPO", "CAVAZZA RICCARDO", "MARIO BULIGA STEFAN", "ZOCCATELLI ALESSANDRO", "CERPELLONI MATTIA", "MACCACARO TOMMASO"]}, {"name": "PERETTI COFER", "players": ["PERNIGO MAURIZIO", "BATTISTOLI FRANCESCO", "CIRILLO PIETRO", "GIACOMELLI FABIO", "RASULO ANDREA", "PERETTI MATTEO", "LUGOBONI MATTEO", "SAVIGNANO FRANCESCO", "BONETTI SIMONE", "TOMELLERI CARLO", "MAINENTI MICHELE"]}, {"name": "CATECHESI", "players": ["RIDOLFI TOMMASO", "MORESCHI LORENZO", "TRIMINI' LORENZO", "OTTOLINI FILIPPO", "RIGHETTI ALESSIO", "BOCCIANTI FILIPPO", "ZUCCONELLI TOMMASO", "ZECCHINELLI TOMMASO", "MARAGNO PIETRO", "MAZZI MICHELE", "MASSELLA JACOPO"]}], "B": [{"name": "GOS MIL DOS", "players": ["PRATO ALBERTO", "DANESE LORENZO", "BILLIANI TOMMASO", "TOMMASI DAVIDE", "POPA CHRISTIAN", "MOTTA DAVIDE", "GIARDINO LORENZO", "COVELLI LEONARDO", "MACCACARO LORENZO", "CHELIDONIO MATTEO"]}, {"name": "PATATANAIKOS", "players": ["GABRIELLI SIMONE", "FONTANA LUCA", "FASOLI MATTEO", "SONA FRANCESCO", "STORTI EDOARDO", "IMOLA FABIO", "DOARDI MATTEO", "CRISTANI FRANCESCO", "SONA THOMAS", "OLIVIERI MATTEO"]}, {"name": "CA MUZZONI", "players": ["SILLI LUCA", "MENEGOTTI ALESSANDRO", "INTRIERI FILIPPO", "MASSOCCO MATTEO", "FIUMINI RICCARDO", "PARLATO ANDREA", "FERRARI FILIPPO", "ALDROVANDI PIETRO", "GORGONE TOMMASO", "FRANCO GIOELE", "ZOCCA ANDREA", "DE BORTOLI DIEGO", "SQUARANTI LUCA"]}, {"name": "BAR BROTHERS", "players": ["CECCHIN MATTEO", "LANZA FABIO", "FERRO GIACOMO", "COBELLI DAVIDE", "MARCHESE FEDERICO", "MURA TOMMASO", "MAZZONI ALESSANDRO", "BEGALI ALESSANDRO", "MANTOVANI MATTEO", "FOSSATI LEONARDO", "ZANONI MATTEO", "BERTASINI LORENZO", "RAIMONDI LUCA", "BIONDANI MATTEO"]}], "C": [{"name": "MORTADHELLAS", "players": ["EPIBOLI DAVIDE", "CIENO SIMONE", "PANATO MATTIA", "PASINATO PIETRO", "CANZIAN MICHELE", "BERSAN TOMMASO", "VENERI DAMIANO", "AVESANI ELIA", "CUSINI FILIPPO", "NANI TOMMASO", "SANTI FILIPPO"]}, {"name": "HERTA VERNELLO", "players": ["REFFOSCO LEONARDO", "PUGGIA MATTIA", "ZAMOIERI MATTEO", "DINDO MICHELE", "EL HANAFI SEBTI MOSTAFA", "GJERGJI RIGERS", "CASERINI THOMAS", "BIASIA GABRIELE", "CABRAS GIOVANNI", "FACCIO ANDREA", "TOSI FILIPPO", "BERTAGNOLI IVAN", "ZAMPIERI MARCO", "VERGA STEFANO", "FERRARI MATTEO"]}, {"name": "BERLUSCA DORTMUND", "players": ["PICCHIONI DAMIANO", "TATAR RAUL GEORGE", "PICCOLI GIANNI", "MAGAGNA RUDY", "BUONCRISTIANI PIERGIORGIO", "MUSCHELLA ANTONIO", "MUSCHELLA FRANCESCO", "PICCOLI MARCO", "POLLINA KEVIN", "ROSSI LEONARDO", "VITTORINI NICOLO'", "FLORA VALERIO"]}, {"name": "ORTI SAN ZENO", "players": ["TRUSCHELLI PIETRO", "MAROSO GREGORIO", "CELON AUGUSTO", "MALAFA MATTEO", "DALLA VIA ALESSIO", "CORIGLIANO DENNY", "DALLA VIA FRANCESCO", "MATTEO FERONI", "FERDINANDO GRIMALDI", "NICOLO' DAL CORSO", "RICCARDO BERTUCCO"]}]};
 const initState=()=>({
-  squadre: JSON.parse(JSON.stringify(DEFAULT_SQUADRE)),
-  matches: {}, koTeams: {}, banco: {}
+  squadre:{
+    A:[{name:'',players:[]},{name:'',players:[]},{name:'',players:[]},{name:'',players:[]}],
+    B:[{name:'',players:[]},{name:'',players:[]},{name:'',players:[]},{name:'',players:[]}],
+    C:[{name:'',players:[]},{name:'',players:[]},{name:'',players:[]},{name:'',players:[]}]
+  },matches:{},koTeams:{},banco:{}
 });
+
+const PRESET_STATE = {
+  "squadre": {
+    "A": [
+      {
+        "name": "CIVICO 93",
+        "players": [
+          "GERVASINI TOMMASO",
+          "TOMMASI PAOLO",
+          "BRAGGIO RICCARDO",
+          "GUARISE BRIAN",
+          "PIETROPOLI FEDERICO",
+          "LUPI PIETRO",
+          "MASSOCCO LORENZO",
+          "MERCI MARCO",
+          "SANI FILIPPO",
+          "CAPRIOTTI ALBERTO"
+        ]
+      },
+      {
+        "name": "TARTUFON FC",
+        "players": [
+          "DAMOLI TOMMASO",
+          "PEPE LUCA",
+          "INGRASSIA LORENZO",
+          "CARRUBBA DAVIDE",
+          "FILIPPO PIGHI",
+          "LANDI PIETRO",
+          "BATTISTELLO JACOPO",
+          "CAVAZZA RICCARDO",
+          "MARIO BULIGA STEFAN",
+          "ZOCCATELLI ALESSANDRO",
+          "CERPELLONI MATTIA",
+          "MACCACARO TOMMASO"
+        ]
+      },
+      {
+        "name": "PERETTI COFER",
+        "players": [
+          "PERNIGO MAURIZIO",
+          "BATTISTOLI FRANCESCO",
+          "CIRILLO PIETRO",
+          "GIACOMELLI FABIO",
+          "RASULO ANDREA",
+          "PERETTI MATTEO",
+          "LUGOBONI MATTEO",
+          "SAVIGNANO FRANCESCO",
+          "BONETTI SIMONE",
+          "TOMELLERI CARLO",
+          "MAINENTI MICHELE"
+        ]
+      },
+      {
+        "name": "CATECHESI",
+        "players": [
+          "RIDOLFI TOMMASO",
+          "MORESCHI LORENZO",
+          "TRIMINI' LORENZO",
+          "OTTOLINI FILIPPO",
+          "RIGHETTI ALESSIO",
+          "BOCCIANTI FILIPPO",
+          "ZUCCONELLI TOMMASO",
+          "ZECCHINELLI TOMMASO",
+          "MARAGNO PIETRO",
+          "MAZZI MICHELE",
+          "MASSELLA JACOPO"
+        ]
+      }
+    ],
+    "B": [
+      {
+        "name": "GOS MIL DOS",
+        "players": [
+          "PRATO ALBERTO",
+          "DANESE LORENZO",
+          "BILLIANI TOMMASO",
+          "TOMMASI DAVIDE",
+          "POPA CHRISTIAN",
+          "MOTTA DAVIDE",
+          "GIARDINO LORENZO",
+          "COVELLI LEONARDO",
+          "MACCACARO LORENZO",
+          "CHELIDONIO MATTEO"
+        ]
+      },
+      {
+        "name": "PATATANAIKOS",
+        "players": [
+          "GABRIELLI SIMONE",
+          "FONTANA LUCA",
+          "FASOLI MATTEO",
+          "SONA FRANCESCO",
+          "STORTI EDOARDO",
+          "IMOLA FABIO",
+          "DOARDI MATTEO",
+          "CRISTANI FRANCESCO",
+          "SONA THOMAS",
+          "OLIVIERI MATTEO"
+        ]
+      },
+      {
+        "name": "CA MUZZONI",
+        "players": [
+          "SILLI LUCA",
+          "MENEGOTTI ALESSANDRO",
+          "INTRIERI FILIPPO",
+          "MASSOCCO MATTEO",
+          "FIUMINI RICCARDO",
+          "PARLATO ANDREA",
+          "FERRARI FILIPPO",
+          "ALDROVANDI PIETRO",
+          "GORGONE TOMMASO",
+          "FRANCO GIOELE",
+          "ZOCCA ANDREA",
+          "DE BORTOLI DIEGO",
+          "SQUARANTI LUCA"
+        ]
+      },
+      {
+        "name": "BAR BROTHERS",
+        "players": [
+          "CECCHIN MATTEO",
+          "LANZA FABIO",
+          "FERRO GIACOMO",
+          "COBELLI DAVIDE",
+          "MARCHESE FEDERICO",
+          "MURA TOMMASO",
+          "MAZZONI ALESSANDRO",
+          "BEGALI ALESSANDRO",
+          "MANTOVANI MATTEO",
+          "FOSSATI LEONARDO",
+          "ZANONI MATTEO",
+          "BERTASINI LORENZO",
+          "RAIMONDI LUCA",
+          "BIONDANI MATTEO"
+        ]
+      }
+    ],
+    "C": [
+      {
+        "name": "MORTADHELLAS",
+        "players": [
+          "EPIBOLI DAVIDE",
+          "CIENO SIMONE",
+          "PANATO MATTIA",
+          "PASINATO PIETRO",
+          "CANZIAN MICHELE",
+          "BERSAN TOMMASO",
+          "VENERI DAMIANO",
+          "AVESANI ELIA",
+          "CUSINI FILIPPO",
+          "NANI TOMMASO",
+          "SANTI FILIPPO"
+        ]
+      },
+      {
+        "name": "HERTA VERNELLO",
+        "players": [
+          "REFFOSCO LEONARDO",
+          "PUGGIA MATTIA",
+          "ZAMOIERI MATTEO",
+          "DINDO MICHELE",
+          "EL HANAFI SEBTI MOSTAFA",
+          "GJERGJI RIGERS",
+          "CASERINI THOMAS",
+          "BIASIA GABRIELE",
+          "CABRAS GIOVANNI",
+          "FACCIO ANDREA",
+          "TOSI FILIPPO",
+          "BERTAGNOLI IVAN",
+          "ZAMPIERI MARCO",
+          "VERGA STEFANO",
+          "FERRARI MATTEO"
+        ]
+      },
+      {
+        "name": "BERLUSCA DORTMUND",
+        "players": [
+          "PICCHIONI DAMIANO",
+          "TATAR RAUL GEORGE",
+          "PICCOLI GIANNI",
+          "MAGAGNA RUDY",
+          "BUONCRISTIANI PIERGIORGIO",
+          "MUSCHELLA ANTONIO",
+          "MUSCHELLA FRANCESCO",
+          "PICCOLI MARCO",
+          "POLLINA KEVIN",
+          "ROSSI LEONARDO",
+          "VITTORINI NICOLO'",
+          "FLORA VALERIO"
+        ]
+      },
+      {
+        "name": "ORTI SAN ZENO",
+        "players": [
+          "TRUSCHELLI PIETRO",
+          "MAROSO GREGORIO",
+          "CELON AUGUSTO",
+          "MALAFA MATTEO",
+          "DALLA VIA ALESSIO",
+          "CORIGLIANO DENNY",
+          "DALLA VIA FRANCESCO",
+          "MATTEO FERONI",
+          "FERDINANDO GRIMALDI",
+          "NICOLO' DAL CORSO",
+          "RICCARDO BERTUCCO"
+        ]
+      }
+    ]
+  },
+  "matches": {},
+  "koTeams": {},
+  "banco": {
+    "CIVICO 93": 0,
+    "TARTUFON FC": 0,
+    "PERETTI COFER": 0,
+    "CATECHESI": 0,
+    "GOS MIL DOS": 0,
+    "PATATANAIKOS": 0,
+    "CA MUZZONI": 0,
+    "BAR BROTHERS": 0,
+    "MORTADHELLAS": 0,
+    "HERTA VERNELLO": 0,
+    "BERLUSCA DORTMUND": 0,
+    "ORTI SAN ZENO": 0
+  }
+};
+
+function isPlaceholderTeamName(name, g, i){
+  const n = (name || '').trim();
+  return !n || n === `Squadra ${g}${i+1}` || n === `Squadra ${g}${i + 1}`;
+}
+function stateNeedsPreset(v){
+  if(!v || typeof v !== 'object' || !v.squadre) return true;
+  let filledTeams = 0;
+  let filledPlayers = 0;
+  for (const g of GIRONI) {
+    const arr = toArr(v.squadre[g]);
+    for (let i = 0; i < 4; i++) {
+      const sq = arr[i] || {};
+      const name = (sq.name || '').trim();
+      const players = toArr(sq.players).filter(Boolean);
+      if (!isPlaceholderTeamName(name, g, i)) filledTeams++;
+      if (players.length) filledPlayers += players.length;
+    }
+  }
+  return filledTeams === 0 || filledPlayers === 0;
+}
+function applyPresetState(){
+  S = normalizeState(PRESET_STATE);
+  save();
+}
+
 const FIREBASE_CONFIG = {
   apiKey: "AIzaSyCAanAjLnNDFsq5JJ7gYDv3ycpfrLahiOI",
   authDomain: "torneo-chievo.firebaseapp.com",
@@ -228,20 +483,17 @@ function normalizeState(v){
   });
   return out;
 }
-function hasAnyTeamData(state){
-  return GIRONI.some(g => toArr(state.squadre && state.squadre[g]).some(sq => (sq && sq.name && String(sq.name).trim()) || (toArr(sq && sq.players).length > 0)));
-}
-function getSafeState(v){
-  const normalized = normalizeState(v);
-  if(!hasAnyTeamData(normalized)) normalized.squadre = JSON.parse(JSON.stringify(DEFAULT_SQUADRE));
-  return normalized;
-}
+function getSafeState(v){ return normalizeState(v); }
 function save(){ if(!appReady) return; stateRef.set(cloneState(normalizeState(S))); }
 function showCurrentTab(){ const activeSection = document.querySelector('.section.active'); if(activeSection && renders[activeSection.id]) { renders[activeSection.id](); } else { renderSquadre(); } }
 function startFirebaseSync(){
   stateRef.on('value', snap => {
     const data = snap.val();
     S = getSafeState(data);
+    if(stateNeedsPreset(S)){
+      applyPresetState();
+      return;
+    }
     if(!hasLoadedInitialState){
       hasLoadedInitialState = true;
       renderSquadre();
@@ -315,7 +567,7 @@ function renderSquadre(){
   const el=document.getElementById('squadre');
   el.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
     <div style="font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:700;text-transform:uppercase;color:var(--text)">Squadre & Rose</div>
-    <button class="btn btn-accent" onclick="saveSquadre()">Salva tutto</button>
+    <div style="display:flex;gap:.6rem;flex-wrap:wrap"><button class="btn" onclick="importPresetTeams()">Importa squadre dal file</button><button class="btn btn-accent" onclick="saveSquadre()">Salva tutto</button></div>
   </div><div class="grid3" id="sq-grid"></div>`;
   const grid=document.getElementById('sq-grid');
   GIRONI.forEach(g=>{
@@ -333,6 +585,14 @@ function renderSquadre(){
     toArr(S.squadre[g]).forEach((_,si)=>renderPlayers(g,si));
   });
 }
+function importPresetTeams(){
+  if(!confirm('Sovrascrivere le squadre attuali con quelle del file Distinte squadre 2025?')) return;
+  S = normalizeState(PRESET_STATE);
+  save();
+  renderSquadre();
+  alert('Squadre importate correttamente');
+}
+
 function renderPlayers(g,si){
   const cont=document.getElementById(`players-${g}-${si}`);if(!cont)return;
   cont.innerHTML='';
