@@ -197,8 +197,41 @@ function cloneState(v){
   });
   return s;
 }
-function getSafeState(v){ return v && typeof v === 'object' ? v : initState(); }
-function save(){ if(!appReady) return; stateRef.set(cloneState(S)); }
+function normalizeState(v){
+  const base = initState();
+  const src = (v && typeof v === 'object') ? v : {};
+  const out = {
+    squadre: {A:[], B:[], C:[]},
+    matches: (src.matches && typeof src.matches === 'object') ? src.matches : {},
+    koTeams: (src.koTeams && typeof src.koTeams === 'object') ? src.koTeams : {},
+    banco: (src.banco && typeof src.banco === 'object') ? src.banco : {}
+  };
+  GIRONI.forEach(g => {
+    const arr = toArr(src.squadre && src.squadre[g]);
+    out.squadre[g] = Array.from({length:4}, (_,i) => {
+      const sq = arr[i] || base.squadre[g][i];
+      return {
+        name: (sq && sq.name) ? String(sq.name) : '',
+        players: toArr(sq && sq.players).filter(p => p !== null && p !== undefined).map(String)
+      };
+    });
+  });
+  Object.keys(out.matches).forEach(k => {
+    const m = out.matches[k] || {};
+    out.matches[k] = {
+      evA: toArr(m.evA).filter(Boolean),
+      evB: toArr(m.evB).filter(Boolean),
+      dt: m.dt || ''
+    };
+  });
+  Object.keys(out.koTeams).forEach(k => {
+    const t = out.koTeams[k] || {};
+    out.koTeams[k] = { a: t.a || '', b: t.b || '' };
+  });
+  return out;
+}
+function getSafeState(v){ return normalizeState(v); }
+function save(){ if(!appReady) return; stateRef.set(cloneState(normalizeState(S))); }
 function showCurrentTab(){ const activeSection = document.querySelector('.section.active'); if(activeSection && renders[activeSection.id]) { renders[activeSection.id](); } else { renderSquadre(); } }
 function startFirebaseSync(){
   stateRef.on('value', snap => {
@@ -244,14 +277,17 @@ window.addEventListener('load', () => {
 });
 const mkey=(phase,idx)=>`${phase}_${idx}`;
 const mdata=key=>{
-  if(!S.matches[key]) S.matches[key]={evA:[],evB:[],dt:''};
+  if(!S || typeof S !== 'object') S = initState();
+  if(!S.matches || typeof S.matches !== 'object') S.matches = {};
+  if(!S.matches[key] || typeof S.matches[key] !== 'object') S.matches[key] = {evA:[],evB:[],dt:''};
   const m=S.matches[key];
   if(!Array.isArray(m.evA)) m.evA=toArr(m.evA);
   if(!Array.isArray(m.evB)) m.evB=toArr(m.evB);
+  if(typeof m.dt !== 'string') m.dt = m.dt ? String(m.dt) : '';
   return m;
 };
-const sqName=(g,i)=>(S.squadre[g]&&S.squadre[g][i]&&S.squadre[g][i].name)||`Squadra ${g}${i+1}`;
-const sqPlayers=(g,i)=>(S.squadre[g]&&S.squadre[g][i]&&toArr(S.squadre[g][i].players)||[]).filter(p=>p&&p.trim());
+const sqName=(g,i)=>(S && S.squadre && S.squadre[g] && S.squadre[g][i] && S.squadre[g][i].name)||`Squadra ${g}${i+1}`;
+const sqPlayers=(g,i)=>(((S && S.squadre && S.squadre[g] && S.squadre[g][i]) ? toArr(S.squadre[g][i].players) : [])).filter(p=>p&&p.trim());
 const calcScore=m=>({
   goA:(m.evA||[]).filter(e=>e.t==='gol').length,
   goB:(m.evB||[]).filter(e=>e.t==='gol').length,
@@ -358,7 +394,7 @@ function renderKO(){
     let html=`<div class="card-title">${ph.label}</div>`;
     for(let i=0;i<ph.n;i++){
       const key=mkey(ph.phase,i);const m=mdata(key);const sc=calcScore(m);
-      const kt=S.koTeams[key];const parts=ph.hints[i].split(' vs ');
+      const kt=(S.koTeams&&S.koTeams[key])||{};const parts=ph.hints[i].split(' vs ');
       const ta=kt?.a||parts[0]||'';const tb=kt?.b||parts[1]||'';
       const winner=sc.goA!==sc.goB?`<div class="winner-label">Avanza: <strong>${sc.goA>sc.goB?ta:tb}</strong></div>`:'';
       html+=`<div class="match-block">
@@ -392,7 +428,7 @@ function setKOTeam(key,side,val){if(!S.koTeams[key])S.koTeams[key]={a:'',b:''};S
 
 let CM=null;
 function openMatchModal(key,g,ia,ib,tab){CM={key,ta:sqName(g,ia),tb:sqName(g,ib),pA:sqPlayers(g,ia),pB:sqPlayers(g,ib),tab};showModal();}
-function openKOModal(key){const kt=S.koTeams[key];CM={key,ta:kt?.a||'Squadra A',tb:kt?.b||'Squadra B',pA:[],pB:[],tab:'ko'};showModal();}
+function openKOModal(key){const kt=(S.koTeams&&S.koTeams[key])||{};CM={key,ta:kt?.a||'Squadra A',tb:kt?.b||'Squadra B',pA:[],pB:[],tab:'ko'};showModal();}
 function showModal(){
   const{ta,tb}=CM;
   document.getElementById('modal-inner').innerHTML=`
@@ -468,7 +504,7 @@ function renderMarcatori(){
   const allKeys=[...GIRONI.flatMap(g=>PAIRS.map((_,i)=>mkey(`G${g}`,i))),...KO_PHASES.flatMap(ph=>Array.from({length:ph.n},(_,i)=>mkey(ph.phase,i)))];
   allKeys.forEach(key=>{
     const m=S.matches[key];if(!m)return;
-    const kt=S.koTeams[key];const parts=key.split('_');const phase=parts[0];const idx=parseInt(parts[1]);
+    const kt=(S.koTeams&&S.koTeams[key])||{};const parts=key.split('_');const phase=parts[0];const idx=parseInt(parts[1]);
     let ta='',tb='';
     if(phase.startsWith('G')){const g=phase[1];const p=PAIRS[idx];if(p){ta=sqName(g,p[0]);tb=sqName(g,p[1]);}}
     else{ta=kt?.a||'';tb=kt?.b||'';}
