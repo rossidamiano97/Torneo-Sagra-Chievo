@@ -176,7 +176,20 @@ const app = firebase.initializeApp(FIREBASE_CONFIG);
 const db = firebase.database();
 const stateRef = db.ref('torneo_ceo');
 let S=initState();
-function cloneState(v){ return JSON.parse(JSON.stringify(v)); }
+function cloneState(v){
+  // JSON round-trip ensures no undefined/functions; Firebase is fine with this
+  const s=JSON.parse(JSON.stringify(v));
+  // Ensure squadre arrays are clean
+  GIRONI.forEach(g=>{
+    if(s.squadre&&s.squadre[g]){
+      s.squadre[g]=Array.from({length:4},(_,i)=>{
+        const sq=s.squadre[g][i]||{name:'',players:[]};
+        return {name:sq.name||'',players:(sq.players||[]).filter(p=>p!==null&&p!==undefined)};
+      });
+    }
+  });
+  return s;
+}
 function getSafeState(v){ return v && typeof v === 'object' ? v : initState(); }
 function save(){ if(!appReady) return; stateRef.set(cloneState(S)); }
 function showCurrentTab(){ const activeSection = document.querySelector('.section.active'); if(activeSection && renders[activeSection.id]) { renders[activeSection.id](); } else { renderSquadre(); } }
@@ -223,9 +236,15 @@ window.addEventListener('load', () => {
   }
 });
 const mkey=(phase,idx)=>`${phase}_${idx}`;
-const mdata=key=>S.matches[key]||(S.matches[key]={evA:[],evB:[],dt:''},S.matches[key]);
-const sqName=(g,i)=>S.squadre[g][i].name||`Squadra ${g}${i+1}`;
-const sqPlayers=(g,i)=>(S.squadre[g][i].players||[]).filter(p=>p.trim());
+const mdata=key=>{
+  if(!S.matches[key]) S.matches[key]={evA:[],evB:[],dt:''};
+  const m=S.matches[key];
+  if(!Array.isArray(m.evA)) m.evA=toArr(m.evA);
+  if(!Array.isArray(m.evB)) m.evB=toArr(m.evB);
+  return m;
+};
+const sqName=(g,i)=>(S.squadre[g]&&S.squadre[g][i]&&S.squadre[g][i].name)||`Squadra ${g}${i+1}`;
+const sqPlayers=(g,i)=>(S.squadre[g]&&S.squadre[g][i]&&toArr(S.squadre[g][i].players)||[]).filter(p=>p&&p.trim());
 const calcScore=m=>({
   goA:(m.evA||[]).filter(e=>e.t==='gol').length,
   goB:(m.evB||[]).filter(e=>e.t==='gol').length,
@@ -254,7 +273,7 @@ function renderSquadre(){
   GIRONI.forEach(g=>{
     const c=document.createElement('div');c.className='card';
     let html=`<div class="card-title">Girone ${g}</div>`;
-    S.squadre[g].forEach((sq,si)=>{
+    toArr(S.squadre[g]).forEach((sq,si)=>{
       html+=`<div style="margin-bottom:14px">
         <div style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Squadra ${si+1}</div>
         <input type="text" id="sqn-${g}-${si}" value="${sq.name}" placeholder="Nome squadra" style="margin-bottom:6px">
@@ -263,23 +282,23 @@ function renderSquadre(){
       </div>`;
     });
     c.innerHTML=html;grid.appendChild(c);
-    S.squadre[g].forEach((_,si)=>renderPlayers(g,si));
+    toArr(S.squadre[g]).forEach((_,si)=>renderPlayers(g,si));
   });
 }
 function renderPlayers(g,si){
   const cont=document.getElementById(`players-${g}-${si}`);if(!cont)return;
   cont.innerHTML='';
-  (S.squadre[g][si].players||[]).forEach((p,pi)=>{
+  toArr(S.squadre[g]&&S.squadre[g][si]&&S.squadre[g][si].players).forEach((p,pi)=>{
     const row=document.createElement('div');row.className='player-row';
     row.innerHTML=`<input type="text" value="${p}" placeholder="Nome giocatore" onchange="updatePlayer('${g}',${si},${pi},this.value)"><button class="del-btn" onclick="removePlayer('${g}',${si},${pi})">×</button>`;
     cont.appendChild(row);
   });
 }
-function addPlayer(g,si){S.squadre[g][si].players.push('');save();renderSquadre();}
-function removePlayer(g,si,pi){S.squadre[g][si].players.splice(pi,1);save();renderSquadre();}
-function updatePlayer(g,si,pi,v){S.squadre[g][si].players[pi]=v;save();}
+function addPlayer(g,si){if(!S.squadre[g])S.squadre[g]=[];if(!S.squadre[g][si])S.squadre[g][si]={name:'',players:[]};S.squadre[g][si].players.push('');save();renderSquadre();}
+function removePlayer(g,si,pi){if(S.squadre[g]&&S.squadre[g][si])S.squadre[g][si].players.splice(pi,1);save();renderSquadre();}
+function updatePlayer(g,si,pi,v){if(S.squadre[g]&&S.squadre[g][si])S.squadre[g][si].players[pi]=v;save();}
 function saveSquadre(){
-  GIRONI.forEach(g=>S.squadre[g].forEach((sq,si)=>{
+  GIRONI.forEach(g=>toArr(S.squadre[g]).forEach((sq,si)=>{
     const el=document.getElementById(`sqn-${g}-${si}`);
     if(el)sq.name=el.value.trim()||`Squadra ${g}${si+1}`;
   }));
@@ -410,7 +429,7 @@ function closeModal(){document.getElementById('modal-bg').classList.remove('open
 
 function getStandings(g){
   const st={};
-  S.squadre[g].forEach((_,i)=>{const n=sqName(g,i);st[n]={pts:0,pg:0,gs:0,gc:0,gd:0,gi:0,ro:0};});
+  toArr(S.squadre[g]).forEach((_,i)=>{const n=sqName(g,i);st[n]={pts:0,pg:0,gs:0,gc:0,gd:0,gi:0,ro:0};});
   PAIRS.forEach(([a,b],i)=>{
     const key=mkey(`G${g}`,i);const m=mdata(key);const sc=calcScore(m);
     const ta=sqName(g,a),tb=sqName(g,b);
@@ -471,7 +490,7 @@ function renderMarcatori(){
   h2+=`</tbody></table>`;c2.innerHTML=h2;el.appendChild(c2);
 }
 
-function getAllTeams(){return GIRONI.flatMap(g=>S.squadre[g].map((_,i)=>sqName(g,i)));}
+function getAllTeams(){return GIRONI.flatMap(g=>toArr(S.squadre[g]).map((_,i)=>sqName(g,i)));}
 function renderBanco(){
   const el=document.getElementById('banco');el.innerHTML='';
   if(!S.banco)S.banco={};
