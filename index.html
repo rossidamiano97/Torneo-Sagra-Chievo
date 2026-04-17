@@ -40,8 +40,8 @@ body { font-family: 'Barlow', sans-serif; background: var(--bg); color: var(--te
 .grid3 { display: grid; grid-template-columns: repeat(3,1fr); gap: .75rem; }
 .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
 @media(max-width:640px){ .grid3,.grid2 { grid-template-columns: 1fr; } }
-input[type=text], input[type=datetime-local], select { width: 100%; padding: 7px 11px; border: 1px solid var(--border); border-radius: 6px; background: var(--bg3); color: var(--text); font-size: 14px; font-family: 'Barlow', sans-serif; outline: none; transition: border-color .15s; }
-input[type=text]:focus, input[type=datetime-local]:focus, select:focus { border-color: var(--accent-light); }
+input[type=text], input[type=password], input[type=datetime-local], select { width: 100%; padding: 7px 11px; border: 1px solid var(--border); border-radius: 6px; background: var(--bg3); color: var(--text); font-size: 14px; font-family: 'Barlow', sans-serif; outline: none; transition: border-color .15s; }
+input[type=text]:focus, input[type=password]:focus, input[type=datetime-local]:focus, select:focus { border-color: var(--accent-light); }
 select option { background: var(--bg2); }
 input[type=datetime-local]::-webkit-calendar-picker-indicator { filter: invert(0.6); cursor: pointer; }
 .btn { padding: 8px 18px; border: 1px solid var(--border); border-radius: 6px; background: var(--bg3); color: var(--text); cursor: pointer; font-size: 13px; font-family: 'Barlow', sans-serif; font-weight: 500; transition: background .15s, border-color .15s; }
@@ -86,7 +86,6 @@ tr:last-child td { border-bottom: none; }
 .ev-item { display: flex; justify-content: space-between; align-items: center; font-size: 13px; padding: 4px 0; border-bottom: 1px solid var(--border); }
 .ev-item:last-child { border-bottom: none; }
 .ev-empty { font-size: 12px; color: var(--text3); padding: 4px 0; }
-
 .auth-overlay { position: fixed; inset: 0; z-index: 1000; display: flex; align-items: center; justify-content: center; background: rgba(10, 6, 8, 0.92); padding: 1rem; }
 .auth-card { width: 100%; max-width: 420px; background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.4rem; box-shadow: 0 10px 30px rgba(0,0,0,.35); }
 .auth-title { font-family: 'Barlow Condensed', sans-serif; font-size: 26px; font-weight: 800; text-transform: uppercase; letter-spacing: .04em; margin-bottom: .4rem; }
@@ -98,7 +97,6 @@ tr:last-child td { border-bottom: none; }
 .status-pill { display:inline-flex; align-items:center; gap:6px; padding: 4px 10px; border-radius: 999px; border: 1px solid var(--border); background: rgba(255,255,255,.02); }
 .status-dot { width:8px; height:8px; border-radius:50%; background:#e0b34a; }
 .status-dot.live { background:#70c97e; }
-
 </style>
 </head>
 <body>
@@ -106,7 +104,7 @@ tr:last-child td { border-bottom: none; }
   <div class="auth-card">
     <div class="auth-title">Accesso Admin</div>
     <div class="auth-sub">Inserisci la password per modificare risultati e classifiche.</div>
-    <div class="info-banner">Inserisci la password per accedere
+    <div class="info-banner">Inserisci la password per accedere.</div>
     <input type="password" id="admin-password" placeholder="Password" autofocus onkeydown="if(event.key==='Enter') checkPassword()">
     <div style="display:flex;gap:.6rem; margin-top: .8rem;">
       <button class="btn btn-accent" onclick="checkPassword()">Entra</button>
@@ -114,34 +112,36 @@ tr:last-child td { border-bottom: none; }
     <div id="auth-error" class="auth-error"></div>
   </div>
 </div>
+
 <div id="app-shell" class="app-hidden">
-<div class="header">
-  <div class="header-icon">⚽</div>
-  <div>
-    <div class="header-title">Torneo Sagra del CEO</div>
-    <div class="header-sub">Pannello di gestione</div>
+  <div class="header">
+    <div class="header-icon">⚽</div>
+    <div>
+      <div class="header-title">Torneo Sagra del CEO</div>
+      <div class="header-sub">Pannello di gestione</div>
+    </div>
+    <div class="header-badge">🔧 Admin</div>
   </div>
-  <div class="header-badge">🔧 Admin</div>
+  <nav class="nav">
+    <button class="nav-btn active" onclick="showTab('squadre',this)">Squadre & Rose</button>
+    <button class="nav-btn" onclick="showTab('gironi',this)">Gironi</button>
+    <button class="nav-btn" onclick="showTab('ko',this)">Eliminazione Diretta</button>
+    <button class="nav-btn" onclick="showTab('classifiche',this)">Classifiche</button>
+    <button class="nav-btn" onclick="showTab('marcatori',this)">Marcatori & Cartellini</button>
+    <button class="nav-btn" onclick="showTab('banco',this)">🍺 Coppa Banco</button>
+  </nav>
+  <div class="status-row"><span class="status-pill"><span id="sync-dot" class="status-dot"></span><span id="sync-label">In attesa di sincronizzazione</span></span><span>Admin online condiviso</span></div>
+  <main class="main">
+    <div id="squadre" class="section active"></div>
+    <div id="gironi" class="section"></div>
+    <div id="ko" class="section"></div>
+    <div id="classifiche" class="section"></div>
+    <div id="marcatori" class="section"></div>
+    <div id="banco" class="section"></div>
+  </main>
+  <div class="modal-bg" id="modal-bg"><div class="modal" id="modal-inner"></div></div>
 </div>
-<nav class="nav">
-  <button class="nav-btn active" onclick="showTab('squadre',this)">Squadre & Rose</button>
-  <button class="nav-btn" onclick="showTab('gironi',this)">Gironi</button>
-  <button class="nav-btn" onclick="showTab('ko',this)">Eliminazione Diretta</button>
-  <button class="nav-btn" onclick="showTab('classifiche',this)">Classifiche</button>
-  <button class="nav-btn" onclick="showTab('marcatori',this)">Marcatori & Cartellini</button>
-  <button class="nav-btn" onclick="showTab('banco',this)">🍺 Coppa Banco</button>
-</nav>
-<div class="status-row"><span class="status-pill"><span id="sync-dot" class="status-dot"></span><span id="sync-label">In attesa di sincronizzazione</span></span><span>Admin online condiviso</span></div>
-<main class="main">
-  <div id="squadre" class="section active"></div>
-  <div id="gironi" class="section"></div>
-  <div id="ko" class="section"></div>
-  <div id="classifiche" class="section"></div>
-  <div id="marcatori" class="section"></div>
-  <div id="banco" class="section"></div>
-</main>
-<div class="modal-bg" id="modal-bg"><div class="modal" id="modal-inner"></div></div>
-</div>
+
 <script src="https://www.gstatic.com/firebasejs/12.2.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/12.2.0/firebase-database-compat.js"></script>
 <script>
@@ -179,7 +179,7 @@ let S=initState();
 function cloneState(v){ return JSON.parse(JSON.stringify(v)); }
 function getSafeState(v){ return v && typeof v === 'object' ? v : initState(); }
 function save(){ if(!appReady) return; stateRef.set(cloneState(S)); }
-function showCurrentTab(){ const activeBtn = document.querySelector('.nav-btn.active'); const activeSection = document.querySelector('.section.active'); if(activeSection && renders[activeSection.id]) { renders[activeSection.id](); } else { renderSquadre(); } }
+function showCurrentTab(){ const activeSection = document.querySelector('.section.active'); if(activeSection && renders[activeSection.id]) { renders[activeSection.id](); } else { renderSquadre(); } }
 function startFirebaseSync(){
   stateRef.on('value', snap => {
     const data = snap.val();
