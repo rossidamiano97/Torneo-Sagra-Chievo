@@ -43,12 +43,17 @@ body { font-family: 'Barlow', sans-serif; background: var(--bg); color: var(--te
 @media(max-width:640px){ .grid3 { grid-template-columns: 1fr; } }
 .match-block { padding: 12px 0; border-bottom: 1px solid var(--border); }
 .match-block:last-child { border-bottom: none; }
-.match-dt-label { font-size: 11px; color: var(--accent-light); margin-bottom: 7px; font-style: italic; display: flex; align-items: center; gap: 5px; }
+.match-top-row { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:7px; }
+.match-dt-label { font-size: 11px; color: var(--accent-light); font-style: italic; display: flex; align-items: center; gap: 5px; }
+.match-status { font-size: 10px; font-family: 'Barlow Condensed', sans-serif; font-weight:700; letter-spacing:.08em; text-transform:uppercase; padding:3px 8px; border-radius:999px; border:1px solid var(--border); }
+.match-status.played { color:#70c97e; background:rgba(40,120,60,.18); border-color:rgba(40,120,60,.35); }
+.match-status.pending { color:var(--text2); background:rgba(255,255,255,.04); }
 .match-row { display: grid; grid-template-columns: 1fr auto 1fr; gap: 12px; align-items: center; margin-bottom: 8px; }
 .team-name { font-weight: 600; font-size: 14px; color: var(--text); }
 .team-name.right { text-align: right; }
 .score-display { display: flex; align-items: center; gap: 8px; justify-content: center; }
 .score-box { min-width: 42px; height: 42px; display: flex; align-items: center; justify-content: center; font-family: 'Barlow Condensed', sans-serif; font-size: 26px; font-weight: 900; color: var(--white); background: var(--bg3); border: 1px solid var(--border); border-radius: 6px; }
+.score-box.pending { color: var(--text3); }
 .score-sep { font-size: 18px; color: var(--text3); font-weight: 700; }
 .cards-info-row { display: flex; justify-content: space-between; margin-bottom: 4px; }
 .cards-info { font-size: 12px; color: var(--text2); }
@@ -123,9 +128,47 @@ const app = firebase.initializeApp(FIREBASE_CONFIG);
 const db = firebase.database();
 const stateRef = db.ref('torneo_ceo');
 let S=null;
+
+function toArr(v){
+  if (Array.isArray(v)) return v;
+  if (v === null || v === undefined) return [];
+  if (typeof v === 'object') return Object.values(v);
+  return [];
+}
+function normalizeState(v){
+  const src = (v && typeof v === 'object') ? v : {};
+  const squadre = {A:[], B:[], C:[]};
+  GIRONI.forEach(g => {
+    const arr = toArr(src.squadre && src.squadre[g]);
+    squadre[g] = Array.from({length:4}, (_,i) => {
+      const sq = arr[i] || {};
+      return { name: sq.name || '', players: toArr(sq.players).map(String) };
+    });
+  });
+  const matches = (src.matches && typeof src.matches === 'object') ? src.matches : {};
+  Object.keys(matches).forEach(k => {
+    const m = matches[k] || {};
+    matches[k] = {
+      evA: toArr(m.evA).filter(Boolean),
+      evB: toArr(m.evB).filter(Boolean),
+      dt: m.dt || '',
+      played: !!m.played
+    };
+  });
+  return {
+    squadre,
+    matches,
+    koTeams: (src.koTeams && typeof src.koTeams === 'object') ? src.koTeams : {},
+    banco: (src.banco && typeof src.banco === 'object') ? src.banco : {}
+  };
+}
+
 const mkey=(phase,idx)=>`${phase}_${idx}`;
-const mdata=key=>(S?.matches&&S.matches[key])||{evA:[],evB:[],dt:''};
-const sqName=(g,i)=>S?.squadre[g][i]?.name||`Squadra ${g}${i+1}`;
+const mdata=key=>{
+  const m=(S?.matches&&S.matches[key])||{};
+  return { evA: toArr(m.evA), evB: toArr(m.evB), dt: m.dt || '', played: !!m.played };
+};
+const sqName=(g,i)=>S?.squadre?.[g]?.[i]?.name||`Squadra ${g}${i+1}`;
 const calcScore=m=>({
   goA:(m.evA||[]).filter(e=>e.t==='gol').length,
   goB:(m.evB||[]).filter(e=>e.t==='gol').length,
@@ -135,6 +178,10 @@ const calcScore=m=>({
   roB:(m.evB||[]).filter(e=>e.t==='rosso').length
 });
 const fmtDt=v=>{if(!v)return'';const d=new Date(v);return d.toLocaleString('it-IT',{weekday:'short',day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});};
+const scoreText = (m, side) => m.played ? calcScore(m)[side] : '–';
+const statusBadge = m => m.played
+  ? '<span class="match-status played">Giocata</span>'
+  : '<span class="match-status pending">Da giocare</span>';
 
 function loadAndRender(){
   document.getElementById('last-update').textContent='Aggiornato: '+new Date().toLocaleTimeString('it-IT');
@@ -144,7 +191,7 @@ function loadAndRender(){
 
 function subscribeLive(){
   stateRef.on('value', snap => {
-    S = snap.val();
+    S = normalizeState(snap.val());
     loadAndRender();
   }, err => {
     console.error(err);
@@ -172,19 +219,22 @@ function renderGironi(){
       const eventsA=(m.evA||[]).map(e=>`<div class="ev-item-view">${e.t==='gol'?'⚽':e.t==='giallo'?'🟨':'🟥'} ${e.p}</div>`).join('');
       const eventsB=(m.evB||[]).map(e=>`<div class="ev-item-view">${e.t==='gol'?'⚽':e.t==='giallo'?'🟨':'🟥'} ${e.p}</div>`).join('');
       html+=`<div class="match-block">
-        ${m.dt?`<div class="match-dt-label">📅 ${fmtDt(m.dt)}</div>`:''}
+        <div class="match-top-row">
+          <div class="match-dt-label">${m.dt?`📅 ${fmtDt(m.dt)}`:'📅 Data/ora da definire'}</div>
+          ${statusBadge(m)}
+        </div>
         <div class="match-row">
           <span class="team-name">${ta}</span>
           <div class="score-display">
-            <div class="score-box">${sc.goA}</div>
-            <span class="score-sep">–</span>
-            <div class="score-box">${sc.goB}</div>
+            <div class="score-box ${m.played?'':'pending'}">${m.played ? sc.goA : '–'}</div>
+            <span class="score-sep">-</span>
+            <div class="score-box ${m.played?'':'pending'}">${m.played ? sc.goB : '–'}</div>
           </div>
           <span class="team-name right">${tb}</span>
         </div>
         <div class="cards-info-row">
-          <div><span class="cards-info">🟨 ${sc.giA} &nbsp; 🟥 ${sc.roA}</span><div class="ev-list-view">${eventsA}</div></div>
-          <div style="text-align:right"><span class="cards-info">🟨 ${sc.giB} &nbsp; 🟥 ${sc.roB}</span><div class="ev-list-view">${eventsB}</div></div>
+          <div><span class="cards-info">🟨 ${m.played ? sc.giA : 0} &nbsp; 🟥 ${m.played ? sc.roA : 0}</span><div class="ev-list-view">${eventsA}</div></div>
+          <div style="text-align:right"><span class="cards-info">🟨 ${m.played ? sc.giB : 0} &nbsp; 🟥 ${m.played ? sc.roB : 0}</span><div class="ev-list-view">${eventsB}</div></div>
         </div>
       </div>`;
     });
@@ -202,23 +252,26 @@ function renderKO(){
       const key=mkey(ph.phase,i);const m=mdata(key);const sc=calcScore(m);
       const kt=S.koTeams&&S.koTeams[key];const parts=ph.hints[i].split(' vs ');
       const ta=kt?.a||parts[0]||'';const tb=kt?.b||parts[1]||'';
-      const winner=sc.goA!==sc.goB?`<div class="winner-label">Avanza: <strong>${sc.goA>sc.goB?ta:tb}</strong></div>`:'';
+      const winner=(m.played && sc.goA!==sc.goB)?`<div class="winner-label">Avanza: <strong>${sc.goA>sc.goB?ta:tb}</strong></div>`:'';
       const eventsA=(m.evA||[]).map(e=>`<div class="ev-item-view">${e.t==='gol'?'⚽':e.t==='giallo'?'🟨':'🟥'} ${e.p}</div>`).join('');
       const eventsB=(m.evB||[]).map(e=>`<div class="ev-item-view">${e.t==='gol'?'⚽':e.t==='giallo'?'🟨':'🟥'} ${e.p}</div>`).join('');
       html+=`<div class="match-block">
-        ${m.dt?`<div class="match-dt-label">📅 ${fmtDt(m.dt)}</div>`:''}
+        <div class="match-top-row">
+          <div class="match-dt-label">${m.dt?`📅 ${fmtDt(m.dt)}`:'📅 Data/ora da definire'}</div>
+          ${statusBadge(m)}
+        </div>
         <div class="match-row">
           <span class="team-name" style="font-size:13px">${ta||'—'}</span>
           <div class="score-display">
-            <div class="score-box">${sc.goA}</div>
-            <span class="score-sep">–</span>
-            <div class="score-box">${sc.goB}</div>
+            <div class="score-box ${m.played?'':'pending'}">${m.played ? sc.goA : '–'}</div>
+            <span class="score-sep">-</span>
+            <div class="score-box ${m.played?'':'pending'}">${m.played ? sc.goB : '–'}</div>
           </div>
           <span class="team-name right" style="font-size:13px">${tb||'—'}</span>
         </div>
         <div class="cards-info-row">
-          <div><span class="cards-info">🟨 ${sc.giA} &nbsp; 🟥 ${sc.roA}</span><div class="ev-list-view">${eventsA}</div></div>
-          <div style="text-align:right"><span class="cards-info">🟨 ${sc.giB} &nbsp; 🟥 ${sc.roB}</span><div class="ev-list-view">${eventsB}</div></div>
+          <div><span class="cards-info">🟨 ${m.played ? sc.giA : 0} &nbsp; 🟥 ${m.played ? sc.roA : 0}</span><div class="ev-list-view">${eventsA}</div></div>
+          <div style="text-align:right"><span class="cards-info">🟨 ${m.played ? sc.giB : 0} &nbsp; 🟥 ${m.played ? sc.roB : 0}</span><div class="ev-list-view">${eventsB}</div></div>
         </div>
         ${winner}
       </div>`;
@@ -231,7 +284,8 @@ function getStandings(g){
   const st={};
   S.squadre[g].forEach((_,i)=>{const n=sqName(g,i);st[n]={pts:0,pg:0,gs:0,gc:0,gd:0,gi:0,ro:0};});
   PAIRS.forEach(([a,b],i)=>{
-    const key=mkey(`G${g}`,i);const m=mdata(key);const sc=calcScore(m);
+    const key=mkey(`G${g}`,i);const m=mdata(key);if(!m.played) return;
+    const sc=calcScore(m);
     const ta=sqName(g,a),tb=sqName(g,b);
     st[ta].pg++;st[tb].pg++;
     st[ta].gs+=sc.goA;st[ta].gc+=sc.goB;st[ta].gd+=sc.goA-sc.goB;
@@ -262,7 +316,7 @@ function renderMarcatori(){
   const players={},teamCards={};
   const allKeys=[...GIRONI.flatMap(g=>PAIRS.map((_,i)=>mkey(`G${g}`,i))),...KO_PHASES.flatMap(ph=>Array.from({length:ph.n},(_,i)=>mkey(ph.phase,i)))];
   allKeys.forEach(key=>{
-    const m=S.matches&&S.matches[key];if(!m)return;
+    const m=S.matches&&S.matches[key];if(!m || !m.played) return;
     const kt=S.koTeams&&S.koTeams[key];const parts=key.split('_');const phase=parts[0];const idx=parseInt(parts[1]);
     let ta='',tb='';
     if(phase.startsWith('G')){const g=phase[1];const p=PAIRS[idx];if(p){ta=sqName(g,p[0]);tb=sqName(g,p[1]);}}
@@ -311,7 +365,6 @@ function renderBanco(){
 }
 
 const renders={gironi:renderGironi,ko:renderKO,classifiche:renderClassifiche,marcatori:renderMarcatori,banco:renderBanco};
-
 subscribeLive();
 </script>
 </body>
