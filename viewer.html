@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Torneo Sagra del CEO — Live</title>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;900&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
 <style>
 :root {
   --accent: #9b2d5a;
@@ -23,6 +24,7 @@
   --radius: 10px;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
+.ig-icon { background: linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
 body { font-family: 'Barlow', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
 .header { background: var(--bg2); border-bottom: 2px solid var(--accent-dark); padding: 1rem 1.5rem; display: flex; align-items: center; gap: 1rem; }
 .header-icon { font-size: 2rem; line-height: 1; }
@@ -93,7 +95,7 @@ tr:last-child td { border-bottom: none; }
   <button class="nav-btn" onclick="showTab('ko',this)">Eliminazione Diretta</button>
   <button class="nav-btn" onclick="showTab('classifiche',this)">Classifiche</button>
   <button class="nav-btn" onclick="showTab('marcatori',this)">Marcatori & Cartellini</button>
-  <button class="nav-btn" onclick="showTab('banco',this)">🍺 Coppa Banco</button>
+  <button class="nav-btn" onclick="showTab('banco',this)"><i class="ti ti-brand-instagram ig-icon"></i> Coppa Social</button>
 </nav>
 <main class="main">
   <div id="gironi" class="section active"></div>
@@ -352,8 +354,8 @@ function renderBanco(){
   const teams=GIRONI.flatMap(g=>S.squadre[g].map((_,i)=>sqName(g,i)));
   const sorted=[...teams].sort((a,b)=>(S.banco[b]||0)-(S.banco[a]||0));
   const c=document.createElement('div');c.className='card';
-  let html=`<div class="card-title">🍺 Coppa Banco — Classifica Consumazioni</div>
-  <table><thead><tr><th style="width:36px">#</th><th>Squadra</th><th style="text-align:center">🍺 Consumazioni</th></tr></thead><tbody>`;
+  let html=`<div class="card-title"><i class="ti ti-brand-instagram ig-icon" style="font-size:20px"></i> Coppa Social — Classifica Punti Social</div>
+  <table><thead><tr><th style="width:36px">#</th><th>Squadra</th><th style="text-align:center"><i class="ti ti-brand-instagram ig-icon"></i> Punti Social</th></tr></thead><tbody>`;
   sorted.forEach((team,i)=>{
     const count=S.banco[team]||0;
     const medal=i===0?'🥇':i===1?'🥈':i===2?'🥉':`${i+1}`;
