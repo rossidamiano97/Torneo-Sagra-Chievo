@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Torneo Sagra del CEO</title>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;900&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
 <style>
 :root {
   --accent: #9b2d5a;
@@ -24,16 +23,9 @@
   --radius: 10px;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
-.ig-icon { background: linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
-.team-drag-block { border-radius: 6px; border: 1px solid transparent; transition: border-color .15s, background .15s; padding: 4px 4px 4px 0; margin-bottom: 14px; }
-.team-drag-block.drag-over { border-color: var(--accent-light); background: rgba(194,64,111,.08); }
-.team-drag-block[draggable="true"] { cursor: default; }
-.drag-handle { cursor: grab; color: var(--text3); font-size: 18px; line-height: 1; padding: 0 8px 0 4px; user-select: none; flex-shrink: 0; align-self: flex-start; padding-top: 2px; }
-.drag-handle:active { cursor: grabbing; }
-.team-drag-inner { flex: 1; min-width: 0; }
 body { font-family: 'Barlow', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
 .header { background: var(--bg2); border-bottom: 2px solid var(--accent-dark); padding: 1rem 1.5rem; display: flex; align-items: center; gap: 1rem; }
-.header-icon { font-size: 2rem; line-height: 1; }
+.header-icon { height: 52px; width: 52px; object-fit: contain; filter: brightness(0) invert(1); }
 .header-title { font-family: 'Barlow Condensed', sans-serif; font-size: 1.9rem; font-weight: 900; text-transform: uppercase; letter-spacing: .04em; color: var(--white); line-height: 1; }
 .header-sub { font-size: 12px; color: var(--text3); letter-spacing: .05em; text-transform: uppercase; margin-top: 2px; }
 .header-badge { margin-left: auto; font-family: 'Barlow Condensed', sans-serif; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; color: var(--accent-light); background: var(--bg3); border: 1px solid var(--accent-dark); border-radius: 20px; padding: 4px 12px; white-space: nowrap; }
@@ -123,7 +115,7 @@ tr:last-child td { border-bottom: none; }
 
 <div id="app-shell" class="app-hidden">
   <div class="header">
-    <div class="header-icon">⚽</div>
+    <img src="Logo.jpeg" alt="Logo Torneo" class="header-icon">
     <div>
       <div class="header-title">Torneo Sagra del CEO</div>
       <div class="header-sub">Pannello di gestione</div>
@@ -136,8 +128,7 @@ tr:last-child td { border-bottom: none; }
     <button class="nav-btn" onclick="showTab('ko',this)">Eliminazione Diretta</button>
     <button class="nav-btn" onclick="showTab('classifiche',this)">Classifiche</button>
     <button class="nav-btn" onclick="showTab('marcatori',this)">Marcatori & Cartellini</button>
-    <button class="nav-btn" onclick="showTab('banco',this)"><i class="ti ti-brand-instagram ig-icon"></i> Coppa Social</button>
-    <button class="nav-btn" onclick="showTab('bancobeer',this)">🍺 Coppa Banco</button>
+    <button class="nav-btn" onclick="showTab('banco',this)">🍺 Coppa Banco</button>
   </nav>
   <div class="status-row"><span class="status-pill"><span id="sync-dot" class="status-dot"></span><span id="sync-label">In attesa di sincronizzazione</span></span><span>Admin online condiviso</span></div>
   <main class="main">
@@ -147,7 +138,6 @@ tr:last-child td { border-bottom: none; }
     <div id="classifiche" class="section"></div>
     <div id="marcatori" class="section"></div>
     <div id="banco" class="section"></div>
-    <div id="bancobeer" class="section"></div>
   </main>
   <div class="modal-bg" id="modal-bg"><div class="modal" id="modal-inner"></div></div>
 </div>
@@ -168,7 +158,7 @@ const initState=()=>({
     A:[{name:'',players:[]},{name:'',players:[]},{name:'',players:[]},{name:'',players:[]}],
     B:[{name:'',players:[]},{name:'',players:[]},{name:'',players:[]},{name:'',players:[]}],
     C:[{name:'',players:[]},{name:'',players:[]},{name:'',players:[]},{name:'',players:[]}]
-  },matches:{},koTeams:{},banco:{},social:{}
+  },matches:{},koTeams:{},banco:{}
 });
 const TEAM_PRESET = {
   "A": [
@@ -442,8 +432,7 @@ function normalizeState(v){
     squadre: {A:[], B:[], C:[]},
     matches: (src.matches && typeof src.matches === 'object') ? src.matches : {},
     koTeams: (src.koTeams && typeof src.koTeams === 'object') ? src.koTeams : {},
-    banco: (src.banco && typeof src.banco === 'object') ? src.banco : {},
-    social: (src.social && typeof src.social === 'object') ? src.social : {}
+    banco: (src.banco && typeof src.banco === 'object') ? src.banco : {}
   };
   GIRONI.forEach(g => {
     const arr = toArr(src.squadre && src.squadre[g]);
@@ -578,17 +567,6 @@ function bancoSet(team, value){
   S.banco[key] = Math.max(0, Number(value) || 0);
 }
 
-function socialGet(team){
-  if(!S.social || typeof S.social !== 'object') S.social = {};
-  const key = bancoKey(team);
-  return Number(S.social[key] || 0);
-}
-function socialSet(team, value){
-  if(!S.social || typeof S.social !== 'object') S.social = {};
-  const key = bancoKey(team);
-  S.social[key] = Math.max(0, Number(value) || 0);
-}
-
 function showTab(t,el){
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
   document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
@@ -596,12 +574,6 @@ function showTab(t,el){
   document.getElementById(t).classList.add('active');
   renders[t]&&renders[t]();
 }
-
-let dragSrc=null;
-function onDragStart(e,g,si){dragSrc={g,si};e.dataTransfer.effectAllowed='move';setTimeout(()=>e.target.closest('.team-drag-block').style.opacity='0.4',0);}
-function onDragEnd(e){const el=e.target.closest('.team-drag-block');if(el)el.style.opacity='1';document.querySelectorAll('.team-drag-block').forEach(b=>b.classList.remove('drag-over'));}
-function onDragOver(e,g,si){e.preventDefault();e.dataTransfer.dropEffect='move';document.querySelectorAll('.team-drag-block').forEach(b=>b.classList.remove('drag-over'));e.currentTarget.classList.add('drag-over');}
-function onDrop(e,g,si){e.stopPropagation();document.querySelectorAll('.team-drag-block').forEach(b=>b.classList.remove('drag-over'));if(!dragSrc||dragSrc.g!==g||dragSrc.si===si)return;const tmp=S.squadre[g][dragSrc.si];S.squadre[g][dragSrc.si]=S.squadre[g][si];S.squadre[g][si]=tmp;dragSrc=null;save();renderSquadre();}
 
 function renderSquadre(){
   const el=document.getElementById('squadre');
@@ -613,14 +585,11 @@ function renderSquadre(){
     const c=document.createElement('div');c.className='card';
     let html=`<div class="card-title">Girone ${g}</div>`;
     toArr(S.squadre[g]).forEach((sq,si)=>{
-      html+=`<div class="team-drag-block" draggable="true" ondragstart="onDragStart(event,'${g}',${si})" ondragend="onDragEnd(event)" ondragover="onDragOver(event,'${g}',${si})" ondrop="onDrop(event,'${g}',${si})" style="display:flex;align-items:flex-start">
-        <span class="drag-handle" title="Trascina per riordinare">⠿</span>
-        <div class="team-drag-inner">
-          <div style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Squadra ${si+1}</div>
-          <input type="text" id="sqn-${g}-${si}" value="${sq.name}" placeholder="Nome squadra" style="margin-bottom:6px" onchange="updateTeamName('${g}',${si},this.value)">
-          <div id="players-${g}-${si}"></div>
-          <button class="btn" style="width:100%;font-size:12px;margin-top:4px" onclick="addPlayer('${g}',${si})">+ Aggiungi giocatore</button>
-        </div>
+      html+=`<div style="margin-bottom:14px">
+        <div style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Squadra ${si+1}</div>
+        <input type="text" id="sqn-${g}-${si}" value="${sq.name}" placeholder="Nome squadra" style="margin-bottom:6px" onchange="updateTeamName('${g}',${si},this.value)">
+        <div id="players-${g}-${si}"></div>
+        <button class="btn" style="width:100%;font-size:12px;margin-top:4px" onclick="addPlayer('${g}',${si})">+ Aggiungi giocatore</button>
       </div>`;
     });
     c.innerHTML=html;grid.appendChild(c);
@@ -837,42 +806,8 @@ function renderMarcatori(){
 }
 
 function getAllTeams(){return GIRONI.flatMap(g=>toArr(S.squadre[g]).map((_,i)=>sqName(g,i)));}
-
 function renderBanco(){
   const el=document.getElementById('banco');el.innerHTML='';
-  if(!S.social || typeof S.social !== 'object')S.social={};
-  const teams=getAllTeams();
-  const sorted=[...teams].sort((a,b)=>socialGet(b)-socialGet(a));
-  const c=document.createElement('div');c.className='card';
-  let html=`<div class="card-title"><i class="ti ti-brand-instagram ig-icon" style="font-size:20px"></i> Coppa Social — Classifica Punti Social</div>
-  <table><thead><tr><th style="width:36px">#</th><th>Squadra</th><th style="text-align:center"><i class="ti ti-brand-instagram ig-icon"></i> Punti Social</th><th style="text-align:center;width:200px">Aggiungi</th></tr></thead><tbody>`;
-  sorted.forEach((team,i)=>{
-    const count=socialGet(team);
-    const medal=i===0?'🥇':i===1?'🥈':i===2?'🥉':`${i+1}`;
-    const rowCls=i===0?'tr-gold':i===1?'tr-silver':'';
-    html+=`<tr class="${rowCls}">
-      <td style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700">${medal}</td>
-      <td><strong>${team}</strong></td>
-      <td style="text-align:center"><span style="font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:900;color:var(--yellow)">${count}</span></td>
-      <td style="text-align:center">
-        <div style="display:flex;align-items:center;justify-content:center;gap:5px">
-          <button class="btn" style="padding:4px 10px;font-size:18px;line-height:1" onclick="socialDelta('${team}',-1)">−</button>
-          <select id="social-qty-${i}" style="width:58px;padding:4px;font-size:13px;text-align:center">
-            <option value="1">+1</option><option value="2">+2</option><option value="3">+3</option><option value="5">+5</option><option value="10">+10</option>
-          </select>
-          <button class="btn btn-accent" style="padding:4px 12px;font-size:14px;font-weight:700" onclick="socialAdd('${team}',${i})">+</button>
-        </div>
-      </td>
-    </tr>`;
-  });
-  html+=`</tbody></table><div style="margin-top:1rem;text-align:center;font-size:12px;color:var(--text3)">Totale punti social torneo: <strong style="color:var(--text2)">${teams.reduce((sum,team)=>sum+socialGet(team),0)}</strong></div>`;
-  c.innerHTML=html;el.appendChild(c);
-}
-function socialAdd(team,rowIdx){const qty=parseInt(document.getElementById(`social-qty-${rowIdx}`)?.value||'1');socialSet(team,socialGet(team)+qty);save().then(renderBanco);}
-function socialDelta(team,delta){socialSet(team,socialGet(team)+delta);save().then(renderBanco);}
-
-function renderBancoBeer(){
-  const el=document.getElementById('bancobeer');el.innerHTML='';
   if(!S.banco || typeof S.banco !== 'object')S.banco={};
   const teams=getAllTeams();
   const sorted=[...teams].sort((a,b)=>bancoGet(b)-bancoGet(a));
@@ -901,10 +836,10 @@ function renderBancoBeer(){
   html+=`</tbody></table><div style="margin-top:1rem;text-align:center;font-size:12px;color:var(--text3)">Totale consumazioni torneo: <strong style="color:var(--text2)">${teams.reduce((sum,team)=>sum+bancoGet(team),0)}</strong></div>`;
   c.innerHTML=html;el.appendChild(c);
 }
-function bancoAdd(team,rowIdx){const qty=parseInt(document.getElementById(`banco-qty-${rowIdx}`)?.value||'1');bancoSet(team, bancoGet(team)+qty);save().then(renderBancoBeer);}
-function bancoDelta(team,delta){bancoSet(team, bancoGet(team)+delta);save().then(renderBancoBeer);}
+function bancoAdd(team,rowIdx){const qty=parseInt(document.getElementById(`banco-qty-${rowIdx}`)?.value||'1');bancoSet(team, bancoGet(team)+qty);save().then(renderBanco);}
+function bancoDelta(team,delta){bancoSet(team, bancoGet(team)+delta);save().then(renderBanco);}
 
-const renders={squadre:renderSquadre,gironi:renderGironi,ko:renderKO,classifiche:renderClassifiche,marcatori:renderMarcatori,banco:renderBanco,bancobeer:renderBancoBeer};
+const renders={squadre:renderSquadre,gironi:renderGironi,ko:renderKO,classifiche:renderClassifiche,marcatori:renderMarcatori,banco:renderBanco};
 </script>
 </body>
 </html>
