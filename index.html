@@ -25,7 +25,7 @@
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: 'Barlow', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
 .header { background: var(--bg2); border-bottom: 2px solid var(--accent-dark); padding: 1rem 1.5rem; display: flex; align-items: center; gap: 1rem; }
-.header-icon { height: 52px; width: 52px; object-fit: contain; filter: brightness(0) invert(1); }
+.header-icon { font-size: 2rem; line-height: 1; }
 .header-title { font-family: 'Barlow Condensed', sans-serif; font-size: 1.9rem; font-weight: 900; text-transform: uppercase; letter-spacing: .04em; color: var(--white); line-height: 1; }
 .header-sub { font-size: 12px; color: var(--text3); letter-spacing: .05em; text-transform: uppercase; margin-top: 2px; }
 .header-badge { margin-left: auto; font-family: 'Barlow Condensed', sans-serif; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; color: var(--accent-light); background: var(--bg3); border: 1px solid var(--accent-dark); border-radius: 20px; padding: 4px 12px; white-space: nowrap; }
@@ -115,7 +115,7 @@ tr:last-child td { border-bottom: none; }
 
 <div id="app-shell" class="app-hidden">
   <div class="header">
-    <img src="Logo.jpeg" alt="Logo Torneo" class="header-icon">
+    <div class="header-icon">⚽</div>
     <div>
       <div class="header-title">Torneo Sagra del CEO</div>
       <div class="header-sub">Pannello di gestione</div>
@@ -813,22 +813,28 @@ function renderBanco(){
   const sorted=[...teams].sort((a,b)=>bancoGet(b)-bancoGet(a));
   const c=document.createElement('div');c.className='card';
   let html=`<div class="card-title">🍺 Coppa Banco — Classifica Consumazioni</div>
-  <table><thead><tr><th style="width:36px">#</th><th>Squadra</th><th style="text-align:center">🍺 Tot.</th><th style="text-align:center;width:200px">Aggiungi</th></tr></thead><tbody>`;
+  <table><thead><tr><th style="width:36px">#</th><th>Squadra</th><th style="text-align:center">🍺 Totale</th><th style="text-align:center;width:220px">Modifica</th></tr></thead><tbody>`;
   sorted.forEach((team,i)=>{
     const count=bancoGet(team);
     const medal=i===0?'🥇':i===1?'🥈':i===2?'🥉':`${i+1}`;
     const rowCls=i===0?'tr-gold':i===1?'tr-silver':'';
+    const teamEsc=team.replace(/'/g,"\\'");
     html+=`<tr class="${rowCls}">
       <td style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700">${medal}</td>
       <td><strong>${team}</strong></td>
-      <td style="text-align:center"><span style="font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:900;color:var(--yellow)">${count}</span></td>
+      <td style="text-align:center">
+        <input type="number" id="banco-direct-${i}" value="${count}" min="0"
+          style="width:72px;text-align:center;font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:900;color:var(--yellow);background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:4px 6px"
+          onchange="bancoSetDirect('${teamEsc}',this.value)"
+          onblur="bancoSetDirect('${teamEsc}',this.value)">
+      </td>
       <td style="text-align:center">
         <div style="display:flex;align-items:center;justify-content:center;gap:5px">
-          <button class="btn" style="padding:4px 10px;font-size:18px;line-height:1" onclick="bancoDelta('${team}',-1)">−</button>
+          <button class="btn" style="padding:4px 10px;font-size:18px;line-height:1" onclick="bancoDelta('${teamEsc}',-1)">−</button>
           <select id="banco-qty-${i}" style="width:58px;padding:4px;font-size:13px;text-align:center">
             <option value="1">+1</option><option value="2">+2</option><option value="3">+3</option><option value="5">+5</option><option value="10">+10</option>
           </select>
-          <button class="btn btn-accent" style="padding:4px 12px;font-size:14px;font-weight:700" onclick="bancoAdd('${team}',${i})">+</button>
+          <button class="btn btn-accent" style="padding:4px 12px;font-size:14px;font-weight:700" onclick="bancoAdd('${teamEsc}',${i})">+</button>
         </div>
       </td>
     </tr>`;
@@ -836,6 +842,7 @@ function renderBanco(){
   html+=`</tbody></table><div style="margin-top:1rem;text-align:center;font-size:12px;color:var(--text3)">Totale consumazioni torneo: <strong style="color:var(--text2)">${teams.reduce((sum,team)=>sum+bancoGet(team),0)}</strong></div>`;
   c.innerHTML=html;el.appendChild(c);
 }
+function bancoSetDirect(team,value){const v=Math.max(0,parseInt(value)||0);bancoSet(team,v);save();}
 function bancoAdd(team,rowIdx){const qty=parseInt(document.getElementById(`banco-qty-${rowIdx}`)?.value||'1');bancoSet(team, bancoGet(team)+qty);save().then(renderBanco);}
 function bancoDelta(team,delta){bancoSet(team, bancoGet(team)+delta);save().then(renderBanco);}
 
