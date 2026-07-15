@@ -93,14 +93,14 @@ tr:last-child td { border-bottom: none; }
   <button class="nav-btn" onclick="showTab('ko',this)">Eliminazione Diretta</button>
   <button class="nav-btn" onclick="showTab('classifiche',this)">Classifiche</button>
   <button class="nav-btn" onclick="showTab('marcatori',this)">Marcatori & Cartellini</button>
-  <button class="nav-btn" onclick="showTab('banco',this)">🍺 Coppa Banco</button>
+  <button class="nav-btn" onclick="showTab('social',this)">📸 Coppa Social</button>
 </nav>
 <main class="main">
   <div id="gironi" class="section active"></div>
   <div id="ko" class="section"></div>
   <div id="classifiche" class="section"></div>
   <div id="marcatori" class="section"></div>
-  <div id="banco" class="section"></div>
+  <div id="social" class="section"></div>
 </main>
 
 <script src="https://www.gstatic.com/firebasejs/12.2.0/firebase-app-compat.js"></script>
@@ -159,7 +159,8 @@ function normalizeState(v){
     squadre,
     matches,
     koTeams: (src.koTeams && typeof src.koTeams === 'object') ? src.koTeams : {},
-    banco: (src.banco && typeof src.banco === 'object') ? src.banco : {}
+    banco: (src.banco && typeof src.banco === 'object') ? src.banco : {},
+    social: (src.social && typeof src.social === 'object') ? src.social : {}
   };
 }
 
@@ -346,25 +347,35 @@ function renderMarcatori(){
   h2+=`</tbody></table>`;c2.innerHTML=h2;el.appendChild(c2);
 }
 
-function renderBanco(){
-  const el=document.getElementById('banco');el.innerHTML='';
-  if(!S||!S.banco){el.innerHTML=`<div class="no-data">Nessun dato disponibile</div>`;return;}
+function socialKey(team){
+  return String(team || '')
+    .trim()
+    .replace(/[.#$/\[\]]/g, '_')
+    .replace(/\s+/g, ' ');
+}
+function socialGet(team){
+  if(!S || !S.social || typeof S.social !== 'object') return 0;
+  return Number(S.social[socialKey(team)] || 0);
+}
+function renderSocial(){
+  const el=document.getElementById('social');el.innerHTML='';
+  if(!S||!S.social){el.innerHTML=`<div class="no-data">Nessun dato disponibile</div>`;return;}
   const teams=GIRONI.flatMap(g=>S.squadre[g].map((_,i)=>sqName(g,i)));
-  const sorted=[...teams].sort((a,b)=>(S.banco[b]||0)-(S.banco[a]||0));
+  const sorted=[...teams].sort((a,b)=>socialGet(b)-socialGet(a));
   const c=document.createElement('div');c.className='card';
-  let html=`<div class="card-title">🍺 Coppa Banco — Classifica Consumazioni</div>
-  <table><thead><tr><th style="width:36px">#</th><th>Squadra</th><th style="text-align:center">🍺 Consumazioni</th></tr></thead><tbody>`;
+  let html=`<div class="card-title">📸 Coppa Social — Classifica Punti Social</div>
+  <table><thead><tr><th style="width:36px">#</th><th>Squadra</th><th style="text-align:center">📸 Punti Social</th></tr></thead><tbody>`;
   sorted.forEach((team,i)=>{
-    const count=S.banco[team]||0;
+    const count=socialGet(team);
     const medal=i===0?'🥇':i===1?'🥈':i===2?'🥉':`${i+1}`;
     const rowCls=i===0?'tr-gold':i===1?'tr-silver':'';
     html+=`<tr class="${rowCls}"><td style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700">${medal}</td><td><strong>${team}</strong></td><td style="text-align:center"><span style="font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:900;color:var(--yellow)">${count}</span></td></tr>`;
   });
-  html+=`</tbody></table><div style="margin-top:1rem;text-align:center;font-size:12px;color:var(--text3)">Totale consumazioni torneo: <strong style="color:var(--text2)">${Object.values(S.banco).reduce((a,b)=>a+b,0)}</strong></div>`;
+  html+=`</tbody></table><div style="margin-top:1rem;text-align:center;font-size:12px;color:var(--text3)">Totale punti social torneo: <strong style="color:var(--text2)">${teams.reduce((sum,team)=>sum+socialGet(team),0)}</strong></div>`;
   c.innerHTML=html;el.appendChild(c);
 }
 
-const renders={gironi:renderGironi,ko:renderKO,classifiche:renderClassifiche,marcatori:renderMarcatori,banco:renderBanco};
+const renders={gironi:renderGironi,ko:renderKO,classifiche:renderClassifiche,marcatori:renderMarcatori,social:renderSocial};
 subscribeLive();
 </script>
 </body>
