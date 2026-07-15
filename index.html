@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Torneo Sagra del CEO</title>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;900&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
 <style>
 :root {
   --accent: #9b2d5a;
@@ -23,9 +24,11 @@
   --radius: 10px;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
+.ig-icon { background: linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
 body { font-family: 'Barlow', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
 .header { background: var(--bg2); border-bottom: 2px solid var(--accent-dark); padding: 1rem 1.5rem; display: flex; align-items: center; gap: 1rem; }
-.header-icon { font-size: 2rem; line-height: 1; }
+.header-icon { display: flex; align-items: center; }
+.header-icon img { height: 3rem; width: auto; display: block; filter: brightness(0) invert(1); }
 .header-title { font-family: 'Barlow Condensed', sans-serif; font-size: 1.9rem; font-weight: 900; text-transform: uppercase; letter-spacing: .04em; color: var(--white); line-height: 1; }
 .header-sub { font-size: 12px; color: var(--text3); letter-spacing: .05em; text-transform: uppercase; margin-top: 2px; }
 .header-badge { margin-left: auto; font-family: 'Barlow Condensed', sans-serif; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; color: var(--accent-light); background: var(--bg3); border: 1px solid var(--accent-dark); border-radius: 20px; padding: 4px 12px; white-space: nowrap; }
@@ -40,8 +43,8 @@ body { font-family: 'Barlow', sans-serif; background: var(--bg); color: var(--te
 .grid3 { display: grid; grid-template-columns: repeat(3,1fr); gap: .75rem; }
 .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
 @media(max-width:640px){ .grid3,.grid2 { grid-template-columns: 1fr; } }
-input[type=text], input[type=password], input[type=datetime-local], select { width: 100%; padding: 7px 11px; border: 1px solid var(--border); border-radius: 6px; background: var(--bg3); color: var(--text); font-size: 14px; font-family: 'Barlow', sans-serif; outline: none; transition: border-color .15s; }
-input[type=text]:focus, input[type=password]:focus, input[type=datetime-local]:focus, select:focus { border-color: var(--accent-light); }
+input[type=text], input[type=password], input[type=datetime-local], input[type=number], select { width: 100%; padding: 7px 11px; border: 1px solid var(--border); border-radius: 6px; background: var(--bg3); color: var(--text); font-size: 14px; font-family: 'Barlow', sans-serif; outline: none; transition: border-color .15s; }
+input[type=text]:focus, input[type=password]:focus, input[type=datetime-local]:focus, input[type=number]:focus, select:focus { border-color: var(--accent-light); }
 select option { background: var(--bg2); }
 input[type=datetime-local]::-webkit-calendar-picker-indicator { filter: invert(0.6); cursor: pointer; }
 .btn { padding: 8px 18px; border: 1px solid var(--border); border-radius: 6px; background: var(--bg3); color: var(--text); cursor: pointer; font-size: 13px; font-family: 'Barlow', sans-serif; font-weight: 500; transition: background .15s, border-color .15s; }
@@ -66,6 +69,11 @@ input[type=datetime-local]::-webkit-calendar-picker-indicator { filter: invert(0
 .player-row { display: flex; gap: 6px; align-items: center; margin-bottom: 6px; }
 .player-row input { flex: 1; }
 .del-btn { cursor: pointer; color: var(--red); font-size: 20px; line-height: 1; padding: 0 6px; flex-shrink: 0; background: none; border: none; }
+.order-row { display: flex; align-items: center; gap: 10px; padding: 9px 10px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg3); margin-bottom: 8px; }
+.order-pos { flex-shrink: 0; width: 74px; }
+.order-pos select { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; text-align: center; padding: 5px 4px; font-size: 14px; }
+.order-name { flex: 1; font-weight: 600; font-size: 14px; color: var(--text); min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.order-players { font-size: 11px; color: var(--text3); white-space: nowrap; }
 table { width: 100%; border-collapse: collapse; font-size: 13px; }
 th { font-family: 'Barlow Condensed', sans-serif; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .05em; color: var(--text3); padding: 6px 10px; border-bottom: 1px solid var(--border); text-align: left; }
 td { padding: 7px 10px; border-bottom: 1px solid var(--border); }
@@ -115,7 +123,7 @@ tr:last-child td { border-bottom: none; }
 
 <div id="app-shell" class="app-hidden">
   <div class="header">
-   <div class="header-icon"><img src="logo.jpeg" alt="Torneo Sagra del CEO" style="height:3rem;width:auto;display:block;filter:brightness(0) invert(1)"></div>
+    <div class="header-icon"><img src="logo.jpeg" alt="Torneo Sagra del CEO"></div>
     <div>
       <div class="header-title">Torneo Sagra del CEO</div>
       <div class="header-sub">Pannello di gestione</div>
@@ -123,20 +131,24 @@ tr:last-child td { border-bottom: none; }
     <div class="header-badge">🔧 Admin</div>
   </div>
   <nav class="nav">
-    <button class="nav-btn active" onclick="showTab('squadre',this)">Squadre & Rose</button>
+    <button class="nav-btn active" onclick="showTab('squadre',this)">Squadre</button>
+    <button class="nav-btn" onclick="showTab('rose',this)">Rose</button>
     <button class="nav-btn" onclick="showTab('gironi',this)">Gironi</button>
     <button class="nav-btn" onclick="showTab('ko',this)">Eliminazione Diretta</button>
     <button class="nav-btn" onclick="showTab('classifiche',this)">Classifiche</button>
     <button class="nav-btn" onclick="showTab('marcatori',this)">Marcatori & Cartellini</button>
+    <button class="nav-btn" onclick="showTab('social',this)"><i class="ti ti-brand-instagram ig-icon"></i> Coppa Social</button>
     <button class="nav-btn" onclick="showTab('banco',this)">🍺 Coppa Banco</button>
   </nav>
   <div class="status-row"><span class="status-pill"><span id="sync-dot" class="status-dot"></span><span id="sync-label">In attesa di sincronizzazione</span></span><span>Admin online condiviso</span></div>
   <main class="main">
     <div id="squadre" class="section active"></div>
+    <div id="rose" class="section"></div>
     <div id="gironi" class="section"></div>
     <div id="ko" class="section"></div>
     <div id="classifiche" class="section"></div>
     <div id="marcatori" class="section"></div>
+    <div id="social" class="section"></div>
     <div id="banco" class="section"></div>
   </main>
   <div class="modal-bg" id="modal-bg"><div class="modal" id="modal-inner"></div></div>
@@ -158,235 +170,35 @@ const initState=()=>({
     A:[{name:'',players:[]},{name:'',players:[]},{name:'',players:[]},{name:'',players:[]}],
     B:[{name:'',players:[]},{name:'',players:[]},{name:'',players:[]},{name:'',players:[]}],
     C:[{name:'',players:[]},{name:'',players:[]},{name:'',players:[]},{name:'',players:[]}]
-  },matches:{},koTeams:{},banco:{}
+  },matches:{},koTeams:{},banco:{},social:{}
 });
 const TEAM_PRESET = {
   "A": [
-    {
-      "name": "Civico 93",
-      "players": [
-        "GERVASINI TOMMASO",
-        "TOMMASI PAOLO",
-        "BRAGGIO RICCARDO",
-        "GUARISE BRIAN",
-        "PIETROPOLI FEDERICO",
-        "LUPI PIETRO",
-        "MASSOCCO LORENZO",
-        "MERCI MARCO",
-        "SANI FILIPPO",
-        "CAPRIOTTI ALBERTO"
-      ]
-    },
-    {
-      "name": "Herta Vernello",
-      "players": [
-        "REFFOSCO LEONARDO",
-        "PUGGIA MATTIA",
-        "ZAMOIERI MATTEO",
-        "DINDO MICHELE",
-        "EL HANAFI SEBTI MOSTAFA",
-        "GJERGJI RIGERS",
-        "CASERINI THOMAS",
-        "BIASIA GABRIELE",
-        "CABRAS GIOVANNI",
-        "FACCIO ANDREA",
-        "TOSI FILIPPO",
-        "BERTAGNOLI IVAN",
-        "ZAMPIERI MARCO",
-        "VERGA STEFANO",
-        "FERRARI MATTEO"
-      ]
-    },
-    {
-      "name": "Tartufon Fc",
-      "players": [
-        "DAMOLI TOMMASO",
-        "PEPE LUCA",
-        "INGRASSIA LORENZO",
-        "CARRUBBA DAVIDE",
-        "FILIPPO PIGHI",
-        "LANDI PIETRO",
-        "BATTISTELLO JACOPO",
-        "CAVAZZA RICCARDO",
-        "MARIO BULIGA STEFAN",
-        "ZOCCATELLI ALESSANDRO",
-        "CERPELLONI MATTIA",
-        "MACCACARO TOMMASO"
-      ]
-    },
-    {
-      "name": "Mortadhellas",
-      "players": [
-        "EPIBOLI DAVIDE",
-        "CIENO SIMONE",
-        "PANATO MATTIA",
-        "PASINATO PIETRO",
-        "CANZIAN MICHELE",
-        "BERSAN TOMMASO",
-        "VENERI DAMIANO",
-        "AVESANI ELIA",
-        "CUSINI FILIPPO",
-        "NANI TOMMASO",
-        "SANTI FILIPPO"
-      ]
-    }
+    {"name": "Civico 93","players": ["GERVASINI TOMMASO","TOMMASI PAOLO","BRAGGIO RICCARDO","GUARISE BRIAN","PIETROPOLI FEDERICO","LUPI PIETRO","MASSOCCO LORENZO","MERCI MARCO","SANI FILIPPO","CAPRIOTTI ALBERTO"]},
+    {"name": "Herta Vernello","players": ["REFFOSCO LEONARDO","PUGGIA MATTIA","ZAMOIERI MATTEO","DINDO MICHELE","EL HANAFI SEBTI MOSTAFA","GJERGJI RIGERS","CASERINI THOMAS","BIASIA GABRIELE","CABRAS GIOVANNI","FACCIO ANDREA","TOSI FILIPPO","BERTAGNOLI IVAN","ZAMPIERI MARCO","VERGA STEFANO","FERRARI MATTEO"]},
+    {"name": "Tartufon Fc","players": ["DAMOLI TOMMASO","PEPE LUCA","INGRASSIA LORENZO","CARRUBBA DAVIDE","FILIPPO PIGHI","LANDI PIETRO","BATTISTELLO JACOPO","CAVAZZA RICCARDO","MARIO BULIGA STEFAN","ZOCCATELLI ALESSANDRO","CERPELLONI MATTIA","MACCACARO TOMMASO"]},
+    {"name": "Mortadhellas","players": ["EPIBOLI DAVIDE","CIENO SIMONE","PANATO MATTIA","PASINATO PIETRO","CANZIAN MICHELE","BERSAN TOMMASO","VENERI DAMIANO","AVESANI ELIA","CUSINI FILIPPO","NANI TOMMASO","SANTI FILIPPO"]}
   ],
   "B": [
-    {
-      "name": "Bar Brothers",
-      "players": [
-        "CECCHIN MATTEO",
-        "LANZA FABIO",
-        "FERRO GIACOMO",
-        "COBELLI DAVIDE",
-        "MARCHESE FEDERICO",
-        "MURA TOMMASO",
-        "MAZZONI ALESSANDRO",
-        "BEGALI ALESSANDRO",
-        "MANTOVANI MATTEO",
-        "FOSSATI LEONARDO",
-        "ZANONI MATTEO",
-        "BERTASINI LORENZO",
-        "RAIMONDI LUCA",
-        "BIONDANI MATTEO"
-      ]
-    },
-    {
-      "name": "Patatanaikos",
-      "players": [
-        "GABRIELLI SIMONE",
-        "FONTANA LUCA",
-        "FASOLI MATTEO",
-        "SONA FRANCESCO",
-        "STORTI EDOARDO",
-        "IMOLA FABIO",
-        "DOARDI MATTEO",
-        "CRISTANI FRANCESCO",
-        "SONA THOMAS",
-        "OLIVIERI MATTEO"
-      ]
-    },
-    {
-      "name": "Gos Mil Dos",
-      "players": [
-        "PRATO ALBERTO",
-        "DANESE LORENZO",
-        "BILLIANI TOMMASO",
-        "TOMMASI DAVIDE",
-        "POPA CHRISTIAN",
-        "MOTTA DAVIDE",
-        "GIARDINO LORENZO",
-        "COVELLI LEONARDO",
-        "MACCACARO LORENZO",
-        "CHELIDONIO MATTEO"
-      ]
-    },
-    {
-      "name": "Berlusca Dortmund",
-      "players": [
-        "PICCHIONI DAMIANO",
-        "TATAR RAUL GEORGE",
-        "PICCOLI GIANNI",
-        "MAGAGNA RUDY",
-        "BUONCRISTIANI PIERGIORGIO",
-        "MUSCHELLA ANTONIO",
-        "MUSCHELLA FRANCESCO",
-        "PICCOLI MARCO",
-        "POLLINA KEVIN",
-        "ROSSI LEONARDO",
-        "VITTORINI NICOLO'",
-        "FLORA VALERIO"
-      ]
-    }
+    {"name": "Bar Brothers","players": ["CECCHIN MATTEO","LANZA FABIO","FERRO GIACOMO","COBELLI DAVIDE","MARCHESE FEDERICO","MURA TOMMASO","MAZZONI ALESSANDRO","BEGALI ALESSANDRO","MANTOVANI MATTEO","FOSSATI LEONARDO","ZANONI MATTEO","BERTASINI LORENZO","RAIMONDI LUCA","BIONDANI MATTEO"]},
+    {"name": "Patatanaikos","players": ["GABRIELLI SIMONE","FONTANA LUCA","FASOLI MATTEO","SONA FRANCESCO","STORTI EDOARDO","IMOLA FABIO","DOARDI MATTEO","CRISTANI FRANCESCO","SONA THOMAS","OLIVIERI MATTEO"]},
+    {"name": "Gos Mil Dos","players": ["PRATO ALBERTO","DANESE LORENZO","BILLIANI TOMMASO","TOMMASI DAVIDE","POPA CHRISTIAN","MOTTA DAVIDE","GIARDINO LORENZO","COVELLI LEONARDO","MACCACARO LORENZO","CHELIDONIO MATTEO"]},
+    {"name": "Berlusca Dortmund","players": ["PICCHIONI DAMIANO","TATAR RAUL GEORGE","PICCOLI GIANNI","MAGAGNA RUDY","BUONCRISTIANI PIERGIORGIO","MUSCHELLA ANTONIO","MUSCHELLA FRANCESCO","PICCOLI MARCO","POLLINA KEVIN","ROSSI LEONARDO","VITTORINI NICOLO'","FLORA VALERIO"]}
   ],
   "C": [
-    {
-      "name": "C.a. Muzzoni",
-      "players": [
-        "SILLI LUCA",
-        "MENEGOTTI ALESSANDRO",
-        "INTRIERI FILIPPO",
-        "MASSOCCO MATTEO",
-        "FIUMINI RICCARDO",
-        "PARLATO ANDREA",
-        "FERRARI FILIPPO",
-        "ALDROVANDI PIETRO",
-        "GORGONE TOMMASO",
-        "FRANCO GIOELE",
-        "ZOCCA ANDREA",
-        "DE BORTOLI DIEGO",
-        "SQUARANTI LUCA"
-      ]
-    },
-    {
-      "name": "Peretti Srl",
-      "players": [
-        "PERNIGO MAURIZIO",
-        "BATTISTOLI FRANCESCO",
-        "CIRILLO PIETRO",
-        "GIACOMELLI FABIO",
-        "RASULO ANDREA",
-        "PERETTI MATTEO",
-        "LUGOBONI MATTEO",
-        "SAVIGNANO FRANCESCO",
-        "BONETTI SIMONE",
-        "TOMELLERI CARLO",
-        "MAINENTI MICHELE"
-      ]
-    },
-    {
-      "name": "Catechesi",
-      "players": [
-        "RIDOLFI TOMMASO",
-        "MORESCHI LORENZO",
-        "TRIMINI' LORENZO",
-        "OTTOLINI FILIPPO",
-        "RIGHETTI ALESSIO",
-        "BOCCIANTI FILIPPO",
-        "ZUCCONELLI TOMMASO",
-        "ZECCHINELLI TOMMASO",
-        "MARAGNO PIETRO",
-        "MAZZI MICHELE",
-        "MASSELLA JACOPO"
-      ]
-    },
-    {
-      "name": "Orti S.Z.",
-      "players": [
-        "TRUSCHELLI PIETRO",
-        "MAROSO GREGORIO",
-        "CELON AUGUSTO",
-        "MALAFA MATTEO",
-        "DALLA VIA ALESSIO",
-        "CORIGLIANO DENNY",
-        "DALLA VIA FRANCESCO",
-        "MATTEO FERONI",
-        "FERDINANDO GRIMALDI",
-        "NICOLO' DAL CORSO",
-        "RICCARDO BERTUCCO"
-      ]
-    }
+    {"name": "C.a. Muzzoni","players": ["SILLI LUCA","MENEGOTTI ALESSANDRO","INTRIERI FILIPPO","MASSOCCO MATTEO","FIUMINI RICCARDO","PARLATO ANDREA","FERRARI FILIPPO","ALDROVANDI PIETRO","GORGONE TOMMASO","FRANCO GIOELE","ZOCCA ANDREA","DE BORTOLI DIEGO","SQUARANTI LUCA"]},
+    {"name": "Peretti Srl","players": ["PERNIGO MAURIZIO","BATTISTOLI FRANCESCO","CIRILLO PIETRO","GIACOMELLI FABIO","RASULO ANDREA","PERETTI MATTEO","LUGOBONI MATTEO","SAVIGNANO FRANCESCO","BONETTI SIMONE","TOMELLERI CARLO","MAINENTI MICHELE"]},
+    {"name": "Catechesi","players": ["RIDOLFI TOMMASO","MORESCHI LORENZO","TRIMINI' LORENZO","OTTOLINI FILIPPO","RIGHETTI ALESSIO","BOCCIANTI FILIPPO","ZUCCONELLI TOMMASO","ZECCHINELLI TOMMASO","MARAGNO PIETRO","MAZZI MICHELE","MASSELLA JACOPO"]},
+    {"name": "Orti S.Z.","players": ["TRUSCHELLI PIETRO","MAROSO GREGORIO","CELON AUGUSTO","MALAFA MATTEO","DALLA VIA ALESSIO","CORIGLIANO DENNY","DALLA VIA FRANCESCO","MATTEO FERONI","FERDINANDO GRIMALDI","NICOLO' DAL CORSO","RICCARDO BERTUCCO"]}
   ]
 };
 const SCHEDULE_PRESET = {
-  "GA_0": "2025-08-25T19:30",
-  "GB_0": "2025-08-25T20:30",
-  "GC_0": "2025-08-25T21:30",
-  "GA_1": "2025-08-27T19:30",
-  "GC_1": "2025-08-27T20:30",
-  "GB_1": "2025-08-27T21:30",
-  "GC_2": "2025-08-29T19:30",
-  "GB_4": "2025-08-29T20:30",
-  "GA_3": "2025-08-29T21:30",
-  "GC_3": "2025-08-30T19:30",
-  "GA_2": "2025-08-30T20:30",
-  "GB_5": "2025-08-30T21:30",
-  "GC_4": "2025-09-01T19:30",
-  "GB_3": "2025-09-01T20:30",
-  "GA_4": "2025-09-01T21:30",
-  "GA_5": "2025-09-03T19:30",
-  "GC_5": "2025-09-03T20:30",
-  "GB_2": "2025-09-03T21:30"
+  "GA_0": "2025-08-25T19:30","GB_0": "2025-08-25T20:30","GC_0": "2025-08-25T21:30",
+  "GA_1": "2025-08-27T19:30","GC_1": "2025-08-27T20:30","GB_1": "2025-08-27T21:30",
+  "GC_2": "2025-08-29T19:30","GB_4": "2025-08-29T20:30","GA_3": "2025-08-29T21:30",
+  "GC_3": "2025-08-30T19:30","GA_2": "2025-08-30T20:30","GB_5": "2025-08-30T21:30",
+  "GC_4": "2025-09-01T19:30","GB_3": "2025-09-01T20:30","GA_4": "2025-09-01T21:30",
+  "GA_5": "2025-09-03T19:30","GC_5": "2025-09-03T20:30","GB_2": "2025-09-03T21:30"
 };
 const FIREBASE_CONFIG = {
   apiKey: "AIzaSyCAanAjLnNDFsq5JJ7gYDv3ycpfrLahiOI",
@@ -412,9 +224,7 @@ function toArr(v){
   return [];
 }
 function cloneState(v){
-  // JSON round-trip ensures no undefined/functions; Firebase is fine with this
   const s=JSON.parse(JSON.stringify(v));
-  // Ensure squadre arrays are clean
   GIRONI.forEach(g=>{
     if(s.squadre&&s.squadre[g]){
       s.squadre[g]=Array.from({length:4},(_,i)=>{
@@ -432,7 +242,8 @@ function normalizeState(v){
     squadre: {A:[], B:[], C:[]},
     matches: (src.matches && typeof src.matches === 'object') ? src.matches : {},
     koTeams: (src.koTeams && typeof src.koTeams === 'object') ? src.koTeams : {},
-    banco: (src.banco && typeof src.banco === 'object') ? src.banco : {}
+    banco: (src.banco && typeof src.banco === 'object') ? src.banco : {},
+    social: (src.social && typeof src.social === 'object') ? src.social : {}
   };
   GIRONI.forEach(g => {
     const arr = toArr(src.squadre && src.squadre[g]);
@@ -549,8 +360,7 @@ const isPlayed=m=>!!(m && m.played);
 const scoreCell=(m,v)=>isPlayed(m)?String(v):'–';
 const fmtDt=v=>{if(!v)return'';const d=new Date(v);return d.toLocaleString('it-IT',{weekday:'short',day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});};
 
-
-function bancoKey(team){
+function coppaKey(team){
   return String(team || '')
     .trim()
     .replace(/[.#$/\[\]]/g, '_')
@@ -558,13 +368,19 @@ function bancoKey(team){
 }
 function bancoGet(team){
   if(!S.banco || typeof S.banco !== 'object') S.banco = {};
-  const key = bancoKey(team);
-  return Number(S.banco[key] || 0);
+  return Number(S.banco[coppaKey(team)] || 0);
 }
 function bancoSet(team, value){
   if(!S.banco || typeof S.banco !== 'object') S.banco = {};
-  const key = bancoKey(team);
-  S.banco[key] = Math.max(0, Number(value) || 0);
+  S.banco[coppaKey(team)] = Math.max(0, Number(value) || 0);
+}
+function socialGet(team){
+  if(!S.social || typeof S.social !== 'object') S.social = {};
+  return Number(S.social[coppaKey(team)] || 0);
+}
+function socialSet(team, value){
+  if(!S.social || typeof S.social !== 'object') S.social = {};
+  S.social[coppaKey(team)] = Math.max(0, Number(value) || 0);
 }
 
 function showTab(t,el){
@@ -578,9 +394,40 @@ function showTab(t,el){
 function renderSquadre(){
   const el=document.getElementById('squadre');
   el.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center;gap:1rem;margin-bottom:1rem;flex-wrap:wrap">
-    <div style="font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:700;text-transform:uppercase;color:var(--text)">Squadre & Rose</div>
+    <div style="font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:700;text-transform:uppercase;color:var(--text)">Schieramento Squadre</div>
+    <div style="font-size:12px;color:var(--text3)">Usa il menu a tendina per ordinare le squadre in ogni girone</div>
   </div><div class="grid3" id="sq-grid"></div>`;
   const grid=document.getElementById('sq-grid');
+  GIRONI.forEach(g=>{
+    const c=document.createElement('div');c.className='card';
+    let html=`<div class="card-title">Girone ${g}</div>`;
+    toArr(S.squadre[g]).forEach((sq,si)=>{
+      const nPlayers=sqPlayers(g,si).length;
+      const opts=[1,2,3,4].map(n=>`<option value="${n-1}" ${n-1===si?'selected':''}>${n}°</option>`).join('');
+      html+=`<div class="order-row">
+        <div class="order-pos"><select onchange="setTeamPosition('${g}',${si},this.value)">${opts}</select></div>
+        <div class="order-name">${sq.name||`Squadra ${g}${si+1}`}</div>
+        <div class="order-players">${nPlayers} 👤</div>
+      </div>`;
+    });
+    c.innerHTML=html;grid.appendChild(c);
+  });
+}
+function setTeamPosition(g,from,toVal){
+  const to=parseInt(toVal);
+  if(isNaN(to)||to===from)return;
+  const arr=S.squadre[g];
+  const moved=arr.splice(from,1)[0];
+  arr.splice(to,0,moved);
+  save();renderSquadre();
+}
+
+function renderRose(){
+  const el=document.getElementById('rose');
+  el.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center;gap:1rem;margin-bottom:1rem;flex-wrap:wrap">
+    <div style="font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:700;text-transform:uppercase;color:var(--text)">Rose Giocatori</div>
+  </div><div class="grid3" id="rose-grid"></div>`;
+  const grid=document.getElementById('rose-grid');
   GIRONI.forEach(g=>{
     const c=document.createElement('div');c.className='card';
     let html=`<div class="card-title">Girone ${g}</div>`;
@@ -605,8 +452,8 @@ function renderPlayers(g,si){
     cont.appendChild(row);
   });
 }
-function addPlayer(g,si){if(!S.squadre[g])S.squadre[g]=[];if(!S.squadre[g][si])S.squadre[g][si]={name:'',players:[]};S.squadre[g][si].players.push('');save();renderSquadre();}
-function removePlayer(g,si,pi){if(S.squadre[g]&&S.squadre[g][si])S.squadre[g][si].players.splice(pi,1);save();renderSquadre();}
+function addPlayer(g,si){if(!S.squadre[g])S.squadre[g]=[];if(!S.squadre[g][si])S.squadre[g][si]={name:'',players:[]};S.squadre[g][si].players.push('');save();renderRose();}
+function removePlayer(g,si,pi){if(S.squadre[g]&&S.squadre[g][si])S.squadre[g][si].players.splice(pi,1);save();renderRose();}
 function updatePlayer(g,si,pi,v){if(S.squadre[g]&&S.squadre[g][si])S.squadre[g][si].players[pi]=v;save();}
 function updateTeamName(g,si,v){
   if(!S.squadre[g])S.squadre[g]=[];
@@ -806,6 +653,47 @@ function renderMarcatori(){
 }
 
 function getAllTeams(){return GIRONI.flatMap(g=>toArr(S.squadre[g]).map((_,i)=>sqName(g,i)));}
+
+function renderSocial(){
+  const el=document.getElementById('social');el.innerHTML='';
+  if(!S.social || typeof S.social !== 'object')S.social={};
+  const teams=getAllTeams();
+  const sorted=[...teams].sort((a,b)=>socialGet(b)-socialGet(a));
+  const c=document.createElement('div');c.className='card';
+  let html=`<div class="card-title"><i class="ti ti-brand-instagram ig-icon" style="font-size:20px"></i> Coppa Social — Classifica Punti Social</div>
+  <table><thead><tr><th style="width:36px">#</th><th>Squadra</th><th style="text-align:center"><i class="ti ti-brand-instagram ig-icon"></i> Tot.</th><th style="text-align:center;width:220px">Modifica</th></tr></thead><tbody>`;
+  sorted.forEach((team,i)=>{
+    const count=socialGet(team);
+    const medal=i===0?'🥇':i===1?'🥈':i===2?'🥉':`${i+1}`;
+    const rowCls=i===0?'tr-gold':i===1?'tr-silver':'';
+    const teamEsc=team.replace(/'/g,"\\'");
+    html+=`<tr class="${rowCls}">
+      <td style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700">${medal}</td>
+      <td><strong>${team}</strong></td>
+      <td style="text-align:center">
+        <input type="number" id="social-direct-${i}" value="${count}" min="0"
+          style="width:72px;text-align:center;font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:900;color:var(--yellow);background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:4px 6px"
+          onchange="socialSetDirect('${teamEsc}',this.value)"
+          onblur="socialSetDirect('${teamEsc}',this.value)">
+      </td>
+      <td style="text-align:center">
+        <div style="display:flex;align-items:center;justify-content:center;gap:5px">
+          <button class="btn" style="padding:4px 10px;font-size:18px;line-height:1" onclick="socialDelta('${teamEsc}',-1)">−</button>
+          <select id="social-qty-${i}" style="width:58px;padding:4px;font-size:13px;text-align:center">
+            <option value="1">+1</option><option value="2">+2</option><option value="3">+3</option><option value="5">+5</option><option value="10">+10</option>
+          </select>
+          <button class="btn btn-accent" style="padding:4px 12px;font-size:14px;font-weight:700" onclick="socialAdd('${teamEsc}',${i})">+</button>
+        </div>
+      </td>
+    </tr>`;
+  });
+  html+=`</tbody></table><div style="margin-top:1rem;text-align:center;font-size:12px;color:var(--text3)">Totale punti social torneo: <strong style="color:var(--text2)">${teams.reduce((sum,team)=>sum+socialGet(team),0)}</strong></div>`;
+  c.innerHTML=html;el.appendChild(c);
+}
+function socialSetDirect(team,value){const v=Math.max(0,parseInt(value)||0);socialSet(team,v);save();}
+function socialAdd(team,rowIdx){const qty=parseInt(document.getElementById(`social-qty-${rowIdx}`)?.value||'1');socialSet(team, socialGet(team)+qty);save().then(renderSocial);}
+function socialDelta(team,delta){socialSet(team, socialGet(team)+delta);save().then(renderSocial);}
+
 function renderBanco(){
   const el=document.getElementById('banco');el.innerHTML='';
   if(!S.banco || typeof S.banco !== 'object')S.banco={};
@@ -846,7 +734,7 @@ function bancoSetDirect(team,value){const v=Math.max(0,parseInt(value)||0);banco
 function bancoAdd(team,rowIdx){const qty=parseInt(document.getElementById(`banco-qty-${rowIdx}`)?.value||'1');bancoSet(team, bancoGet(team)+qty);save().then(renderBanco);}
 function bancoDelta(team,delta){bancoSet(team, bancoGet(team)+delta);save().then(renderBanco);}
 
-const renders={squadre:renderSquadre,gironi:renderGironi,ko:renderKO,classifiche:renderClassifiche,marcatori:renderMarcatori,banco:renderBanco};
+const renders={squadre:renderSquadre,rose:renderRose,gironi:renderGironi,ko:renderKO,classifiche:renderClassifiche,marcatori:renderMarcatori,social:renderSocial,banco:renderBanco};
 </script>
 </body>
 </html>
