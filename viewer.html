@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Torneo Sagra del CEO — Live</title>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;900&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
 <style>
 :root {
   --accent: #9b2d5a;
@@ -23,9 +24,10 @@
   --radius: 10px;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
+.ig-icon { background: linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
 body { font-family: 'Barlow', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
 .header { background: var(--bg2); border-bottom: 2px solid var(--accent-dark); padding: 1rem 1.5rem; display: flex; align-items: center; gap: 1rem; }
-.header-icon { height: 52px; width: 52px; object-fit: contain; filter: brightness(0) invert(1); }
+.header-icon { font-size: 2rem; line-height: 1; }
 .header-title { font-family: 'Barlow Condensed', sans-serif; font-size: 1.9rem; font-weight: 900; text-transform: uppercase; letter-spacing: .04em; color: var(--white); line-height: 1; }
 .header-sub { font-size: 12px; color: var(--text3); letter-spacing: .05em; text-transform: uppercase; margin-top: 2px; }
 .header-badge { margin-left: auto; font-family: 'Barlow Condensed', sans-serif; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; color: #70c97e; background: rgba(40,120,60,.2); border: 1px solid rgba(40,120,60,.4); border-radius: 20px; padding: 4px 12px; white-space: nowrap; display: flex; align-items: center; gap: 5px; }
@@ -77,7 +79,7 @@ tr:last-child td { border-bottom: none; }
 </head>
 <body>
 <div class="header">
-  <img src="Logo.jpeg" alt="Logo Torneo" class="header-icon">
+  <div class="header-icon">⚽</div>
   <div>
     <div class="header-title">Torneo Sagra del CEO</div>
     <div class="header-sub">Risultati in tempo reale</div>
@@ -93,7 +95,7 @@ tr:last-child td { border-bottom: none; }
   <button class="nav-btn" onclick="showTab('ko',this)">Eliminazione Diretta</button>
   <button class="nav-btn" onclick="showTab('classifiche',this)">Classifiche</button>
   <button class="nav-btn" onclick="showTab('marcatori',this)">Marcatori & Cartellini</button>
-  <button class="nav-btn" onclick="showTab('social',this)">📸 Coppa Social</button>
+  <button class="nav-btn" onclick="showTab('social',this)"><i class="ti ti-brand-instagram ig-icon"></i> Coppa Social</button>
 </nav>
 <main class="main">
   <div id="gironi" class="section active"></div>
@@ -363,8 +365,8 @@ function renderSocial(){
   const teams=GIRONI.flatMap(g=>S.squadre[g].map((_,i)=>sqName(g,i)));
   const sorted=[...teams].sort((a,b)=>socialGet(b)-socialGet(a));
   const c=document.createElement('div');c.className='card';
-  let html=`<div class="card-title">📸 Coppa Social — Classifica Punti Social</div>
-  <table><thead><tr><th style="width:36px">#</th><th>Squadra</th><th style="text-align:center">📸 Punti Social</th></tr></thead><tbody>`;
+  let html=`<div class="card-title"><i class="ti ti-brand-instagram ig-icon" style="font-size:20px"></i> Coppa Social — Classifica Punti Social</div>
+  <table><thead><tr><th style="width:36px">#</th><th>Squadra</th><th style="text-align:center"><i class="ti ti-brand-instagram ig-icon"></i> Punti Social</th></tr></thead><tbody>`;
   sorted.forEach((team,i)=>{
     const count=socialGet(team);
     const medal=i===0?'🥇':i===1?'🥈':i===2?'🥉':`${i+1}`;
