@@ -145,7 +145,11 @@ function normalizeState(v){
     const arr = toArr(src.squadre && src.squadre[g]);
     squadre[g] = Array.from({length:4}, (_,i) => {
       const sq = arr[i] || {};
-      return { name: sq.name || '', players: toArr(sq.players).map(String) };
+      const players = toArr(sq.players).map(p => {
+        if (p && typeof p === 'object') return { n: (p.n===undefined||p.n===null)?'':p.n, name: String(p.name||'') };
+        return { n: '', name: String(p||'') };
+      }).filter(p => p.name);
+      return { name: sq.name || '', players };
     });
   });
   const matches = (src.matches && typeof src.matches === 'object') ? src.matches : {};
