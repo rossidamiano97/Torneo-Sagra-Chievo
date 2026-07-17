@@ -8,10 +8,10 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
 <style>
 :root {
-  --accent: #9b2d5a; --accent-light: #c2406f; --accent-dark: #6b1a3a;
-  --yellow: #f0c050; --red: #e04040; --bg: #1a0d12; --bg2: #261018;
-  --bg3: #331520; --border: #4a2030; --text: #f5e8ec; --text2: #c49aaa;
-  --text3: #7a4458; --white: #ffffff; --radius: 10px;
+  --accent: #b8386c; --accent-light: #e0578e; --accent-dark: #6b1a3a;
+  --yellow: #ffd166; --red: #ff5a5a; --bg: #1a0d12; --bg2: #2e131d;
+  --bg3: #3d1826; --border: #6b3049; --text: #fbeef2; --text2: #d9b3c1;
+  --text3: #a06880; --white: #ffffff; --radius: 10px;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 .ig-icon { background: linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
@@ -56,8 +56,9 @@ input[type=datetime-local]::-webkit-calendar-picker-indicator { filter: invert(0
 .winner-label { text-align: center; font-size: 12px; color: var(--text2); margin-top: 4px; }
 .winner-label strong { color: var(--accent-light); }
 .player-row { display: flex; gap: 6px; align-items: center; margin-bottom: 6px; }
-.player-num { width: 52px; flex-shrink: 0; text-align: center; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; }
-.player-name { flex: 1; min-width: 0; }
+.player-num { width: 46px; flex: 0 0 46px; text-align: center; padding-left: 4px; padding-right: 4px; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; color: var(--yellow); -moz-appearance: textfield; appearance: textfield; }
+.player-num::-webkit-outer-spin-button, .player-num::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.player-name { flex: 1 1 auto; min-width: 0; }
 .del-btn { cursor: pointer; color: var(--red); font-size: 20px; line-height: 1; padding: 0 6px; flex-shrink: 0; background: none; border: none; }
 .order-row { display: flex; align-items: center; gap: 10px; padding: 9px 10px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg3); margin-bottom: 8px; }
 .order-pos { flex-shrink: 0; width: 74px; }
@@ -121,25 +122,25 @@ tr:last-child td { border-bottom: none; }
     <div class="header-badge">&#128295; Admin</div>
   </div>
   <nav class="nav">
-    <button class="nav-btn active" onclick="showTab('squadre',this)">Squadre</button>
-    <button class="nav-btn" onclick="showTab('rose',this)">Rose</button>
+    <button class="nav-btn active" onclick="showTab('banco',this)">&#127866; Coppa Banco</button>
+    <button class="nav-btn" onclick="showTab('social',this)"><i class="ti ti-brand-instagram ig-icon"></i> Coppa Social</button>
     <button class="nav-btn" onclick="showTab('gironi',this)">Gironi</button>
     <button class="nav-btn" onclick="showTab('ko',this)">Eliminazione Diretta</button>
+    <button class="nav-btn" onclick="showTab('squadre',this)">Squadre</button>
+    <button class="nav-btn" onclick="showTab('rose',this)">Rose</button>
     <button class="nav-btn" onclick="showTab('classifiche',this)">Classifiche</button>
     <button class="nav-btn" onclick="showTab('marcatori',this)">Marcatori &amp; Cartellini</button>
-    <button class="nav-btn" onclick="showTab('social',this)"><i class="ti ti-brand-instagram ig-icon"></i> Coppa Social</button>
-    <button class="nav-btn" onclick="showTab('banco',this)">&#127866; Coppa Banco</button>
   </nav>
   <div class="status-row"><span class="status-pill"><span id="sync-dot" class="status-dot"></span><span id="sync-label">In attesa di sincronizzazione</span></span><span>Admin online condiviso</span></div>
   <main class="main">
-    <div id="squadre" class="section active"></div>
-    <div id="rose" class="section"></div>
+    <div id="banco" class="section active"></div>
+    <div id="social" class="section"></div>
     <div id="gironi" class="section"></div>
     <div id="ko" class="section"></div>
+    <div id="squadre" class="section"></div>
+    <div id="rose" class="section"></div>
     <div id="classifiche" class="section"></div>
     <div id="marcatori" class="section"></div>
-    <div id="social" class="section"></div>
-    <div id="banco" class="section"></div>
   </main>
   <div class="modal-bg" id="modal-bg"><div class="modal" id="modal-inner"></div></div>
 </div>
@@ -207,7 +208,6 @@ function toArr(v){
   if (typeof v === 'object') return Object.values(v);
   return [];
 }
-// Normalizza un giocatore: accetta stringa (vecchio formato) o {n,name} (nuovo)
 function normPlayer(p){
   if(p===null||p===undefined) return null;
   if(typeof p==='string'){ const s=p.trim(); return s?{n:'',name:s}:null; }
@@ -259,7 +259,8 @@ function normalizeState(v){
       evA: toArr(m.evA).filter(Boolean),
       evB: toArr(m.evB).filter(Boolean),
       dt: m.dt || '',
-      played: !!m.played
+      played: !!m.played,
+      live: !!m.live
     };
   });
   Object.keys(out.koTeams).forEach(k => {
@@ -271,7 +272,6 @@ function normalizeState(v){
 
 function mergePresetIntoState(base){
   const out = normalizeState(base || initState());
-  // distribuzione iniziale: prime 12 squadre del preset in A/B/C (4 ciascuno)
   let idx=0;
   GIRONI.forEach(g => {
     for(let i=0;i<4;i++){
@@ -287,7 +287,7 @@ function mergePresetIntoState(base){
 }
 function getSafeState(v){ return normalizeState(v); }
 function save(){ if(!appReady) return Promise.resolve(); return stateRef.set(cloneState(normalizeState(S))); }
-function showCurrentTab(){ const activeSection = document.querySelector('.section.active'); if(activeSection && renders[activeSection.id]) { renders[activeSection.id](); } else { renderSquadre(); } }
+function showCurrentTab(){ const activeSection = document.querySelector('.section.active'); if(activeSection && renders[activeSection.id]) { renders[activeSection.id](); } else { renderBanco(); } }
 function startFirebaseSync(){
   stateRef.on('value', snap => {
     const data = snap.val();
@@ -299,7 +299,7 @@ function startFirebaseSync(){
     }
     if(!hasLoadedInitialState){
       hasLoadedInitialState = true;
-      renderSquadre();
+      renderBanco();
     } else {
       showCurrentTab();
     }
@@ -337,12 +337,13 @@ const mkey=(phase,idx)=>`${phase}_${idx}`;
 const mdata=key=>{
   if(!S || typeof S !== 'object') S = initState();
   if(!S.matches || typeof S.matches !== 'object') S.matches = {};
-  if(!S.matches[key] || typeof S.matches[key] !== 'object') S.matches[key] = {evA:[],evB:[],dt:'',played:false};
+  if(!S.matches[key] || typeof S.matches[key] !== 'object') S.matches[key] = {evA:[],evB:[],dt:'',played:false,live:false};
   const m=S.matches[key];
   if(!Array.isArray(m.evA)) m.evA=toArr(m.evA);
   if(!Array.isArray(m.evB)) m.evB=toArr(m.evB);
   if(typeof m.dt !== 'string') m.dt = m.dt ? String(m.dt) : '';
   m.played = !!m.played;
+  m.live = !!m.live;
   return m;
 };
 const sqName=(g,i)=>(S && S.squadre && S.squadre[g] && S.squadre[g][i] && S.squadre[g][i].name)||`Squadra ${g}${i+1}`;
@@ -360,8 +361,9 @@ const calcScore=m=>({
   roB:(m.evB||[]).filter(e=>e.t==='rosso').length
 });
 const isPlayed=m=>!!(m && m.played);
-const scoreCell=(m,v)=>isPlayed(m)?String(v):'\u2013';
-const fmtDt=v=>{if(!v)return'';const d=new Date(v);return d.toLocaleString('it-IT',{weekday:'short',day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});};
+const isVisible=m=>!!(m && (m.played || m.live));
+const scoreCell=(m,v)=>isVisible(m)?String(v):'\u2013';
+const fmtDt=v=>{if(!v)return'';const d=new Date(v);if(isNaN(d))return'';const gg=String(d.getDate()).padStart(2,'0');const mm=String(d.getMonth()+1).padStart(2,'0');const aa=d.getFullYear();const hh=String(d.getHours()).padStart(2,'0');const mi=String(d.getMinutes()).padStart(2,'0');return `${gg}/${mm}/${aa} ${hh}:${mi}`;};
 
 function coppaKey(team){
   return String(team || '').trim().replace(/[.#$/\[\]]/g, '_').replace(/\s+/g, ' ');
@@ -383,8 +385,10 @@ function renderSquadre(){
   const el=document.getElementById('squadre');
   el.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center;gap:1rem;margin-bottom:1rem;flex-wrap:wrap">
     <div style="font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:700;text-transform:uppercase;color:var(--text)">Schieramento Squadre</div>
-    <div style="font-size:12px;color:var(--text3)">Usa il menu a tendina per ordinare le squadre in ogni girone</div>
-  </div><div class="grid3" id="sq-grid"></div>`;
+    <button class="btn btn-accent" style="font-size:12px" onclick="importaSquadre()">&#128229; Importa squadre da Excel</button>
+  </div>
+  <div style="font-size:12px;color:var(--text3);margin-bottom:1rem">Usa il menu a tendina per ordinare le squadre in ogni girone. L'import sostituisce nomi e rose ma NON tocca risultati, punti e coppe.</div>
+  <div class="grid3" id="sq-grid"></div>`;
   const grid=document.getElementById('sq-grid');
   GIRONI.forEach(g=>{
     const c=document.createElement('div');c.className='card';
@@ -408,6 +412,19 @@ function setTeamPosition(g,from,toVal){
   const moved=arr.splice(from,1)[0];
   arr.splice(to,0,moved);
   save();renderSquadre();
+}
+function importaSquadre(){
+  if(!confirm('Importare le 12 squadre dal file Excel?\n\nSostituisce nomi e rose di tutte le squadre (A1-4, B1-4, C1-4) con quelle del preset.\nNON tocca risultati, punti coppe o cartellini.\n\nProcedere?'))return;
+  let idx=0;
+  GIRONI.forEach(g=>{
+    for(let i=0;i<4;i++){
+      const t=TEAM_PRESET[idx++];
+      if(!S.squadre[g])S.squadre[g]=[];
+      if(t){ S.squadre[g][i]={name:t.name,players:t.players.map(p=>({n:(p.n===undefined?'':p.n),name:p.name}))}; }
+    }
+  });
+  save();renderSquadre();
+  alert('Squadre importate! Le trovi anche nella tab Rose.');
 }
 
 function renderRose(){
@@ -464,7 +481,10 @@ function dtBlock(key){
     <span style="font-size:13px">\ud83d\udcc5</span>
     <input type="datetime-local" value="${dtVal}" style="flex:1;min-width:220px;font-size:12px;padding:5px 8px;color:var(--text2)" onchange="setMatchDt('${key}',this.value)">
     ${dtVal?`<span class="dt-display">${fmtDt(dtVal)}</span>`:''}
-    <label style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text2);margin-left:auto">
+    <label style="display:flex;align-items:center;gap:6px;font-size:12px;color:#e0b34a;margin-left:auto">
+      <input type="checkbox" ${m.live?'checked':''} onchange="setMatchLive('${key}',this.checked)"> In corso
+    </label>
+    <label style="display:flex;align-items:center;gap:6px;font-size:12px;color:#70c97e">
       <input type="checkbox" ${m.played?'checked':''} onchange="setMatchPlayed('${key}',this.checked)"> Giocata
     </label>
   </div>`;
@@ -537,7 +557,8 @@ function renderKO(){
   });
 }
 function setMatchDt(key,val){mdata(key).dt=val;showCurrentTab();save();}
-function setMatchPlayed(key,val){mdata(key).played=!!val;showCurrentTab();save();}
+function setMatchPlayed(key,val){const m=mdata(key);m.played=!!val;if(val)m.live=false;showCurrentTab();save();}
+function setMatchLive(key,val){const m=mdata(key);m.live=!!val;if(val)m.played=false;showCurrentTab();save();}
 function setKOTeam(key,side,val){if(!S.koTeams[key])S.koTeams[key]={a:'',b:''};S.koTeams[key][side]=val;showCurrentTab();save();}
 
 let CM=null;
@@ -624,20 +645,23 @@ function renderMarcatori(){
     else{ta=kt?.a||'';tb=kt?.b||'';}
     [[m.evA||[],ta],[m.evB||[],tb]].forEach(([evs,team])=>{
       if(team&&!teamCards[team])teamCards[team]={gi:0,ro:0};
+      const seenMatchPlayers=new Set();
       evs.forEach(e=>{
         const pk=`${e.p}|||${team||'?'}`;
-        if(!players[pk])players[pk]={name:e.p,team:team||'?',gol:0,gi:0,ro:0};
+        if(!players[pk])players[pk]={name:e.p,team:team||'?',gol:0,pg:0,_matches:new Set()};
         if(e.t==='gol')players[pk].gol++;
-        if(e.t==='giallo'){players[pk].gi++;if(team)teamCards[team].gi++;}
-        if(e.t==='rosso'){players[pk].ro++;if(team)teamCards[team].ro++;}
+        if(e.t==='giallo'){if(team)teamCards[team].gi++;}
+        if(e.t==='rosso'){if(team)teamCards[team].ro++;}
+        players[pk]._matches.add(key);
       });
     });
   });
-  const sorted=Object.values(players).sort((a,b)=>b.gol-a.gol||b.gi-a.gi);
+  Object.values(players).forEach(p=>{p.pg=p._matches.size;delete p._matches;});
+  const sorted=Object.values(players).sort((a,b)=>b.gol-a.gol||a.pg-b.pg);
   const c1=document.createElement('div');c1.className='card';
-  let h1=`<div class="card-title">Classifica Marcatori</div><table><thead><tr><th>#</th><th>Giocatore</th><th>Squadra</th><th>\u26bd</th><th>\ud83d\udfe8</th><th>\ud83d\udfe5</th></tr></thead><tbody>`;
-  if(!sorted.length)h1+=`<tr><td colspan="6" style="color:var(--text3)">Nessun dato ancora</td></tr>`;
-  sorted.forEach((p,i)=>{h1+=`<tr class="${i===0?'tr-gold':''}"><td>${i+1}</td><td><strong>${p.name}</strong></td><td style="color:var(--text2)">${p.team}</td><td>${p.gol}</td><td>${p.gi}</td><td>${p.ro}</td></tr>`;});
+  let h1=`<div class="card-title">Classifica Marcatori</div><table><thead><tr><th>#</th><th>Giocatore</th><th>Squadra</th><th style="text-align:center">\u26bd Gol</th><th style="text-align:center">PG</th></tr></thead><tbody>`;
+  if(!sorted.length)h1+=`<tr><td colspan="5" style="color:var(--text3)">Nessun dato ancora</td></tr>`;
+  sorted.forEach((p,i)=>{h1+=`<tr class="${i===0?'tr-gold':''}"><td>${i+1}</td><td><strong>${p.name}</strong></td><td style="color:var(--text2)">${p.team}</td><td style="text-align:center"><strong>${p.gol}</strong></td><td style="text-align:center">${p.pg}</td></tr>`;});
   h1+=`</tbody></table>`;c1.innerHTML=h1;el.appendChild(c1);
   const c2=document.createElement('div');c2.className='card';
   const tc=Object.entries(teamCards).sort((a,b)=>(b[1].gi+b[1].ro)-(a[1].gi+a[1].ro));
