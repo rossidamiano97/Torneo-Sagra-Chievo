@@ -6,6 +6,7 @@
 <title>Torneo Sagra del CEO</title>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;900&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <style>
 :root {
   --accent: #b8386c; --accent-light: #e0578e; --accent-dark: #6b1a3a;
@@ -385,9 +386,10 @@ function renderSquadre(){
   const el=document.getElementById('squadre');
   el.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center;gap:1rem;margin-bottom:1rem;flex-wrap:wrap">
     <div style="font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:700;text-transform:uppercase;color:var(--text)">Schieramento Squadre</div>
-    <button class="btn btn-accent" style="font-size:12px" onclick="importaSquadre()">&#128229; Importa squadre da Excel</button>
+    <button class="btn btn-accent" style="font-size:12px" onclick="document.getElementById('excel-file-input').click()">&#128229; Importa squadre da Excel</button>
+    <input type="file" id="excel-file-input" accept=".xlsx,.xls" style="display:none" onchange="importaExcel(this)">
   </div>
-  <div style="font-size:12px;color:var(--text3);margin-bottom:1rem">Usa il menu a tendina per ordinare le squadre in ogni girone. L'import sostituisce nomi e rose ma NON tocca risultati, punti e coppe.</div>
+  <div style="font-size:12px;color:var(--text3);margin-bottom:1rem">Ordina le squadre coi menu a tendina. L'import legge un file Excel (una distinta per foglio) e aggiorna le rose delle squadre il cui nome coincide con quelle già inserite. NON tocca risultati, punti e coppe.</div>
   <div class="grid3" id="sq-grid"></div>`;
   const grid=document.getElementById('sq-grid');
   GIRONI.forEach(g=>{
@@ -413,18 +415,96 @@ function setTeamPosition(g,from,toVal){
   arr.splice(to,0,moved);
   save();renderSquadre();
 }
-function importaSquadre(){
-  if(!confirm('Importare le 12 squadre dal file Excel?\n\nSostituisce nomi e rose di tutte le squadre (A1-4, B1-4, C1-4) con quelle del preset.\nNON tocca risultati, punti coppe o cartellini.\n\nProcedere?'))return;
-  let idx=0;
-  GIRONI.forEach(g=>{
-    for(let i=0;i<4;i++){
-      const t=TEAM_PRESET[idx++];
-      if(!S.squadre[g])S.squadre[g]=[];
-      if(t){ S.squadre[g][i]={name:t.name,players:t.players.map(p=>({n:(p.n===undefined?'':p.n),name:p.name}))}; }
+// Confronto nomi tollerante: ignora maiuscole, spazi multipli, punti, apostrofi
+function normName(s){
+  return String(s||'')
+    .toLowerCase()
+    .replace(/['`.]/g,'')
+    .replace(/\s+/g,' ')
+    .trim();
+}
+// Legge una distinta (un foglio = una squadra): nome in A1, giocatori dalla riga con header "NOME GIOCATORE", col A=numero, col B=nome
+function parseSheet(ws){
+  const rows = XLSX.utils.sheet_to_json(ws, {header:1, defval:null, raw:true});
+  if(!rows.length) return null;
+  const teamName = String((rows[0] && rows[0][0]) || '').trim();
+  if(!teamName) return null;
+  // trova la riga header (colonna B contiene "NOME GIOCATORE")
+  let hdr = -1;
+  for(let r=0; r<Math.min(rows.length,15); r++){
+    const b = String((rows[r] && rows[r][1]) || '').trim().toUpperCase();
+    if(b === 'NOME GIOCATORE'){ hdr = r; break; }
+  }
+  if(hdr === -1) hdr = 2; // fallback: header in riga 3 (indice 2)
+  const FOOTER = ['allenatore:','canzone squadra:','totale giocatori:'];
+  const players = [];
+  for(let r=hdr+1; r<rows.length; r++){
+    const row = rows[r] || [];
+    const numRaw = row[0];
+    const nameRaw = row[1];
+    const numLabel = String(numRaw||'').trim().toLowerCase();
+    if(FOOTER.includes(numLabel)) break;
+    const name = String(nameRaw||'').trim();
+    if(!name) continue;
+    if(FOOTER.includes(name.toLowerCase())) break;
+    let n = '';
+    if(numRaw!==null && numRaw!==undefined && String(numRaw).trim()!==''){
+      const parsed = parseInt(numRaw);
+      n = isNaN(parsed) ? '' : parsed;
     }
-  });
-  save();renderSquadre();
-  alert('Squadre importate! Le trovi anche nella tab Rose.');
+    players.push({n:n, name:name});
+  }
+  return {name:teamName, players:players};
+}
+function importaExcel(inputEl){
+  const file = inputEl.files && inputEl.files[0];
+  if(!file){ return; }
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const data = new Uint8Array(e.target.result);
+      const wb = XLSX.read(data, {type:'array'});
+      // costruisci elenco squadre dal file
+      const teamsFromFile = [];
+      wb.SheetNames.forEach(sn => {
+        const parsed = parseSheet(wb.Sheets[sn]);
+        if(parsed && parsed.name) teamsFromFile.push(parsed);
+      });
+      if(!teamsFromFile.length){
+        alert('Nessuna squadra trovata nel file. Controlla che ogni foglio abbia il nome squadra in cella A1 e i giocatori sotto (colonna A = numero, B = nome).');
+        inputEl.value=''; return;
+      }
+      // indicizza le squadre attuali per nome normalizzato
+      const current = [];
+      GIRONI.forEach(g => toArr(S.squadre[g]).forEach((sq,i) => current.push({g, i, key: normName(sq.name)})));
+      let updated = 0;
+      const notFound = [];
+      teamsFromFile.forEach(t => {
+        const target = current.find(c => c.key === normName(t.name));
+        if(target){
+          S.squadre[target.g][target.i] = {
+            name: S.squadre[target.g][target.i].name, // mantiene il nome esistente
+            players: t.players.map(p=>({n:(p.n===undefined?'':p.n), name:p.name}))
+          };
+          updated++;
+        } else {
+          notFound.push(t.name);
+        }
+      });
+      save(); renderSquadre();
+      let msg = `Importate ${updated} squadre (rose aggiornate).`;
+      if(notFound.length){
+        msg += `\n\nNON trovate tra le squadre attuali (nome diverso): \n- ${notFound.join('\n- ')}\n\nControlla che il nome nel file coincida con quello inserito nei gironi.`;
+      }
+      alert(msg);
+    } catch(err){
+      console.error(err);
+      alert('Errore durante la lettura del file Excel:\n' + err.message);
+    }
+    inputEl.value = ''; // reset, così puoi ricaricare lo stesso file
+  };
+  reader.onerror = () => { alert('Impossibile leggere il file.'); inputEl.value=''; };
+  reader.readAsArrayBuffer(file);
 }
 
 function renderRose(){
