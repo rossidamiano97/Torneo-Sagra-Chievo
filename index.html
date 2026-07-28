@@ -65,6 +65,8 @@ input[type=datetime-local]::-webkit-calendar-picker-indicator { filter: invert(0
 .order-pos { flex-shrink: 0; width: 74px; }
 .order-pos select { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; text-align: center; padding: 5px 4px; font-size: 14px; }
 .order-name { flex: 1; font-weight: 600; font-size: 14px; color: var(--text); min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.order-team { flex: 1; min-width: 0; }
+.order-team select { width: 100%; font-weight: 600; font-size: 13px; padding: 6px 8px; }
 .order-players { font-size: 11px; color: var(--text3); white-space: nowrap; }
 table { width: 100%; border-collapse: collapse; font-size: 13px; }
 th { font-family: 'Barlow Condensed', sans-serif; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .05em; color: var(--text3); padding: 6px 10px; border-bottom: 1px solid var(--border); text-align: left; }
@@ -398,20 +400,36 @@ function renderSquadre(){
   <div style="font-size:12px;color:var(--text3);margin-bottom:1rem">Ordina le squadre coi menu a tendina. L'import legge un file Excel (una distinta per foglio) e aggiorna le rose delle squadre il cui nome coincide con quelle già inserite. NON tocca risultati, punti e coppe.</div>
   <div class="grid3" id="sq-grid"></div>`;
   const grid=document.getElementById('sq-grid');
+  // elenco di tutti gli slot (girone+posizione) con nome squadra, per le tendine
+  const allSlots=[];
+  GIRONI.forEach(gg=>toArr(S.squadre[gg]).forEach((sq,ii)=>allSlots.push({g:gg,i:ii,name:sq.name||`Squadra ${gg}${ii+1}`})));
   GIRONI.forEach(g=>{
     const c=document.createElement('div');c.className='card';
     let html=`<div class="card-title">Girone ${g}</div>`;
     toArr(S.squadre[g]).forEach((sq,si)=>{
       const nPlayers=sqPlayers(g,si).length;
       const opts=[1,2,3,4].map(n=>`<option value="${n-1}" ${n-1===si?'selected':''}>${n}\u00b0</option>`).join('');
+      const teamOpts=allSlots.map(s=>`<option value="${s.g}:${s.i}" ${(s.g===g&&s.i===si)?'selected':''}>${(s.name||'').replace(/"/g,'&quot;')}</option>`).join('');
       html+=`<div class="order-row">
         <div class="order-pos"><select onchange="setTeamPosition('${g}',${si},this.value)">${opts}</select></div>
-        <div class="order-name">${sq.name||`Squadra ${g}${si+1}`}</div>
+        <div class="order-team"><select onchange="swapTeamSlot('${g}',${si},this.value)">${teamOpts}</select></div>
         <div class="order-players">${nPlayers} \ud83d\udc64</div>
       </div>`;
     });
     c.innerHTML=html;grid.appendChild(c);
   });
+}
+// Scambia la squadra dello slot (g,si) con quella dello slot scelto (anche altro girone)
+function swapTeamSlot(g,si,target){
+  const [tg,tiRaw]=String(target).split(':');
+  const ti=parseInt(tiRaw);
+  if(!tg||isNaN(ti)) return;
+  if(tg===g && ti===si){ return; }
+  const a=S.squadre[g][si];
+  const b=S.squadre[tg][ti];
+  S.squadre[g][si]=b;
+  S.squadre[tg][ti]=a;
+  save();renderSquadre();
 }
 function setTeamPosition(g,from,toVal){
   const to=parseInt(toVal);
