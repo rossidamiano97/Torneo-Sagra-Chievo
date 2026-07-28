@@ -287,7 +287,13 @@ function mergePresetIntoState(base){
   return out;
 }
 function getSafeState(v){ return normalizeState(v); }
-function save(){ if(!appReady) return Promise.resolve(); return stateRef.set(cloneState(normalizeState(S))); }
+const WRITE_KEY = 'federicopietropoli';
+function save(){
+  if(!appReady) return Promise.resolve();
+  const payload = cloneState(normalizeState(S));
+  payload._wkey = WRITE_KEY; // richiesto dalle regole Firebase per autorizzare la scrittura
+  return stateRef.set(payload);
+}
 function showCurrentTab(){ const activeSection = document.querySelector('.section.active'); if(activeSection && renders[activeSection.id]) { renders[activeSection.id](); } else { renderBanco(); } }
 function startFirebaseSync(){
   stateRef.on('value', snap => {
