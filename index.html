@@ -145,7 +145,14 @@ tr:last-child td { border-bottom: none; }
     <button class="nav-btn" onclick="showTab('classifiche',this)">Classifiche</button>
     <button class="nav-btn" onclick="showTab('marcatori',this)">Marcatori &amp; Cartellini</button>
   </nav>
-  <div class="status-row"><span class="status-pill"><span id="sync-dot" class="status-dot"></span><span id="sync-label">In attesa di sincronizzazione</span></span><span>Admin online condiviso</span></div>
+  <div class="status-row">
+    <span class="status-pill"><span id="sync-dot" class="status-dot"></span><span id="sync-label">In attesa di sincronizzazione</span></span>
+    <span style="display:flex;gap:8px;align-items:center">
+      <button class="btn" style="padding:5px 12px;font-size:13px" onclick="exportBackup()">&#11015; Backup JSON</button>
+      <button class="btn" style="padding:5px 12px;font-size:13px" onclick="document.getElementById('json-restore-input').click()">&#11014; Ripristina</button>
+      <input type="file" id="json-restore-input" accept=".json,application/json" style="display:none" onchange="importBackup(this)">
+    </span>
+  </div>
   <main class="main">
     <div id="banco" class="section active"></div>
     <div id="social" class="section"></div>
@@ -301,11 +308,24 @@ function mergePresetIntoState(base){
 }
 function getSafeState(v){ return normalizeState(v); }
 const WRITE_KEY = 'federicopietropoli';
+function flagSaveError(err){
+  console.error('Salvataggio non riuscito:', err);
+  const dot=document.getElementById('sync-dot');
+  const label=document.getElementById('sync-label');
+  if(dot){ dot.classList.remove('live'); dot.style.background='#ff5a5a'; }
+  if(label) label.textContent='\u26a0 Salvataggio non riuscito \u2014 controlla la connessione';
+}
+function clearSaveError(){
+  const dot=document.getElementById('sync-dot');
+  const label=document.getElementById('sync-label');
+  if(dot){ dot.classList.add('live'); dot.style.background=''; }
+  if(label) label.textContent='Sincronizzato live';
+}
 function save(){
   if(!appReady) return Promise.resolve();
   const payload = cloneState(normalizeState(S));
   payload._wkey = WRITE_KEY; // richiesto dalle regole Firebase per autorizzare la scrittura
-  return stateRef.set(payload);
+  return stateRef.set(payload).catch(flagSaveError); // errore visibile invece di fallire in silenzio
 }
 function showCurrentTab(){ const activeSection = document.querySelector('.section.active'); if(activeSection && renders[activeSection.id]) { renders[activeSection.id](); } else { renderBanco(); } }
 function startFirebaseSync(){
@@ -325,7 +345,7 @@ function startFirebaseSync(){
     }
     const dot = document.getElementById('sync-dot');
     const label = document.getElementById('sync-label');
-    if(dot) dot.classList.add('live');
+    if(dot){ dot.classList.add('live'); dot.style.background=''; }
     if(label) label.textContent = 'Sincronizzato live';
   }, err => {
     const label = document.getElementById('sync-label');
@@ -392,6 +412,42 @@ function bancoGet(team){ if(!S.banco||typeof S.banco!=='object')S.banco={}; retu
 function bancoSet(team,value){ if(!S.banco||typeof S.banco!=='object')S.banco={}; S.banco[coppaKey(team)]=Math.max(0,Number(value)||0); }
 function socialGet(team){ if(!S.social||typeof S.social!=='object')S.social={}; return Number(S.social[coppaKey(team)]||0); }
 function socialSet(team,value){ if(!S.social||typeof S.social!=='object')S.social={}; S.social[coppaKey(team)]=Math.max(0,Number(value)||0); }
+// Riferimento diretto al singolo contatore in Firebase: consente scritture atomiche (transaction)
+// invece di riscrivere l'intero stato, evitando che due incrementi simultanei si sovrascrivano.
+function counterRef(kind, team){ return stateRef.child(kind + '/' + coppaKey(team)); }
+
+// --- Backup / Ripristino ---
+function exportBackup(){
+  try{
+    const data = cloneState(normalizeState(S)); // stato pulito, senza _wkey
+    const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    const ts = new Date().toISOString().slice(0,19).replace(/[:T]/g,'-');
+    a.href = url; a.download = `torneo-backup-${ts}.json`;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(()=>URL.revokeObjectURL(url), 1000);
+  }catch(err){ console.error(err); alert('Errore durante l\'export del backup:\n' + err.message); }
+}
+function importBackup(inputEl){
+  const file = inputEl.files && inputEl.files[0];
+  if(!file){ return; }
+  const reader = new FileReader();
+  reader.onload = e => {
+    try{
+      const parsed = JSON.parse(e.target.result);
+      if(!parsed || typeof parsed !== 'object'){ alert('File di backup non valido.'); inputEl.value=''; return; }
+      if(!confirm('Ripristinare questo backup?\n\nTutti i dati attuali (risultati, coppe, rose) verranno SOVRASCRITTI.')){ inputEl.value=''; return; }
+      S = normalizeState(parsed);
+      save();
+      showCurrentTab();
+      alert('Backup ripristinato correttamente.');
+    }catch(err){ console.error(err); alert('Errore nella lettura del backup:\n' + err.message); }
+    inputEl.value = '';
+  };
+  reader.onerror = () => { alert('Impossibile leggere il file.'); inputEl.value=''; };
+  reader.readAsText(file);
+}
 
 function showTab(t,el){
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
@@ -760,7 +816,6 @@ function renderMarcatori(){
     else{ta=kt?.a||'';tb=kt?.b||'';}
     [[m.evA||[],ta],[m.evB||[],tb]].forEach(([evs,team])=>{
       if(team&&!teamCards[team])teamCards[team]={gi:0,ro:0};
-      const seenMatchPlayers=new Set();
       evs.forEach(e=>{
         const pk=`${e.p}|||${team||'?'}`;
         if(!players[pk])players[pk]={name:e.p,team:team||'?',gol:0,pg:0,_matches:new Set()};
@@ -815,9 +870,9 @@ function renderSocial(){
   html+=`</tbody></table><div style="margin-top:1rem;text-align:center;font-size:12px;color:var(--text3)">Totale punti social torneo: <strong style="color:var(--text2)">${teams.reduce((sum,team)=>sum+socialGet(team),0)}</strong></div>`;
   c.innerHTML=html;el.appendChild(c);
 }
-function socialSetDirect(team,value){socialSet(team,Math.max(0,parseInt(value)||0));save();}
-function socialAdd(team,rowIdx){const qty=parseInt(document.getElementById(`social-qty-${rowIdx}`)?.value||'1');socialSet(team,socialGet(team)+qty);save().then(renderSocial);}
-function socialDelta(team,delta){socialSet(team,socialGet(team)+delta);save().then(renderSocial);}
+function socialSetDirect(team,value){counterRef('social',team).set(Math.max(0,parseInt(value)||0)).catch(flagSaveError);}
+function socialAdd(team,rowIdx){const qty=parseInt(document.getElementById(`social-qty-${rowIdx}`)?.value||'1');counterRef('social',team).transaction(cur=>Math.max(0,(Number(cur)||0)+qty)).catch(flagSaveError);}
+function socialDelta(team,delta){counterRef('social',team).transaction(cur=>Math.max(0,(Number(cur)||0)+delta)).catch(flagSaveError);}
 
 function renderBanco(){
   const el=document.getElementById('banco');el.innerHTML='';
@@ -846,9 +901,9 @@ function renderBanco(){
   html+=`</tbody></table><div style="margin-top:1rem;text-align:center;font-size:12px;color:var(--text3)">Totale consumazioni torneo: <strong style="color:var(--text2)">${teams.reduce((sum,team)=>sum+bancoGet(team),0)}</strong></div>`;
   c.innerHTML=html;el.appendChild(c);
 }
-function bancoSetDirect(team,value){bancoSet(team,Math.max(0,parseInt(value)||0));save();}
-function bancoAdd(team,rowIdx){const qty=parseInt(document.getElementById(`banco-qty-${rowIdx}`)?.value||'1');bancoSet(team,bancoGet(team)+qty);save().then(renderBanco);}
-function bancoDelta(team,delta){bancoSet(team,bancoGet(team)+delta);save().then(renderBanco);}
+function bancoSetDirect(team,value){counterRef('banco',team).set(Math.max(0,parseInt(value)||0)).catch(flagSaveError);}
+function bancoAdd(team,rowIdx){const qty=parseInt(document.getElementById(`banco-qty-${rowIdx}`)?.value||'1');counterRef('banco',team).transaction(cur=>Math.max(0,(Number(cur)||0)+qty)).catch(flagSaveError);}
+function bancoDelta(team,delta){counterRef('banco',team).transaction(cur=>Math.max(0,(Number(cur)||0)+delta)).catch(flagSaveError);}
 
 const renders={squadre:renderSquadre,rose:renderRose,gironi:renderGironi,ko:renderKO,classifiche:renderClassifiche,marcatori:renderMarcatori,social:renderSocial,banco:renderBanco};
 </script>
