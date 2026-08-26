@@ -662,13 +662,47 @@ function dtBlock(key){
 }
 
 function renderGironi(){
-  const el=document.getElementById('gironi');el.innerHTML='';
+  const el=document.getElementById('gironi');
+  el.innerHTML='';
+
   GIRONI.forEach(g=>{
-    const c=document.createElement('div');c.className='card';
+    const c=document.createElement('div');
+    c.className='card';
+
     let html=`<div class="card-title">Girone ${g}</div>`;
-    PAIRS.forEach(([a,b],i)=>{
-      const key=mkey(`G${g}`,i);const m=mdata(key);const sc=calcScore(m);
+
+    /*
+     * Costruiamo prima l'elenco completo delle partite del girone,
+     * mantenendo per ogni partita il proprio indice originale (i).
+     * Questo è importante perché la chiave Firebase resta, ad esempio,
+     * GA_0, GA_1, ... e NON deve cambiare quando cambia l'ordine visivo.
+     *
+     * Le partite vengono poi ordinate per data/ora crescente.
+     * Quelle senza data vengono messe in fondo.
+     */
+    const matches = PAIRS.map(([a,b],i)=>{
+      const key = mkey(`G${g}`,i);
+      const m = mdata(key);
+
+      return {
+        a,
+        b,
+        i,
+        key,
+        m,
+        timestamp: m.dt ? new Date(m.dt).getTime() : Infinity
+      };
+    });
+
+    matches.sort((x,y)=>{
+      if(x.timestamp !== y.timestamp) return x.timestamp - y.timestamp;
+      return x.i - y.i;
+    });
+
+    matches.forEach(({a,b,i,key,m})=>{
+      const sc=calcScore(m);
       const ta=sqName(g,a),tb=sqName(g,b);
+
       html+=`<div class="match-block">
         ${dtBlock(key)}
         <div class="match-row">
@@ -687,7 +721,9 @@ function renderGironi(){
         </div>
       </div>`;
     });
-    c.innerHTML=html;el.appendChild(c);
+
+    c.innerHTML=html;
+    el.appendChild(c);
   });
 }
 
