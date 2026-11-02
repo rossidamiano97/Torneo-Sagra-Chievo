@@ -110,6 +110,22 @@ tr:last-child td { border-bottom: none; }
     display: grid; grid-template-columns: repeat(2,1fr); gap: 1.2rem; align-items: start;
   }
 }
+
+/* --- Edizioni e Albo d'oro --- */
+.season-bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:9px 1.5rem;background:var(--bg3);border-bottom:1px solid var(--border);color:var(--text2)}
+.season-bar select{width:auto;min-width:105px;padding:6px 10px;font-weight:700;color:var(--yellow)}
+.season-pill{display:inline-flex;align-items:center;padding:4px 10px;border:1px solid var(--border);border-radius:999px;font-size:12px}.season-pill.current{color:#70c97e}.season-pill.archive{color:var(--yellow)}
+.season-back{padding:5px 10px!important;font-size:12px!important}.archive-warning{background:rgba(255,209,102,.10);border:1px solid rgba(255,209,102,.35);color:#ffe6a6;border-radius:8px;padding:9px 12px;font-size:13px;margin-bottom:12px}
+.honors-subnav{display:flex;overflow-x:auto;gap:4px;margin-bottom:14px}.honors-subnav button{border:1px solid var(--border);background:var(--bg3);color:var(--text2);border-radius:7px;padding:8px 12px;cursor:pointer;white-space:nowrap}.honors-subnav button.active{background:var(--accent);border-color:var(--accent);color:white}
+.honors-note{font-size:13px;color:var(--text3);margin:-5px 0 12px}.honors-empty{text-align:center;color:var(--text3);padding:20px}.hidden{display:none!important}
+@media(max-width:640px){.season-bar{padding:8px 12px}.season-label{display:none}.honors-table-wrap{overflow-x:auto}}
+
+
+/* Correzione menu edizione */
+.season-bar select{appearance:auto!important;background-color:var(--bg3)!important;color:var(--yellow)!important;border:1px solid var(--accent)!important;box-shadow:none!important;font-weight:700!important}
+.season-bar select option{background:var(--bg2)!important;color:var(--text)!important}
+.season-back{background:var(--bg3)!important;color:var(--text)!important;border-color:var(--border)!important}
+
 </style>
 </head>
 <body>
@@ -135,6 +151,7 @@ tr:last-child td { border-bottom: none; }
     </div>
     <div class="header-badge">&#128295; Admin</div>
   </div>
+  <div class="season-bar"><span class="season-label">Edizione visualizzata</span><select id="season-select" onchange="switchSeason(this.value)"></select><span id="season-pill" class="season-pill"></span><button id="season-back" class="btn season-back hidden" onclick="switchSeason(CURRENT_SEASON)">Torna al 2027</button></div>
   <nav class="nav">
     <button class="nav-btn active" onclick="showTab('banco',this)">&#127866; Coppa Banco</button>
     <button class="nav-btn" onclick="showTab('social',this)"><i class="ti ti-brand-instagram ig-icon"></i> Coppa Social</button>
@@ -144,6 +161,7 @@ tr:last-child td { border-bottom: none; }
     <button class="nav-btn" onclick="showTab('rose',this)">Rose</button>
     <button class="nav-btn" onclick="showTab('classifiche',this)">Classifiche</button>
     <button class="nav-btn" onclick="showTab('marcatori',this)">Marcatori &amp; Cartellini</button>
+    <button class="nav-btn" onclick="showTab('albo',this)">Albo d'oro</button>
   </nav>
   <div class="status-row">
     <span class="status-pill"><span id="sync-dot" class="status-dot"></span><span id="sync-label">In attesa di sincronizzazione</span></span>
@@ -162,6 +180,7 @@ tr:last-child td { border-bottom: none; }
     <div id="rose" class="section"></div>
     <div id="classifiche" class="section"></div>
     <div id="marcatori" class="section"></div>
+    <div id="albo" class="section"></div>
   </main>
   <div class="modal-bg" id="modal-bg"><div class="modal" id="modal-inner"></div></div>
 </div>
@@ -220,7 +239,13 @@ let appReady = false;
 let hasLoadedInitialState = false;
 const app = firebase.initializeApp(FIREBASE_CONFIG);
 const db = firebase.database();
-const stateRef = db.ref('torneo_ceo');
+const ROOT_REF = db.ref('torneo_ceo_v2');
+const CURRENT_SEASON='2027';
+let selectedSeason=CURRENT_SEASON;
+let stateRef=ROOT_REF.child('seasons/'+selectedSeason+'/tournament');
+let seasonMetaRef=ROOT_REF.child('seasons/'+selectedSeason);
+let currentSyncHandler=null;
+let ALL_SEASONS={};
 let S=initState();
 
 function toArr(v){
@@ -308,6 +333,8 @@ function mergePresetIntoState(base){
 }
 function getSafeState(v){ return normalizeState(v); }
 const WRITE_KEY = 'federicopietropoli';
+function isArchive(){return selectedSeason!==CURRENT_SEASON;}
+function requireWritable(){if(isArchive()){alert('Le edizioni storiche sono in sola lettura. Torna al 2027 per apportare modifiche.');return false;}return true;}
 function flagSaveError(err){
   console.error('Salvataggio non riuscito:', err);
   const dot=document.getElementById('sync-dot');
@@ -323,35 +350,23 @@ function clearSaveError(){
 }
 function save(){
   if(!appReady) return Promise.resolve();
+  if(!requireWritable()) return Promise.resolve();
   const payload = cloneState(normalizeState(S));
   payload._wkey = WRITE_KEY; // richiesto dalle regole Firebase per autorizzare la scrittura
   return stateRef.set(payload).catch(flagSaveError); // errore visibile invece di fallire in silenzio
 }
 function showCurrentTab(){ const activeSection = document.querySelector('.section.active'); if(activeSection && renders[activeSection.id]) { renders[activeSection.id](); } else { renderBanco(); } }
+function populateSeasonMenu(){
+  ROOT_REF.once('value').then(snap=>{const root=snap.val()||{};ALL_SEASONS=root.seasons||{};window.__ROOT_DATA=root;const years=(root.config&&root.config.availableSeasons)||['2027','2026'];const sel=document.getElementById('season-select');sel.innerHTML=years.map(y=>`<option value="${y}">${y}${y===CURRENT_SEASON?' · corrente':''}</option>`).join('');sel.value=selectedSeason;updateSeasonUI();});
+}
+function updateSeasonUI(){const pill=document.getElementById('season-pill'),back=document.getElementById('season-back');if(!pill)return;const archive=isArchive();pill.textContent=archive?'Archivio storico · sola lettura':'Edizione corrente · modificabile';pill.className='season-pill '+(archive?'archive':'current');back.classList.toggle('hidden',!archive);document.querySelectorAll('#json-restore-input,.status-row button').forEach(el=>{if(archive&&String(el.textContent).includes('Ripristina'))el.disabled=true;else if(!archive)el.disabled=false;});}
+function switchSeason(year){
+  if(!year||year===selectedSeason)return; if(currentSyncHandler)stateRef.off('value',currentSyncHandler);selectedSeason=String(year);stateRef=ROOT_REF.child('seasons/'+selectedSeason+'/tournament');seasonMetaRef=ROOT_REF.child('seasons/'+selectedSeason);hasLoadedInitialState=false;S=initState();document.getElementById('season-select').value=selectedSeason;updateSeasonUI();startFirebaseSync();
+}
 function startFirebaseSync(){
-  stateRef.on('value', snap => {
-    const data = snap.val();
-    if(data === null){
-      S = mergePresetIntoState(initState());
-      save();
-    } else {
-      S = getSafeState(data);
-    }
-    if(!hasLoadedInitialState){
-      hasLoadedInitialState = true;
-      renderBanco();
-    } else {
-      showCurrentTab();
-    }
-    const dot = document.getElementById('sync-dot');
-    const label = document.getElementById('sync-label');
-    if(dot){ dot.classList.add('live'); dot.style.background=''; }
-    if(label) label.textContent = 'Sincronizzato live';
-  }, err => {
-    const label = document.getElementById('sync-label');
-    if(label) label.textContent = 'Errore sincronizzazione';
-    console.error(err);
-  });
+  currentSyncHandler=snap=>{const data=snap.val();S=data===null?initState():getSafeState(data);hasLoadedInitialState=true;showCurrentTab();const dot=document.getElementById('sync-dot'),label=document.getElementById('sync-label');if(dot){dot.classList.add('live');dot.style.background='';}if(label)label.textContent=isArchive()?`Archivio ${selectedSeason} · sola lettura`:'Sincronizzato live';};
+  stateRef.on('value',currentSyncHandler,err=>{const label=document.getElementById('sync-label');if(label)label.textContent='Errore sincronizzazione';console.error(err);});
+  ROOT_REF.child('seasons').once('value').then(s=>{ALL_SEASONS=s.val()||{};if(document.querySelector('.section.active')?.id==='albo')renderAlbo();});
 }
 function checkPassword(){
   const input = document.getElementById('admin-password');
@@ -364,13 +379,13 @@ function checkPassword(){
   sessionStorage.setItem('torneo_admin_ok', '1');
   document.getElementById('auth-overlay').style.display = 'none';
   document.getElementById('app-shell').classList.remove('app-hidden');
-  if(!appReady){ appReady = true; startFirebaseSync(); }
+  if(!appReady){ appReady = true; populateSeasonMenu(); startFirebaseSync(); }
 }
 window.addEventListener('load', () => {
   if(sessionStorage.getItem('torneo_admin_ok') === '1'){
     document.getElementById('auth-overlay').style.display = 'none';
     document.getElementById('app-shell').classList.remove('app-hidden');
-    if(!appReady){ appReady = true; startFirebaseSync(); }
+    if(!appReady){ appReady = true; populateSeasonMenu(); startFirebaseSync(); }
   }
 });
 const mkey=(phase,idx)=>`${phase}_${idx}`;
@@ -414,7 +429,7 @@ function socialGet(team){ if(!S.social||typeof S.social!=='object')S.social={}; 
 function socialSet(team,value){ if(!S.social||typeof S.social!=='object')S.social={}; S.social[coppaKey(team)]=Math.max(0,Number(value)||0); }
 // Riferimento diretto al singolo contatore in Firebase: consente scritture atomiche (transaction)
 // invece di riscrivere l'intero stato, evitando che due incrementi simultanei si sovrascrivano.
-function counterRef(kind, team){ return stateRef.child(kind + '/' + coppaKey(team)); }
+function counterRef(kind, team){ if(!requireWritable()) throw new Error('Archivio in sola lettura'); return stateRef.child(kind + '/' + coppaKey(team)); }
 
 // --- Backup / Ripristino ---
 function exportBackup(){
@@ -424,12 +439,12 @@ function exportBackup(){
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     const ts = new Date().toISOString().slice(0,19).replace(/[:T]/g,'-');
-    a.href = url; a.download = `torneo-backup-${ts}.json`;
+    a.href = url; a.download = `torneo-backup-${selectedSeason}-${ts}.json`;
     document.body.appendChild(a); a.click(); document.body.removeChild(a);
     setTimeout(()=>URL.revokeObjectURL(url), 1000);
   }catch(err){ console.error(err); alert('Errore durante l\'export del backup:\n' + err.message); }
 }
-function importBackup(inputEl){
+function importBackup(inputEl){if(!requireWritable())return;
   const file = inputEl.files && inputEl.files[0];
   if(!file){ return; }
   const reader = new FileReader();
@@ -455,6 +470,7 @@ function showTab(t,el){
   if(el)el.classList.add('active');
   document.getElementById(t).classList.add('active');
   renders[t]&&renders[t]();
+  if(isArchive()&&t!=='albo'){const sec=document.getElementById(t);if(sec)sec.insertAdjacentHTML('afterbegin',`<div class="archive-warning">Edizione ${selectedSeason}: archivio storico in sola lettura. Nessuna modifica verrà salvata.</div>`);}
 }
 
 function renderSquadre(){
@@ -487,7 +503,7 @@ function renderSquadre(){
   });
 }
 // Scambia la squadra dello slot (g,si) con quella dello slot scelto (anche altro girone)
-function swapTeamSlot(g,si,target){
+function swapTeamSlot(g,si,target){if(!requireWritable())return;
   const [tg,tiRaw]=String(target).split(':');
   const ti=parseInt(tiRaw);
   if(!tg||isNaN(ti)) return;
@@ -498,7 +514,7 @@ function swapTeamSlot(g,si,target){
   S.squadre[tg][ti]=a;
   save();renderSquadre();
 }
-function setTeamPosition(g,from,toVal){
+function setTeamPosition(g,from,toVal){if(!requireWritable())return;
   const to=parseInt(toVal);
   if(isNaN(to)||to===from)return;
   const arr=S.squadre[g];
@@ -547,7 +563,7 @@ function parseSheet(ws){
   }
   return {name:teamName, players:players};
 }
-function importaExcel(inputEl){
+function importaExcel(inputEl){if(!requireWritable())return;
   const file = inputEl.files && inputEl.files[0];
   if(!file){ return; }
   const reader = new FileReader();
@@ -635,11 +651,11 @@ function ensurePlayers(g,si){
   if(!S.squadre[g][si])S.squadre[g][si]={name:'',players:[]};
   S.squadre[g][si].players=normPlayers(S.squadre[g][si].players);
 }
-function addPlayer(g,si){ensurePlayers(g,si);S.squadre[g][si].players.push({n:'',name:''});save();renderRose();}
-function removePlayer(g,si,pi){ensurePlayers(g,si);S.squadre[g][si].players.splice(pi,1);save();renderRose();}
-function updatePlayerName(g,si,pi,v){ensurePlayers(g,si);if(S.squadre[g][si].players[pi])S.squadre[g][si].players[pi].name=v;save();}
-function updatePlayerNum(g,si,pi,v){ensurePlayers(g,si);if(S.squadre[g][si].players[pi]){const n=parseInt(v);S.squadre[g][si].players[pi].n=isNaN(n)?'':n;}save();}
-function updateTeamName(g,si,v){
+function addPlayer(g,si){if(!requireWritable())return;ensurePlayers(g,si);S.squadre[g][si].players.push({n:'',name:''});save();renderRose();}
+function removePlayer(g,si,pi){if(!requireWritable())return;ensurePlayers(g,si);S.squadre[g][si].players.splice(pi,1);save();renderRose();}
+function updatePlayerName(g,si,pi,v){if(!requireWritable())return;ensurePlayers(g,si);if(S.squadre[g][si].players[pi])S.squadre[g][si].players[pi].name=v;save();}
+function updatePlayerNum(g,si,pi,v){if(!requireWritable())return;ensurePlayers(g,si);if(S.squadre[g][si].players[pi]){const n=parseInt(v);S.squadre[g][si].players[pi].n=isNaN(n)?'':n;}save();}
+function updateTeamName(g,si,v){if(!requireWritable())return;
   if(!S.squadre[g])S.squadre[g]=[];
   if(!S.squadre[g][si])S.squadre[g][si]={name:'',players:[]};
   S.squadre[g][si].name=(v||'').trim()||`Squadra ${g}${si+1}`;
@@ -763,10 +779,10 @@ function renderKO(){
     c.innerHTML=html;el.appendChild(c);
   });
 }
-function setMatchDt(key,val){mdata(key).dt=val;showCurrentTab();save();}
-function setMatchPlayed(key,val){const m=mdata(key);m.played=!!val;if(val)m.live=false;showCurrentTab();save();}
-function setMatchLive(key,val){const m=mdata(key);m.live=!!val;if(val)m.played=false;showCurrentTab();save();}
-function setKOTeam(key,side,val){if(!S.koTeams[key])S.koTeams[key]={a:'',b:''};S.koTeams[key][side]=val;showCurrentTab();save();}
+function setMatchDt(key,val){if(!requireWritable())return;mdata(key).dt=val;showCurrentTab();save();}
+function setMatchPlayed(key,val){if(!requireWritable())return;const m=mdata(key);m.played=!!val;if(val)m.live=false;showCurrentTab();save();}
+function setMatchLive(key,val){if(!requireWritable())return;const m=mdata(key);m.live=!!val;if(val)m.played=false;showCurrentTab();save();}
+function setKOTeam(key,side,val){if(!requireWritable())return;if(!S.koTeams[key])S.koTeams[key]={a:'',b:''};S.koTeams[key][side]=val;showCurrentTab();save();}
 
 let CM=null;
 function openMatchModal(key,g,ia,ib,tab){CM={key,ta:sqName(g,ia),tb:sqName(g,ib),pA:sqPlayers(g,ia),pB:sqPlayers(g,ib),tab};showModal();}
@@ -794,13 +810,13 @@ function renderEvForm(side,players){
     <button class="btn btn-accent" onclick="addEv('${side}')">+ Aggiungi</button></div>`;
 }
 function getPlayer(side){const s=document.getElementById(`sel-p-${side}`);const i=document.getElementById(`inp-p-${side}`);return s?s.value:i?i.value.trim():'';}
-function addEv(side){
+function addEv(side){if(!requireWritable())return;
   const player=getPlayer(side);if(!player)return;
   const type=document.getElementById(`sel-t-${side}`).value;
   const m=mdata(CM.key);(side==='A'?m.evA:m.evB).push({p:player,t:type});
   save();renderEvList(side);CM.tab==='gironi'?renderGironi():renderKO();
 }
-function removeEv(side,idx){
+function removeEv(side,idx){if(!requireWritable())return;
   const m=mdata(CM.key);(side==='A'?m.evA:m.evB).splice(idx,1);
   save();renderEvList(side);CM.tab==='gironi'?renderGironi():renderKO();
 }
@@ -906,9 +922,9 @@ function renderSocial(){
   html+=`</tbody></table><div style="margin-top:1rem;text-align:center;font-size:12px;color:var(--text3)">Totale punti social torneo: <strong style="color:var(--text2)">${teams.reduce((sum,team)=>sum+socialGet(team),0)}</strong></div>`;
   c.innerHTML=html;el.appendChild(c);
 }
-function socialSetDirect(team,value){counterRef('social',team).set(Math.max(0,parseInt(value)||0)).catch(flagSaveError);}
-function socialAdd(team,rowIdx){const qty=parseInt(document.getElementById(`social-qty-${rowIdx}`)?.value||'1');counterRef('social',team).transaction(cur=>Math.max(0,(Number(cur)||0)+qty)).catch(flagSaveError);}
-function socialDelta(team,delta){counterRef('social',team).transaction(cur=>Math.max(0,(Number(cur)||0)+delta)).catch(flagSaveError);}
+function socialSetDirect(team,value){if(!requireWritable())return;counterRef('social',team).set(Math.max(0,parseInt(value)||0)).catch(flagSaveError);}
+function socialAdd(team,rowIdx){if(!requireWritable())return;const qty=parseInt(document.getElementById(`social-qty-${rowIdx}`)?.value||'1');counterRef('social',team).transaction(cur=>Math.max(0,(Number(cur)||0)+qty)).catch(flagSaveError);}
+function socialDelta(team,delta){if(!requireWritable())return;counterRef('social',team).transaction(cur=>Math.max(0,(Number(cur)||0)+delta)).catch(flagSaveError);}
 
 function renderBanco(){
   const el=document.getElementById('banco');el.innerHTML='';
@@ -937,11 +953,28 @@ function renderBanco(){
   html+=`</tbody></table><div style="margin-top:1rem;text-align:center;font-size:12px;color:var(--text3)">Totale consumazioni torneo: <strong style="color:var(--text2)">${teams.reduce((sum,team)=>sum+bancoGet(team),0)}</strong></div>`;
   c.innerHTML=html;el.appendChild(c);
 }
-function bancoSetDirect(team,value){counterRef('banco',team).set(Math.max(0,parseInt(value)||0)).catch(flagSaveError);}
-function bancoAdd(team,rowIdx){const qty=parseInt(document.getElementById(`banco-qty-${rowIdx}`)?.value||'1');counterRef('banco',team).transaction(cur=>Math.max(0,(Number(cur)||0)+qty)).catch(flagSaveError);}
-function bancoDelta(team,delta){counterRef('banco',team).transaction(cur=>Math.max(0,(Number(cur)||0)+delta)).catch(flagSaveError);}
+function bancoSetDirect(team,value){if(!requireWritable())return;counterRef('banco',team).set(Math.max(0,parseInt(value)||0)).catch(flagSaveError);}
+function bancoAdd(team,rowIdx){if(!requireWritable())return;const qty=parseInt(document.getElementById(`banco-qty-${rowIdx}`)?.value||'1');counterRef('banco',team).transaction(cur=>Math.max(0,(Number(cur)||0)+qty)).catch(flagSaveError);}
+function bancoDelta(team,delta){if(!requireWritable())return;counterRef('banco',team).transaction(cur=>Math.max(0,(Number(cur)||0)+delta)).catch(flagSaveError);}
 
-const renders={squadre:renderSquadre,rose:renderRose,gironi:renderGironi,ko:renderKO,classifiche:renderClassifiche,marcatori:renderMarcatori,social:renderSocial,banco:renderBanco};
+
+function htmlEsc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function canonicalTeam(v){const x=String(v||'').trim().toUpperCase().replace(/\s+/g,' ');return {'ORTI SZ':'ORTI SAN ZENO','C.A. MUZZONI':'CA MUZZONI'}[x]||x;}
+function scorerTotals(t){const out={};const matches=(t&&t.matches)||{};Object.values(matches).forEach(m=>[...toArr(m&&m.evA),...toArr(m&&m.evB)].forEach(e=>{if(!e||e.t!=='gol'||/AUTOGOL|VITTORIA AI RIGORI/i.test(e.p||''))return;const n=String(e.p||'').replace(/^#\d+\s*/,'').trim().replace(/\s+/g,' ').toUpperCase();if(n)out[n]=(out[n]||0)+1;}));return out;}
+function renderAlbo(){
+ const el=document.getElementById('albo'); if(!el)return; const seasons=Object.entries(ALL_SEASONS||{}).sort((a,b)=>Number(b[0])-Number(a[0]));
+ el.innerHTML=`<div class="honors-subnav"><button class="active" onclick="renderAlboSub('podi',this)">Podi per anno</button><button onclick="renderAlboSub('squadre',this)">Titoli e premi squadra</button><button onclick="renderAlboSub('individuali',this)">Premi individuali</button><button onclick="renderAlboSub('marcatori',this)">Marcatori all time</button></div><div id="albo-content"></div>`;
+ window.__honorsSeasons=seasons;renderAlboSub('podi',el.querySelector('button'));
+}
+function renderAlboSub(kind,btn){
+ document.querySelectorAll('.honors-subnav button').forEach(b=>b.classList.toggle('active',b===btn));const el=document.getElementById('albo-content'),seasons=window.__honorsSeasons||[];
+ if(kind==='podi'){el.innerHTML=`<div class="card"><div class="card-title">Podi per edizione</div><div class="honors-table-wrap"><table><thead><tr><th>Edizione</th><th>Campione</th><th>Secondo</th><th>Terzo</th></tr></thead><tbody>${seasons.map(([y,s])=>{const p=(s.awards&&s.awards.podium)||['','',''];return `<tr><td><strong>${y}</strong></td>${[0,1,2].map(i=>`<td>${htmlEsc(p[i]||'Da assegnare')}</td>`).join('')}</tr>`}).join('')}</tbody></table></div></div>`;return;}
+ if(kind==='individuali'){el.innerHTML=seasons.map(([y,s])=>{const a=(s.awards&&s.awards.individual)||[];return `<div class="card"><div class="card-title">${y}</div>${a.length?`<table><thead><tr><th>Premio</th><th>Vincitore</th><th>Squadra</th></tr></thead><tbody>${a.map(x=>`<tr><td>${htmlEsc(x.type)}</td><td><strong>${htmlEsc(x.person)}</strong></td><td>${htmlEsc(x.team)}</td></tr>`).join('')}</tbody></table>`:'<div class="honors-empty">Premi da assegnare</div>'}</div>`}).join('');return;}
+ if(kind==='squadre'){const t={};seasons.forEach(([y,s])=>{const a=s.awards||{};(a.podium||[]).forEach((n,i)=>{n=canonicalTeam(n);if(!n)return;t[n]??={win:0,second:0,third:0,banco:0,social:0};if(i===0)t[n].win++;if(i===1)t[n].second++;if(i===2)t[n].third++;});(a.team||[]).forEach(x=>{const n=canonicalTeam(x.team);if(!n)return;t[n]??={win:0,second:0,third:0,banco:0,social:0};if(x.type==='Coppa Banco')t[n].banco++;if(x.type==='Coppa Social')t[n].social++;});});const rows=Object.entries(t).sort((a,b)=>b[1].win-a[1].win||b[1].banco+b[1].social-a[1].banco-a[1].social);el.innerHTML=`<div class="card"><div class="card-title">Titoli e premi di squadra</div><div class="honors-table-wrap"><table><thead><tr><th>Squadra</th><th>Titoli</th><th>2°</th><th>3°</th><th>Banco</th><th>Social</th></tr></thead><tbody>${rows.map(([n,x])=>`<tr><td><strong>${htmlEsc(n)}</strong></td><td>${x.win}</td><td>${x.second}</td><td>${x.third}</td><td>${x.banco}</td><td>${x.social}</td></tr>`).join('')}</tbody></table></div></div>`;return;}
+ if(kind==='marcatori'){const all={};const hist=(window.__ROOT_DATA&&window.__ROOT_DATA.historicalScorers)||{};Object.values(hist).forEach(year=>Object.entries(year||{}).forEach(([n,v])=>all[String(n).toUpperCase()]=(all[String(n).toUpperCase()]||0)+Number(v||0)));seasons.forEach(([y,s])=>Object.entries(scorerTotals(s.tournament||{})).forEach(([n,v])=>all[n]=(all[n]||0)+v));const rows=Object.entries(all).sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0]));el.innerHTML=`<div class="card"><div class="card-title">Classifica marcatori all time</div><div class="honors-note">Classifica aggregata con i gol completi del 2024 e i gol registrati digitalmente dal 2026. I dati 2025 saranno aggiunti quando disponibili.</div><table><thead><tr><th>#</th><th>Giocatore</th><th>Gol</th></tr></thead><tbody>${rows.map(([n,v],i)=>`<tr class="${i===0?'tr-gold':''}"><td>${i+1}</td><td><strong>${htmlEsc(n)}</strong></td><td>${v}</td></tr>`).join('')}</tbody></table></div>`;}
+}
+
+const renders={albo:renderAlbo,squadre:renderSquadre,rose:renderRose,gironi:renderGironi,ko:renderKO,classifiche:renderClassifiche,marcatori:renderMarcatori,social:renderSocial,banco:renderBanco};
 </script>
 </body>
 </html>
