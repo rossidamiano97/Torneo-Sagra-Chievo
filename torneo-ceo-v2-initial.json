@@ -1,0 +1,2619 @@
+{
+  "config": {
+    "currentSeason": "2027",
+    "availableSeasons": [
+      "2027",
+      "2026"
+    ]
+  },
+  "seasons": {
+    "2024": {
+      "status": "archived",
+      "hasDetails": false,
+      "tournament": {
+        "squadre": {
+          "A": [
+            {
+              "name": "",
+              "players": []
+            },
+            {
+              "name": "",
+              "players": []
+            },
+            {
+              "name": "",
+              "players": []
+            },
+            {
+              "name": "",
+              "players": []
+            }
+          ],
+          "B": [
+            {
+              "name": "",
+              "players": []
+            },
+            {
+              "name": "",
+              "players": []
+            },
+            {
+              "name": "",
+              "players": []
+            },
+            {
+              "name": "",
+              "players": []
+            }
+          ],
+          "C": [
+            {
+              "name": "",
+              "players": []
+            },
+            {
+              "name": "",
+              "players": []
+            },
+            {
+              "name": "",
+              "players": []
+            },
+            {
+              "name": "",
+              "players": []
+            }
+          ]
+        },
+        "matches": {},
+        "koTeams": {},
+        "banco": {},
+        "social": {}
+      },
+      "awards": {
+        "podium": [
+          "CIVICO 93",
+          "ORTI SAN ZENO",
+          "NASPI CHIEVO"
+        ],
+        "individual": [
+          {
+            "type": "Capocannoniere",
+            "person": "Ferdinando Grimaldi",
+            "team": "Orti San Zeno"
+          },
+          {
+            "type": "Miglior giocatore",
+            "person": "Marco Merci",
+            "team": "Civico 93"
+          },
+          {
+            "type": "Miglior portiere",
+            "person": "Tommaso Gervasini",
+            "team": "Civico 93"
+          }
+        ],
+        "team": [
+          {
+            "type": "Coppa Banco",
+            "team": "Gos Mil Dos"
+          },
+          {
+            "type": "Coppa Social",
+            "team": "Bar Brother"
+          }
+        ]
+      }
+    },
+    "2025": {
+      "status": "archived",
+      "hasDetails": false,
+      "tournament": {
+        "squadre": {
+          "A": [
+            {
+              "name": "",
+              "players": []
+            },
+            {
+              "name": "",
+              "players": []
+            },
+            {
+              "name": "",
+              "players": []
+            },
+            {
+              "name": "",
+              "players": []
+            }
+          ],
+          "B": [
+            {
+              "name": "",
+              "players": []
+            },
+            {
+              "name": "",
+              "players": []
+            },
+            {
+              "name": "",
+              "players": []
+            },
+            {
+              "name": "",
+              "players": []
+            }
+          ],
+          "C": [
+            {
+              "name": "",
+              "players": []
+            },
+            {
+              "name": "",
+              "players": []
+            },
+            {
+              "name": "",
+              "players": []
+            },
+            {
+              "name": "",
+              "players": []
+            }
+          ]
+        },
+        "matches": {},
+        "koTeams": {},
+        "banco": {},
+        "social": {}
+      },
+      "awards": {
+        "podium": [
+          "TARTUFON FC",
+          "CA MUZZONI",
+          "CIVICO 93"
+        ],
+        "individual": [
+          {
+            "type": "Capocannoniere",
+            "person": "Andrea Zocca",
+            "team": "CA Muzzoni"
+          },
+          {
+            "type": "MVP",
+            "person": "Luca Pepe",
+            "team": "Tartufon FC"
+          },
+          {
+            "type": "Miglior portiere",
+            "person": "Tommaso Nani",
+            "team": "Mortadhellas"
+          }
+        ],
+        "team": [
+          {
+            "type": "Coppa Social",
+            "team": "Gos Mil Dos"
+          },
+          {
+            "type": "Coppa Banco",
+            "team": "Herta Vernello Verona"
+          }
+        ]
+      }
+    },
+    "2026": {
+      "status": "archived",
+      "hasDetails": true,
+      "tournament": {
+        "squadre": {
+          "A": [
+            {
+              "name": "TARTUFON FC",
+              "players": [
+                {
+                  "n": 3,
+                  "name": "PEPE LUCA"
+                },
+                {
+                  "n": 32,
+                  "name": "BILLIANI EDOARDO"
+                },
+                {
+                  "n": 1,
+                  "name": "ZAMPINI GABRIELE"
+                },
+                {
+                  "n": 8,
+                  "name": "INGRASSIA LORENZO"
+                },
+                {
+                  "n": 10,
+                  "name": "ORTOLANI ANDREA LUIGI"
+                },
+                {
+                  "n": 16,
+                  "name": "PIGHI FILIPPO"
+                },
+                {
+                  "n": 19,
+                  "name": "VIGNOLA RICCARDO"
+                },
+                {
+                  "n": 20,
+                  "name": "LANDI PIETRO"
+                },
+                {
+                  "n": 22,
+                  "name": "BATTISTELLO JACOPO"
+                },
+                {
+                  "n": 23,
+                  "name": "CAVAZZA RICCARDO"
+                },
+                {
+                  "n": 29,
+                  "name": "BULIGA MARIAN STEFAN"
+                },
+                {
+                  "n": 88,
+                  "name": "CERPELLONI MATTIA"
+                },
+                {
+                  "n": 96,
+                  "name": "MACCACARO TOMMASO"
+                }
+              ]
+            },
+            {
+              "name": "ORTI SAN ZENO",
+              "players": [
+                {
+                  "n": 1,
+                  "name": "TRUSCHELLI PIETRO"
+                },
+                {
+                  "n": 3,
+                  "name": "CELON AUGUSTO"
+                },
+                {
+                  "n": 5,
+                  "name": "DALLA VIA ALESSIO"
+                },
+                {
+                  "n": 6,
+                  "name": "PEZZINO SIMONE"
+                },
+                {
+                  "n": 9,
+                  "name": "DAL CORSO NICOLO'"
+                },
+                {
+                  "n": 10,
+                  "name": "FERONI MATTEO"
+                },
+                {
+                  "n": 11,
+                  "name": "BERTUCCO RICCARDO"
+                },
+                {
+                  "n": 14,
+                  "name": "DALLA VIA FRANCESCO"
+                },
+                {
+                  "n": 19,
+                  "name": "GRIMALDI FERDINANDO"
+                },
+                {
+                  "n": 21,
+                  "name": "MAROSO GREGORIO"
+                },
+                {
+                  "n": 42,
+                  "name": "MALAFA MATTEO"
+                }
+              ]
+            },
+            {
+              "name": "CAYO FC",
+              "players": [
+                {
+                  "n": 10,
+                  "name": "CASTAGNA ENRICO"
+                },
+                {
+                  "n": 13,
+                  "name": "NICASTRO MANUEL"
+                },
+                {
+                  "n": 14,
+                  "name": "NICASTRO MIRKO"
+                },
+                {
+                  "n": 25,
+                  "name": "PERETTI LEONARDO"
+                },
+                {
+                  "n": 29,
+                  "name": "DE GUIDI ALBERTO"
+                },
+                {
+                  "n": 43,
+                  "name": "CATANIA DAVIDE VITTORIO"
+                },
+                {
+                  "n": 49,
+                  "name": "PALA SAMUEL"
+                },
+                {
+                  "n": 71,
+                  "name": "SOSPETTI FEDERICO"
+                },
+                {
+                  "n": 88,
+                  "name": "BIASUTTI MANUEL"
+                },
+                {
+                  "n": 99,
+                  "name": "GARIGGIO TOMMASO"
+                }
+              ]
+            },
+            {
+              "name": "GOS MIL DOS",
+              "players": [
+                {
+                  "n": 3,
+                  "name": "PRATO ALBERTO"
+                },
+                {
+                  "n": 7,
+                  "name": "DANESE LORENZO"
+                },
+                {
+                  "n": 10,
+                  "name": "BILLIANI TOMMASO"
+                },
+                {
+                  "n": 11,
+                  "name": "POPA CRISTIAN"
+                },
+                {
+                  "n": 16,
+                  "name": "BORDIGNONI MATTIA"
+                },
+                {
+                  "n": 19,
+                  "name": "MOTTA DAVIDE"
+                },
+                {
+                  "n": 21,
+                  "name": "TOMMASI DAVIDE"
+                },
+                {
+                  "n": 22,
+                  "name": "GIARDINO LORENZO"
+                },
+                {
+                  "n": 27,
+                  "name": "COVELLI LEONARDO"
+                },
+                {
+                  "n": 69,
+                  "name": "MACCACARO LORENZO"
+                },
+                {
+                  "n": 90,
+                  "name": "CHELIDONIO MATTEO"
+                }
+              ]
+            }
+          ],
+          "B": [
+            {
+              "name": "MORTADHELLAS",
+              "players": [
+                {
+                  "n": 3,
+                  "name": "APRILI VITTORIO"
+                },
+                {
+                  "n": 5,
+                  "name": "VENERI DAMIANO"
+                },
+                {
+                  "n": 6,
+                  "name": "AVESANI ELIA"
+                },
+                {
+                  "n": 7,
+                  "name": "PASINATO PIETRO MARIA"
+                },
+                {
+                  "n": 8,
+                  "name": "CESCHI ALESSANDRO"
+                },
+                {
+                  "n": 10,
+                  "name": "CIENO SIMONE"
+                },
+                {
+                  "n": 11,
+                  "name": "PANATO MATTIA"
+                },
+                {
+                  "n": 14,
+                  "name": "COMMISSO LUIGI MARIA"
+                },
+                {
+                  "n": 18,
+                  "name": "SANTI FILIPPO"
+                },
+                {
+                  "n": 21,
+                  "name": "EPIBOLI DAVIDE"
+                },
+                {
+                  "n": 22,
+                  "name": "CANZIAN MICHELE"
+                },
+                {
+                  "n": 23,
+                  "name": "ZERMAN ALESSANDRO"
+                },
+                {
+                  "n": 25,
+                  "name": "BERSAN TOMMASO"
+                },
+                {
+                  "n": 27,
+                  "name": "CUSINI FILIPPO"
+                },
+                {
+                  "n": 88,
+                  "name": "NANI TOMMASO"
+                }
+              ]
+            },
+            {
+              "name": "I TESTONI DEL BRO",
+              "players": []
+            },
+            {
+              "name": "CA MUZZONI",
+              "players": [
+                {
+                  "n": 0,
+                  "name": "BALESTRIERO GIOVANNI"
+                },
+                {
+                  "n": 3,
+                  "name": "FERRARI LEONARDO"
+                },
+                {
+                  "n": 3,
+                  "name": "DE BORTOLI DIEGO"
+                },
+                {
+                  "n": 5,
+                  "name": "MASSOCCO MATTEO"
+                },
+                {
+                  "n": 4,
+                  "name": "SQUARANTI LUCA"
+                },
+                {
+                  "n": 8,
+                  "name": "ALDROVANDI PIETRO"
+                },
+                {
+                  "n": 7,
+                  "name": "FERRARI FILIPPO"
+                },
+                {
+                  "n": 6,
+                  "name": "MARCHIOTTO DIEGO"
+                },
+                {
+                  "n": 99,
+                  "name": "FIUMINI RICCARDO"
+                },
+                {
+                  "n": 10,
+                  "name": "CORSO DAVIDE"
+                },
+                {
+                  "n": 13,
+                  "name": "ZOCCA ANDREA"
+                },
+                {
+                  "n": 100,
+                  "name": "SIGNORINI FRANCESCO"
+                }
+              ]
+            },
+            {
+              "name": "PATATANAIKOS",
+              "players": [
+                {
+                  "n": 1,
+                  "name": "CRESATANELLO ANDREA"
+                },
+                {
+                  "n": 7,
+                  "name": "FILIPPO LAVANDA"
+                },
+                {
+                  "n": 9,
+                  "name": "FARINELLI LUIGI"
+                },
+                {
+                  "n": 22,
+                  "name": "FASOLI MATTEO"
+                },
+                {
+                  "n": 24,
+                  "name": "SONA FRANCESCO"
+                },
+                {
+                  "n": 33,
+                  "name": "FERRARI ALESSANDRO"
+                },
+                {
+                  "n": 37,
+                  "name": "STORTI EDOARDO"
+                },
+                {
+                  "n": 44,
+                  "name": "IMOLA FABIO"
+                },
+                {
+                  "n": 62,
+                  "name": "DOARDI MATTEO"
+                },
+                {
+                  "n": 69,
+                  "name": "CRISTANI FRANCESCO"
+                },
+                {
+                  "n": 77,
+                  "name": "SONA THOMAS"
+                },
+                {
+                  "n": 97,
+                  "name": "OLIVIERI MATTEO"
+                }
+              ]
+            }
+          ],
+          "C": [
+            {
+              "name": "BORGO LENTO FC",
+              "players": [
+                {
+                  "n": 6,
+                  "name": "GIACOMELLO PIETRO"
+                },
+                {
+                  "n": 70,
+                  "name": "MANARA TOBIA"
+                },
+                {
+                  "n": 3,
+                  "name": "FACCIOLO RICCARDO"
+                },
+                {
+                  "n": 8,
+                  "name": "BERTOLASO GIACOMO"
+                },
+                {
+                  "n": 45,
+                  "name": "OTTAVIANI ANDREA"
+                },
+                {
+                  "n": 10,
+                  "name": "TOPPAN GIOVANNI"
+                },
+                {
+                  "n": 17,
+                  "name": "DAL PRETE BINIAM BIHONEGN"
+                },
+                {
+                  "n": 22,
+                  "name": "GELMETTI TOMMASO"
+                },
+                {
+                  "n": 14,
+                  "name": "RIZZA MATTIA"
+                },
+                {
+                  "n": 19,
+                  "name": "DANIELI FILIPPO"
+                }
+              ]
+            },
+            {
+              "name": "CATECHESI",
+              "players": [
+                {
+                  "n": 5,
+                  "name": "RIDOLFI TOMMASO"
+                },
+                {
+                  "n": 6,
+                  "name": "MORESCHI LORENZO"
+                },
+                {
+                  "n": 7,
+                  "name": "TRIMINI' LORENZO"
+                },
+                {
+                  "n": 8,
+                  "name": "OTTOLINI FILIPPO"
+                },
+                {
+                  "n": 9,
+                  "name": "SCHENA GIOVANNI"
+                },
+                {
+                  "n": 10,
+                  "name": "RIGHETTI ALESSIO"
+                },
+                {
+                  "n": 17,
+                  "name": "BORDIGNONI MARTINO"
+                },
+                {
+                  "n": 18,
+                  "name": "ZUCCONELLI TOMMASO"
+                },
+                {
+                  "n": 21,
+                  "name": "SCHENA NICOLA"
+                },
+                {
+                  "n": 69,
+                  "name": "MARAGNO PIETRO"
+                },
+                {
+                  "n": 88,
+                  "name": "MAZZI MICHELE"
+                },
+                {
+                  "n": 95,
+                  "name": "GASTALDELLO GIACOMO"
+                }
+              ]
+            },
+            {
+              "name": "CIVICO 93",
+              "players": [
+                {
+                  "n": 1,
+                  "name": "GERVASINI TOMMASO"
+                },
+                {
+                  "n": 1,
+                  "name": "BERNARDI FRANCESCO"
+                },
+                {
+                  "n": 2,
+                  "name": "TOMMASI PAOLO"
+                },
+                {
+                  "n": 4,
+                  "name": "BRAGGIO RICCARDO"
+                },
+                {
+                  "n": 5,
+                  "name": "GUARISE BRIAN"
+                },
+                {
+                  "n": 6,
+                  "name": "PIETROPOLI FEDERICO"
+                },
+                {
+                  "n": 7,
+                  "name": "LUPI PIETRO"
+                },
+                {
+                  "n": 8,
+                  "name": "MASSOCCO LORENZO"
+                },
+                {
+                  "n": 9,
+                  "name": "MERCI MARCO"
+                },
+                {
+                  "n": 10,
+                  "name": "SANI FILIPPO"
+                },
+                {
+                  "n": 11,
+                  "name": "CAPRIOTTI ALBERTO"
+                }
+              ]
+            },
+            {
+              "name": "BORGO SORTE",
+              "players": [
+                {
+                  "n": 1,
+                  "name": "MURA TOMMASO"
+                },
+                {
+                  "n": 5,
+                  "name": "CECCHIN MATTEO"
+                },
+                {
+                  "n": 8,
+                  "name": "FERRO GIACOMO"
+                },
+                {
+                  "n": 13,
+                  "name": "BEGALI ALESSANDRO"
+                },
+                {
+                  "n": 20,
+                  "name": "MARCHESE FEDERICO"
+                },
+                {
+                  "n": 30,
+                  "name": "BIONDANI MATTEO"
+                },
+                {
+                  "n": 27,
+                  "name": "ZANONI MATTEO"
+                },
+                {
+                  "n": 29,
+                  "name": "RAIMONDI LUCA"
+                },
+                {
+                  "n": 6,
+                  "name": "LANZA FABIO"
+                },
+                {
+                  "n": 10,
+                  "name": "COBELLI DAVIDE"
+                }
+              ]
+            }
+          ]
+        },
+        "matches": {
+          "F3_0": {
+            "evA": [],
+            "evB": [],
+            "dt": "2026-09-09T20:00",
+            "played": false,
+            "live": false
+          },
+          "F_0": {
+            "evA": [
+              {
+                "p": "#10 CORSO DAVIDE",
+                "t": "gol"
+              },
+              {
+                "p": "#11 ZOCCA ANDREA",
+                "t": "gol"
+              },
+              {
+                "p": "#11 ZOCCA ANDREA",
+                "t": "gol"
+              },
+              {
+                "p": "#99 FIUMINI RICCARDO",
+                "t": "gol"
+              }
+            ],
+            "evB": [
+              {
+                "p": "#10 BILLIANI TOMMASO",
+                "t": "gol"
+              },
+              {
+                "p": "#22 GIARDINO LORENZO",
+                "t": "gol"
+              }
+            ],
+            "dt": "2026-09-09T21:00",
+            "played": true,
+            "live": false
+          },
+          "GA_0": {
+            "evA": [
+              {
+                "p": "#22 BATTISTELLO JACOPO",
+                "t": "gol"
+              },
+              {
+                "p": "#20 LANDI PIETRO",
+                "t": "gol"
+              },
+              {
+                "p": "#10 ORTOLANI ANDREA LUIGI",
+                "t": "gol"
+              },
+              {
+                "p": "#10 ORTOLANI ANDREA LUIGI",
+                "t": "gol"
+              },
+              {
+                "p": "#32 BILLIANI EDOARDO",
+                "t": "giallo"
+              },
+              {
+                "p": "#96 MACCACARO TOMMASO",
+                "t": "rosso"
+              },
+              {
+                "p": "#22 BATTISTELLO JACOPO",
+                "t": "rosso"
+              }
+            ],
+            "evB": [
+              {
+                "p": "#14 DALLA VIA FRANCESCO",
+                "t": "gol"
+              },
+              {
+                "p": "#19 GRIMALDI FERDINANDO",
+                "t": "gol"
+              },
+              {
+                "p": "#10 FERONI MATTEO",
+                "t": "gol"
+              },
+              {
+                "p": "#10 FERONI MATTEO",
+                "t": "gol"
+              },
+              {
+                "p": "#19 GRIMALDI FERDINANDO",
+                "t": "gol"
+              },
+              {
+                "p": "#6 PEZZINO SIMONE",
+                "t": "gol"
+              },
+              {
+                "p": "#19 GRIMALDI FERDINANDO",
+                "t": "gol"
+              },
+              {
+                "p": "#42 MALAFA MATTEO",
+                "t": "gol"
+              },
+              {
+                "p": "#10 FERONI MATTEO",
+                "t": "gol"
+              }
+            ],
+            "dt": "2026-08-31T20:30",
+            "played": true,
+            "live": false
+          },
+          "GA_1": {
+            "evA": [
+              {
+                "p": "#29 DE GUIDI ALBERTO",
+                "t": "gol"
+              },
+              {
+                "p": "#71 SOSPETTI FEDERICO",
+                "t": "gol"
+              },
+              {
+                "p": "#25 PERETTI LEONARDO",
+                "t": "gol"
+              },
+              {
+                "p": "#49 PALA SAMUEL",
+                "t": "giallo"
+              },
+              {
+                "p": "#29 DE GUIDI ALBERTO",
+                "t": "gol"
+              },
+              {
+                "p": "#29 DE GUIDI ALBERTO",
+                "t": "gol"
+              },
+              {
+                "p": "#25 PERETTI LEONARDO",
+                "t": "giallo"
+              }
+            ],
+            "evB": [
+              {
+                "p": "#19 MOTTA DAVIDE",
+                "t": "gol"
+              },
+              {
+                "p": "#10 BILLIANI TOMMASO",
+                "t": "gol"
+              },
+              {
+                "p": "#69 MACCACARO LORENZO",
+                "t": "gol"
+              },
+              {
+                "p": "#19 MOTTA DAVIDE",
+                "t": "gol"
+              },
+              {
+                "p": "#19 MOTTA DAVIDE",
+                "t": "gol"
+              },
+              {
+                "p": "#19 MOTTA DAVIDE",
+                "t": "gol"
+              }
+            ],
+            "dt": "2026-09-02T21:30",
+            "played": true,
+            "live": false
+          },
+          "GA_2": {
+            "evA": [
+              {
+                "p": "#10 ORTOLANI ANDREA LUIGI",
+                "t": "gol"
+              },
+              {
+                "p": "#8 INGRASSIA LORENZO",
+                "t": "gol"
+              },
+              {
+                "p": "#29 BULIGA MARIAN STEFAN",
+                "t": "gol"
+              },
+              {
+                "p": "#29 BULIGA MARIAN STEFAN",
+                "t": "giallo"
+              },
+              {
+                "p": "#23 CAVAZZA RICCARDO",
+                "t": "giallo"
+              },
+              {
+                "p": "#22 BATTISTELLO JACOPO",
+                "t": "gol"
+              }
+            ],
+            "evB": [
+              {
+                "p": "#49 PALA SAMUEL",
+                "t": "gol"
+              },
+              {
+                "p": "#29 DE GUIDI ALBERTO",
+                "t": "gol"
+              },
+              {
+                "p": "#49 PALA SAMUEL",
+                "t": "gol"
+              },
+              {
+                "p": "#71 SOSPETTI FEDERICO",
+                "t": "gol"
+              },
+              {
+                "p": "#71 SOSPETTI FEDERICO",
+                "t": "gol"
+              }
+            ],
+            "dt": "2026-08-28T20:30",
+            "played": true,
+            "live": false
+          },
+          "GA_3": {
+            "evA": [
+              {
+                "p": "#14 DALLA VIA FRANCESCO",
+                "t": "gol"
+              },
+              {
+                "p": "#21 MAROSO GREGORIO",
+                "t": "giallo"
+              },
+              {
+                "p": "#5 DALLA VIA ALESSIO",
+                "t": "gol"
+              },
+              {
+                "p": "#10 FERONI MATTEO",
+                "t": "gol"
+              }
+            ],
+            "evB": [
+              {
+                "p": "#69 MACCACARO LORENZO",
+                "t": "gol"
+              },
+              {
+                "p": "#3 PRATO ALBERTO",
+                "t": "gol"
+              },
+              {
+                "p": "#7 DANESE LORENZO",
+                "t": "gol"
+              },
+              {
+                "p": "#22 GIARDINO LORENZO",
+                "t": "gol"
+              },
+              {
+                "p": "#7 DANESE LORENZO",
+                "t": "gol"
+              },
+              {
+                "p": "#10 BILLIANI TOMMASO",
+                "t": "giallo"
+              }
+            ],
+            "dt": "2026-08-29T21:30",
+            "played": true,
+            "live": false
+          },
+          "GA_4": {
+            "evA": [
+              {
+                "p": "#29 BULIGA MARIAN STEFAN",
+                "t": "giallo"
+              },
+              {
+                "p": "#9 ORTOLANI ANDREA LUIGI",
+                "t": "gol"
+              },
+              {
+                "p": "#23 CAVAZZA RICCARDO",
+                "t": "giallo"
+              }
+            ],
+            "evB": [
+              {
+                "p": "#7 DANESE LORENZO",
+                "t": "gol"
+              },
+              {
+                "p": "#7 DANESE LORENZO",
+                "t": "gol"
+              },
+              {
+                "p": "#3 PRATO ALBERTO",
+                "t": "gol"
+              },
+              {
+                "p": "#7 DANESE LORENZO",
+                "t": "gol"
+              }
+            ],
+            "dt": "2026-08-26T21:30",
+            "played": true,
+            "live": false
+          },
+          "GA_5": {
+            "evA": [
+              {
+                "p": "#11 BERTUCCO RICCARDO",
+                "t": "gol"
+              },
+              {
+                "p": "#11 BERTUCCO RICCARDO",
+                "t": "gol"
+              },
+              {
+                "p": "#19 GRIMALDI FERDINANDO",
+                "t": "gol"
+              },
+              {
+                "p": "#19 GRIMALDI FERDINANDO",
+                "t": "gol"
+              },
+              {
+                "p": "#42 MALAFA MATTEO",
+                "t": "gol"
+              }
+            ],
+            "evB": [
+              {
+                "p": "#29 DE GUIDI ALBERTO",
+                "t": "gol"
+              },
+              {
+                "p": "#10 CASTAGNA ENRICO",
+                "t": "gol"
+              },
+              {
+                "p": "#49 PALA SAMUEL",
+                "t": "gol"
+              },
+              {
+                "p": "#71 SOSPETTI FEDERICO",
+                "t": "gol"
+              },
+              {
+                "p": "#29 DE GUIDI ALBERTO",
+                "t": "gol"
+              }
+            ],
+            "dt": "2026-08-24T20:30",
+            "played": true,
+            "live": false
+          },
+          "GB_0": {
+            "evA": [
+              {
+                "p": "#11 PANATO MATTIA",
+                "t": "gol"
+              },
+              {
+                "p": "#25 BERSAN TOMMASO",
+                "t": "gol"
+              },
+              {
+                "p": "#23 ZERMAN ALESSANDRO",
+                "t": "gol"
+              },
+              {
+                "p": "#7 PASINATO PIETRO MARIA",
+                "t": "gol"
+              },
+              {
+                "p": "#5 VENERI DAMIANO",
+                "t": "gol"
+              },
+              {
+                "p": "#10 CIENO SIMONE",
+                "t": "gol"
+              },
+              {
+                "p": "#11 PANATO MATTIA",
+                "t": "giallo"
+              }
+            ],
+            "evB": [
+              {
+                "p": "#9 BONETTI SIMONE",
+                "t": "gol"
+              },
+              {
+                "p": "#9 BONETTI SIMONE",
+                "t": "gol"
+              },
+              {
+                "p": "#9 BONETTI SIMONE",
+                "t": "gol"
+              },
+              {
+                "p": "#9 BONETTI SIMONE",
+                "t": "gol"
+              },
+              {
+                "p": "#5 MICHEL PODDIE",
+                "t": "gol"
+              },
+              {
+                "p": "AUTOGOL",
+                "t": "gol"
+              },
+              {
+                "p": "#6 MASSAGRANDE DIEGO",
+                "t": "giallo"
+              }
+            ],
+            "dt": "2026-08-24T21:30",
+            "played": true,
+            "live": false
+          },
+          "GB_1": {
+            "evA": [
+              {
+                "p": "#99 FIUMINI RICCARDO",
+                "t": "gol"
+              },
+              {
+                "p": "#10 CORSO DAVIDE",
+                "t": "gol"
+              },
+              {
+                "p": "#7 FERRARI FILIPPO",
+                "t": "gol"
+              },
+              {
+                "p": "#7 FERRARI FILIPPO",
+                "t": "gol"
+              },
+              {
+                "p": "#99 FIUMINI RICCARDO",
+                "t": "gol"
+              },
+              {
+                "p": "#7 FERRARI FILIPPO",
+                "t": "gol"
+              },
+              {
+                "p": "#99 FIUMINI RICCARDO",
+                "t": "gol"
+              },
+              {
+                "p": "#10 CORSO DAVIDE",
+                "t": "gol"
+              },
+              {
+                "p": "#99 FIUMINI RICCARDO",
+                "t": "gol"
+              }
+            ],
+            "evB": [
+              {
+                "p": "#33 FERRARI ALESSANDRO",
+                "t": "gol"
+              },
+              {
+                "p": "#37 STORTI EDOARDO",
+                "t": "gol"
+              },
+              {
+                "p": "#22 FASOLI MATTEO",
+                "t": "gol"
+              },
+              {
+                "p": "#33 FERRARI ALESSANDRO",
+                "t": "gol"
+              },
+              {
+                "p": "#33 FERRARI ALESSANDRO",
+                "t": "gol"
+              }
+            ],
+            "dt": "2026-08-26T20:30",
+            "played": true,
+            "live": false
+          },
+          "GB_2": {
+            "evA": [
+              {
+                "p": "#5 VENERI DAMIANO",
+                "t": "gol"
+              },
+              {
+                "p": "#11 PANATO MATTIA",
+                "t": "gol"
+              }
+            ],
+            "evB": [
+              {
+                "p": "#99 FIUMINI RICCARDO",
+                "t": "gol"
+              },
+              {
+                "p": "#99 FIUMINI RICCARDO",
+                "t": "gol"
+              },
+              {
+                "p": "#11 ZOCCA ANDREA",
+                "t": "gol"
+              },
+              {
+                "p": "#7 FERRARI FILIPPO",
+                "t": "gol"
+              }
+            ],
+            "dt": "2026-08-28T19:30",
+            "played": true,
+            "live": false
+          },
+          "GB_3": {
+            "evA": [
+              {
+                "p": "VITTORIA A TAVOLINO",
+                "t": "gol"
+              },
+              {
+                "p": "VITTORIA A TAVOLINO",
+                "t": "gol"
+              },
+              {
+                "p": "VITTORIA A TAVOLINO",
+                "t": "gol"
+              }
+            ],
+            "evB": [],
+            "dt": "2026-08-29T20:30",
+            "played": true,
+            "live": false
+          },
+          "GB_4": {
+            "evA": [
+              {
+                "p": "#14 COMMISSO LUIGI MARIA",
+                "t": "gol"
+              },
+              {
+                "p": "#11 PANATO MATTIA",
+                "t": "gol"
+              },
+              {
+                "p": "#11 PANATO MATTIA",
+                "t": "gol"
+              },
+              {
+                "p": "#10 CIENO SIMONE",
+                "t": "gol"
+              },
+              {
+                "p": "#11 PANATO MATTIA",
+                "t": "gol"
+              },
+              {
+                "p": "#3 APRILI VITTORIO",
+                "t": "gol"
+              }
+            ],
+            "evB": [],
+            "dt": "2026-09-02T19:30",
+            "played": true,
+            "live": false
+          },
+          "GB_5": {
+            "evA": [
+              {
+                "p": "#11 Denny Corigliano",
+                "t": "gol"
+              },
+              {
+                "p": "#11 Denny Corigliano",
+                "t": "gol"
+              }
+            ],
+            "evB": [
+              {
+                "p": "#99 FIUMINI RICCARDO",
+                "t": "gol"
+              },
+              {
+                "p": "#5 MASSOCCO MATTEO",
+                "t": "gol"
+              },
+              {
+                "p": "#99 FIUMINI RICCARDO",
+                "t": "gol"
+              },
+              {
+                "p": "#3 DE BORTOLI DIEGO",
+                "t": "gol"
+              },
+              {
+                "p": "#11 ZOCCA ANDREA",
+                "t": "gol"
+              },
+              {
+                "p": "#7 FERRARI FILIPPO",
+                "t": "gol"
+              },
+              {
+                "p": "#99 FIUMINI RICCARDO",
+                "t": "gol"
+              },
+              {
+                "p": "#8 ALDROVANDI PIETRO",
+                "t": "gol"
+              },
+              {
+                "p": "#11 ZOCCA ANDREA",
+                "t": "gol"
+              },
+              {
+                "p": "#11 ZOCCA ANDREA",
+                "t": "gol"
+              },
+              {
+                "p": "#11 ZOCCA ANDREA",
+                "t": "gol"
+              }
+            ],
+            "dt": "2026-08-31T21:30",
+            "played": true,
+            "live": false
+          },
+          "GC_0": {
+            "evA": [
+              {
+                "p": "#10 TOPPAN GIOVANNI",
+                "t": "gol"
+              },
+              {
+                "p": "#10 TOPPAN GIOVANNI",
+                "t": "gol"
+              }
+            ],
+            "evB": [
+              {
+                "p": "#18 ZUCCONELLI TOMMASO",
+                "t": "gol"
+              },
+              {
+                "p": "#8 OTTOLINI FILIPPO",
+                "t": "giallo"
+              }
+            ],
+            "dt": "2026-08-26T19:30",
+            "played": true,
+            "live": false
+          },
+          "GC_1": {
+            "evA": [
+              {
+                "p": "#10 SANI FILIPPO",
+                "t": "gol"
+              },
+              {
+                "p": "#10 SANI FILIPPO",
+                "t": "gol"
+              },
+              {
+                "p": "#7 LUPI PIETRO",
+                "t": "gol"
+              },
+              {
+                "p": "#9 MERCI MARCO",
+                "t": "gol"
+              },
+              {
+                "p": "#7 LUPI PIETRO",
+                "t": "gol"
+              }
+            ],
+            "evB": [
+              {
+                "p": "#27 ZANONI MATTEO",
+                "t": "gol"
+              },
+              {
+                "p": "#6 LANZA FABIO",
+                "t": "gol"
+              },
+              {
+                "p": "#30 BIONDANI MATTEO",
+                "t": "gol"
+              },
+              {
+                "p": "#29 RAIMONDI LUCA",
+                "t": "gol"
+              }
+            ],
+            "dt": "2026-08-24T19:30",
+            "played": true,
+            "live": false
+          },
+          "GC_2": {
+            "evA": [
+              {
+                "p": "#8 BERTOLASO GIACOMO",
+                "t": "gol"
+              },
+              {
+                "p": "#17 DAL PRETE BINIAM BIHONEGN",
+                "t": "gol"
+              },
+              {
+                "p": "#8 BERTOLASO GIACOMO",
+                "t": "gol"
+              }
+            ],
+            "evB": [
+              {
+                "p": "#7 LUPI PIETRO",
+                "t": "giallo"
+              },
+              {
+                "p": "#5 GUARISE BRIAN",
+                "t": "gol"
+              },
+              {
+                "p": "#10 SANI FILIPPO",
+                "t": "gol"
+              },
+              {
+                "p": "#8 MASSOCCO LORENZO",
+                "t": "gol"
+              },
+              {
+                "p": "#8 MASSOCCO LORENZO",
+                "t": "gol"
+              },
+              {
+                "p": "#8 MASSOCCO LORENZO",
+                "t": "gol"
+              }
+            ],
+            "dt": "2026-08-29T19:30",
+            "played": true,
+            "live": false
+          },
+          "GC_3": {
+            "evA": [
+              {
+                "p": "#5 RIDOLFI TOMMASO",
+                "t": "gol"
+              },
+              {
+                "p": "#69 MARAGNO PIETRO",
+                "t": "gol"
+              },
+              {
+                "p": "#69 MARAGNO PIETRO",
+                "t": "giallo"
+              },
+              {
+                "p": "#6 MORESCHI LORENZO",
+                "t": "gol"
+              },
+              {
+                "p": "#18 ZUCCONELLI TOMMASO",
+                "t": "gol"
+              },
+              {
+                "p": "#21 SCHENA NICOLA",
+                "t": "giallo"
+              },
+              {
+                "p": "#18 ZUCCONELLI TOMMASO",
+                "t": "gol"
+              }
+            ],
+            "evB": [
+              {
+                "p": "#10 COBELLI DAVIDE",
+                "t": "gol"
+              },
+              {
+                "p": "#1 MURA TOMMASO",
+                "t": "gol"
+              },
+              {
+                "p": "#10 COBELLI DAVIDE",
+                "t": "gol"
+              }
+            ],
+            "dt": "2026-08-28T21:30",
+            "played": true,
+            "live": false
+          },
+          "GC_4": {
+            "evA": [
+              {
+                "p": "#14 RIZZA MATTIA",
+                "t": "gol"
+              },
+              {
+                "p": "#45 OTTAVIANI ANDREA",
+                "t": "gol"
+              },
+              {
+                "p": "#8 BERTOLASO GIACOMO",
+                "t": "gol"
+              },
+              {
+                "p": "#22 GELMETTI TOMMASO",
+                "t": "gol"
+              },
+              {
+                "p": "#14 RIZZA MATTIA",
+                "t": "gol"
+              }
+            ],
+            "evB": [
+              {
+                "p": "#29 RAIMONDI LUCA",
+                "t": "gol"
+              },
+              {
+                "p": "#6 LANZA FABIO",
+                "t": "gol"
+              },
+              {
+                "p": "#30 BIONDANI MATTEO",
+                "t": "gol"
+              },
+              {
+                "p": "#6 LANZA FABIO",
+                "t": "gol"
+              }
+            ],
+            "dt": "2026-09-02T20:30",
+            "played": true,
+            "live": false
+          },
+          "GC_5": {
+            "evA": [
+              {
+                "p": "#5 RIDOLFI TOMMASO",
+                "t": "gol"
+              }
+            ],
+            "evB": [
+              {
+                "p": "#4 BRAGGIO RICCARDO",
+                "t": "gol"
+              }
+            ],
+            "dt": "2026-08-31T19:30",
+            "played": true,
+            "live": false
+          },
+          "QF_0": {
+            "evA": [
+              {
+                "p": "#7 FERRARI FILIPPO",
+                "t": "gol"
+              },
+              {
+                "p": "#99 FIUMINI RICCARDO",
+                "t": "gol"
+              },
+              {
+                "p": "#99 FIUMINI RICCARDO",
+                "t": "gol"
+              },
+              {
+                "p": "VITTORIA AI RIGORI",
+                "t": "gol"
+              }
+            ],
+            "evB": [
+              {
+                "p": "#29 DE GUIDI ALBERTO",
+                "t": "gol"
+              },
+              {
+                "p": "#71 SOSPETTI FEDERICO",
+                "t": "gol"
+              },
+              {
+                "p": "#71 SOSPETTI FEDERICO",
+                "t": "gol"
+              }
+            ],
+            "dt": "2026-09-04T20:00",
+            "played": true,
+            "live": false
+          },
+          "QF_1": {
+            "evA": [
+              {
+                "p": "#22 GIARDINO LORENZO",
+                "t": "gol"
+              },
+              {
+                "p": "#19 MOTTA DAVIDE",
+                "t": "gol"
+              },
+              {
+                "p": "#22 GIARDINO LORENZO",
+                "t": "gol"
+              }
+            ],
+            "evB": [
+              {
+                "p": "#18 ZUCCONELLI TOMMASO",
+                "t": "gol"
+              },
+              {
+                "p": "#6 MORESCHI LORENZO",
+                "t": "giallo"
+              }
+            ],
+            "dt": "2026-09-04T21:00",
+            "played": true,
+            "live": false
+          },
+          "QF_2": {
+            "evA": [],
+            "evB": [
+              {
+                "p": "#19 GRIMALDI FERDINANDO",
+                "t": "gol"
+              },
+              {
+                "p": "#21 MAROSO GREGORIO",
+                "t": "gol"
+              }
+            ],
+            "dt": "2026-09-05T20:00",
+            "played": true,
+            "live": false
+          },
+          "QF_3": {
+            "evA": [
+              {
+                "p": "#19 DANIELI FILIPPO",
+                "t": "gol"
+              },
+              {
+                "p": "#17 DAL PRETE BINIAM BIHONEGN",
+                "t": "gol"
+              },
+              {
+                "p": "#17 DAL PRETE BINIAM BIHONEGN",
+                "t": "gol"
+              }
+            ],
+            "evB": [
+              {
+                "p": "#25 BERSAN TOMMASO",
+                "t": "gol"
+              },
+              {
+                "p": "#25 BERSAN TOMMASO",
+                "t": "gol"
+              },
+              {
+                "p": "#25 BERSAN TOMMASO",
+                "t": "giallo"
+              }
+            ],
+            "dt": "2026-09-05T21:00",
+            "played": true,
+            "live": false
+          },
+          "SF_0": {
+            "evA": [
+              {
+                "p": "#42 MALAFA MATTEO",
+                "t": "gol"
+              },
+              {
+                "p": "#10 FERONI MATTEO",
+                "t": "gol"
+              },
+              {
+                "p": "#11 BERTUCCO  RICCARDO",
+                "t": "gol"
+              }
+            ],
+            "evB": [
+              {
+                "p": "#99 FIUMINI RICCARDO",
+                "t": "gol"
+              },
+              {
+                "p": "#11 ZOCCA ANDREA",
+                "t": "gol"
+              },
+              {
+                "p": "#11 ZOCCA ANDREA",
+                "t": "gol"
+              },
+              {
+                "p": "#11 ZOCCA ANDREA",
+                "t": "gol"
+              }
+            ],
+            "dt": "2026-09-07T20:00",
+            "played": true,
+            "live": false
+          },
+          "SF_1": {
+            "evA": [
+              {
+                "p": "#3 FACCIOLO RICCARDO",
+                "t": "gol"
+              }
+            ],
+            "evB": [
+              {
+                "p": "#10 BILLIANI TOMMASO",
+                "t": "gol"
+              },
+              {
+                "p": "#3 PRATO ALBERTO",
+                "t": "gol"
+              },
+              {
+                "p": "#69 MACCACARO LORENZO",
+                "t": "gol"
+              }
+            ],
+            "dt": "2026-09-07T21:00",
+            "played": true,
+            "live": false
+          }
+        },
+        "koTeams": {
+          "F3_0": {
+            "a": "ORTI SZ",
+            "b": "BORGO LENTO FC"
+          },
+          "F_0": {
+            "a": "CA MUZZONI",
+            "b": "GOS MIL DOS"
+          },
+          "QF_0": {
+            "a": "CA MUZZONI",
+            "b": "CAYO FC"
+          },
+          "QF_1": {
+            "a": "GOS MIL DOS",
+            "b": "CATECHESI"
+          },
+          "QF_2": {
+            "a": "CIVICO 93",
+            "b": "ORTI SZ"
+          },
+          "QF_3": {
+            "a": "BORGO LENTO FC",
+            "b": "MORTADHELLAS"
+          },
+          "SF_0": {
+            "a": "ORTI SZ",
+            "b": "CA MUZZONI"
+          },
+          "SF_1": {
+            "a": "BORGO LENTO FC",
+            "b": "GOS MIL DOS"
+          }
+        },
+        "banco": {
+          "BAR BROTHERS": 0,
+          "BERLUSCA DORTMUND": 0,
+          "BORGO LENTO FC": 66,
+          "BORGO SORTE": 510,
+          "Bar Brothers": 0,
+          "Berlusca Dortmund": 0,
+          "CA MUZZONI": 306,
+          "CATECHESI": 214,
+          "CAYO FC": 39,
+          "CIVICO 93": 200,
+          "C_a_ Muzzoni": 0,
+          "Catechesi": 0,
+          "Civico 93": 24,
+          "Civico 93 - AGGIORNATO": 10,
+          "GOS MIL DOS": 894,
+          "Gos Mil Dos": 10,
+          "HERTA VERNELLO": 0,
+          "Herta Vernello": 7,
+          "I TESTONI DEL BRO": 68,
+          "MORTADHELLAS": 185,
+          "Mortadhellas": 65,
+          "ORTI SAN ZENO": 418,
+          "Orti S_Z_": 0,
+          "PATATANAIKOS": 128,
+          "PERETTI COFER": 1,
+          "Patatanaikos - AGGIORNATO": 10,
+          "Peretti Srl": 0,
+          "TARTUFON FC": 295,
+          "Tartufon Fc": 5,
+          "Tartufon Fc - AGGIORNATO": 10,
+          "xxxxxxxxxx": 10
+        },
+        "social": {
+          "BORGO LENTO FC": 23,
+          "BORGO SORTE": 13,
+          "CA MUZZONI": 23,
+          "CATECHESI": 15,
+          "CAYO FC": 16,
+          "CIVICO 93": 11,
+          "Civico 93 - AGGIORNATO": 7,
+          "GOS MIL DOS": 86,
+          "I TESTONI DEL BRO": 2,
+          "MORTADHELLAS": 82,
+          "Mortadhellas": 1,
+          "ORTI SAN ZENO": 16,
+          "PATATANAIKOS": 11,
+          "Patatanaikos - AGGIORNATO": 48,
+          "TARTUFON FC": 42,
+          "Tartufon Fc - AGGIORNATO": 1
+        }
+      },
+      "awards": {
+        "podium": [
+          "CA MUZZONI",
+          "GOS MIL DOS",
+          "ORTI SAN ZENO"
+        ],
+        "individual": [
+          {
+            "type": "Capocannoniere",
+            "person": "Riccardo Fiumini",
+            "team": "CA Muzzoni"
+          },
+          {
+            "type": "Miglior giocatore",
+            "person": "Alberto Prato",
+            "team": "Gos Mil Dos"
+          },
+          {
+            "type": "Miglior portiere",
+            "person": "Giovanni Balestriero",
+            "team": "CA Muzzoni"
+          }
+        ],
+        "team": [
+          {
+            "type": "Coppa Social",
+            "team": "Gos Mil Dos"
+          },
+          {
+            "type": "Coppa Banco",
+            "team": "Gos Mil Dos"
+          }
+        ]
+      }
+    },
+    "2027": {
+      "status": "current",
+      "hasDetails": true,
+      "tournament": {
+        "squadre": {
+          "A": [
+            {
+              "name": "TARTUFON FC",
+              "players": [
+                {
+                  "n": 3,
+                  "name": "PEPE LUCA"
+                },
+                {
+                  "n": 32,
+                  "name": "BILLIANI EDOARDO"
+                },
+                {
+                  "n": 1,
+                  "name": "ZAMPINI GABRIELE"
+                },
+                {
+                  "n": 8,
+                  "name": "INGRASSIA LORENZO"
+                },
+                {
+                  "n": 10,
+                  "name": "ORTOLANI ANDREA LUIGI"
+                },
+                {
+                  "n": 16,
+                  "name": "PIGHI FILIPPO"
+                },
+                {
+                  "n": 19,
+                  "name": "VIGNOLA RICCARDO"
+                },
+                {
+                  "n": 20,
+                  "name": "LANDI PIETRO"
+                },
+                {
+                  "n": 22,
+                  "name": "BATTISTELLO JACOPO"
+                },
+                {
+                  "n": 23,
+                  "name": "CAVAZZA RICCARDO"
+                },
+                {
+                  "n": 29,
+                  "name": "BULIGA MARIAN STEFAN"
+                },
+                {
+                  "n": 88,
+                  "name": "CERPELLONI MATTIA"
+                },
+                {
+                  "n": 96,
+                  "name": "MACCACARO TOMMASO"
+                }
+              ]
+            },
+            {
+              "name": "ORTI SAN ZENO",
+              "players": [
+                {
+                  "n": 1,
+                  "name": "TRUSCHELLI PIETRO"
+                },
+                {
+                  "n": 3,
+                  "name": "CELON AUGUSTO"
+                },
+                {
+                  "n": 5,
+                  "name": "DALLA VIA ALESSIO"
+                },
+                {
+                  "n": 6,
+                  "name": "PEZZINO SIMONE"
+                },
+                {
+                  "n": 9,
+                  "name": "DAL CORSO NICOLO'"
+                },
+                {
+                  "n": 10,
+                  "name": "FERONI MATTEO"
+                },
+                {
+                  "n": 11,
+                  "name": "BERTUCCO RICCARDO"
+                },
+                {
+                  "n": 14,
+                  "name": "DALLA VIA FRANCESCO"
+                },
+                {
+                  "n": 19,
+                  "name": "GRIMALDI FERDINANDO"
+                },
+                {
+                  "n": 21,
+                  "name": "MAROSO GREGORIO"
+                },
+                {
+                  "n": 42,
+                  "name": "MALAFA MATTEO"
+                }
+              ]
+            },
+            {
+              "name": "CAYO FC",
+              "players": [
+                {
+                  "n": 10,
+                  "name": "CASTAGNA ENRICO"
+                },
+                {
+                  "n": 13,
+                  "name": "NICASTRO MANUEL"
+                },
+                {
+                  "n": 14,
+                  "name": "NICASTRO MIRKO"
+                },
+                {
+                  "n": 25,
+                  "name": "PERETTI LEONARDO"
+                },
+                {
+                  "n": 29,
+                  "name": "DE GUIDI ALBERTO"
+                },
+                {
+                  "n": 43,
+                  "name": "CATANIA DAVIDE VITTORIO"
+                },
+                {
+                  "n": 49,
+                  "name": "PALA SAMUEL"
+                },
+                {
+                  "n": 71,
+                  "name": "SOSPETTI FEDERICO"
+                },
+                {
+                  "n": 88,
+                  "name": "BIASUTTI MANUEL"
+                },
+                {
+                  "n": 99,
+                  "name": "GARIGGIO TOMMASO"
+                }
+              ]
+            },
+            {
+              "name": "GOS MIL DOS",
+              "players": [
+                {
+                  "n": 3,
+                  "name": "PRATO ALBERTO"
+                },
+                {
+                  "n": 7,
+                  "name": "DANESE LORENZO"
+                },
+                {
+                  "n": 10,
+                  "name": "BILLIANI TOMMASO"
+                },
+                {
+                  "n": 11,
+                  "name": "POPA CRISTIAN"
+                },
+                {
+                  "n": 16,
+                  "name": "BORDIGNONI MATTIA"
+                },
+                {
+                  "n": 19,
+                  "name": "MOTTA DAVIDE"
+                },
+                {
+                  "n": 21,
+                  "name": "TOMMASI DAVIDE"
+                },
+                {
+                  "n": 22,
+                  "name": "GIARDINO LORENZO"
+                },
+                {
+                  "n": 27,
+                  "name": "COVELLI LEONARDO"
+                },
+                {
+                  "n": 69,
+                  "name": "MACCACARO LORENZO"
+                },
+                {
+                  "n": 90,
+                  "name": "CHELIDONIO MATTEO"
+                }
+              ]
+            }
+          ],
+          "B": [
+            {
+              "name": "MORTADHELLAS",
+              "players": [
+                {
+                  "n": 3,
+                  "name": "APRILI VITTORIO"
+                },
+                {
+                  "n": 5,
+                  "name": "VENERI DAMIANO"
+                },
+                {
+                  "n": 6,
+                  "name": "AVESANI ELIA"
+                },
+                {
+                  "n": 7,
+                  "name": "PASINATO PIETRO MARIA"
+                },
+                {
+                  "n": 8,
+                  "name": "CESCHI ALESSANDRO"
+                },
+                {
+                  "n": 10,
+                  "name": "CIENO SIMONE"
+                },
+                {
+                  "n": 11,
+                  "name": "PANATO MATTIA"
+                },
+                {
+                  "n": 14,
+                  "name": "COMMISSO LUIGI MARIA"
+                },
+                {
+                  "n": 18,
+                  "name": "SANTI FILIPPO"
+                },
+                {
+                  "n": 21,
+                  "name": "EPIBOLI DAVIDE"
+                },
+                {
+                  "n": 22,
+                  "name": "CANZIAN MICHELE"
+                },
+                {
+                  "n": 23,
+                  "name": "ZERMAN ALESSANDRO"
+                },
+                {
+                  "n": 25,
+                  "name": "BERSAN TOMMASO"
+                },
+                {
+                  "n": 27,
+                  "name": "CUSINI FILIPPO"
+                },
+                {
+                  "n": 88,
+                  "name": "NANI TOMMASO"
+                }
+              ]
+            },
+            {
+              "name": "I TESTONI DEL BRO",
+              "players": []
+            },
+            {
+              "name": "CA MUZZONI",
+              "players": [
+                {
+                  "n": 0,
+                  "name": "BALESTRIERO GIOVANNI"
+                },
+                {
+                  "n": 3,
+                  "name": "FERRARI LEONARDO"
+                },
+                {
+                  "n": 3,
+                  "name": "DE BORTOLI DIEGO"
+                },
+                {
+                  "n": 5,
+                  "name": "MASSOCCO MATTEO"
+                },
+                {
+                  "n": 4,
+                  "name": "SQUARANTI LUCA"
+                },
+                {
+                  "n": 8,
+                  "name": "ALDROVANDI PIETRO"
+                },
+                {
+                  "n": 7,
+                  "name": "FERRARI FILIPPO"
+                },
+                {
+                  "n": 6,
+                  "name": "MARCHIOTTO DIEGO"
+                },
+                {
+                  "n": 99,
+                  "name": "FIUMINI RICCARDO"
+                },
+                {
+                  "n": 10,
+                  "name": "CORSO DAVIDE"
+                },
+                {
+                  "n": 13,
+                  "name": "ZOCCA ANDREA"
+                },
+                {
+                  "n": 100,
+                  "name": "SIGNORINI FRANCESCO"
+                }
+              ]
+            },
+            {
+              "name": "PATATANAIKOS",
+              "players": [
+                {
+                  "n": 1,
+                  "name": "CRESATANELLO ANDREA"
+                },
+                {
+                  "n": 7,
+                  "name": "FILIPPO LAVANDA"
+                },
+                {
+                  "n": 9,
+                  "name": "FARINELLI LUIGI"
+                },
+                {
+                  "n": 22,
+                  "name": "FASOLI MATTEO"
+                },
+                {
+                  "n": 24,
+                  "name": "SONA FRANCESCO"
+                },
+                {
+                  "n": 33,
+                  "name": "FERRARI ALESSANDRO"
+                },
+                {
+                  "n": 37,
+                  "name": "STORTI EDOARDO"
+                },
+                {
+                  "n": 44,
+                  "name": "IMOLA FABIO"
+                },
+                {
+                  "n": 62,
+                  "name": "DOARDI MATTEO"
+                },
+                {
+                  "n": 69,
+                  "name": "CRISTANI FRANCESCO"
+                },
+                {
+                  "n": 77,
+                  "name": "SONA THOMAS"
+                },
+                {
+                  "n": 97,
+                  "name": "OLIVIERI MATTEO"
+                }
+              ]
+            }
+          ],
+          "C": [
+            {
+              "name": "BORGO LENTO FC",
+              "players": [
+                {
+                  "n": 6,
+                  "name": "GIACOMELLO PIETRO"
+                },
+                {
+                  "n": 70,
+                  "name": "MANARA TOBIA"
+                },
+                {
+                  "n": 3,
+                  "name": "FACCIOLO RICCARDO"
+                },
+                {
+                  "n": 8,
+                  "name": "BERTOLASO GIACOMO"
+                },
+                {
+                  "n": 45,
+                  "name": "OTTAVIANI ANDREA"
+                },
+                {
+                  "n": 10,
+                  "name": "TOPPAN GIOVANNI"
+                },
+                {
+                  "n": 17,
+                  "name": "DAL PRETE BINIAM BIHONEGN"
+                },
+                {
+                  "n": 22,
+                  "name": "GELMETTI TOMMASO"
+                },
+                {
+                  "n": 14,
+                  "name": "RIZZA MATTIA"
+                },
+                {
+                  "n": 19,
+                  "name": "DANIELI FILIPPO"
+                }
+              ]
+            },
+            {
+              "name": "CATECHESI",
+              "players": [
+                {
+                  "n": 5,
+                  "name": "RIDOLFI TOMMASO"
+                },
+                {
+                  "n": 6,
+                  "name": "MORESCHI LORENZO"
+                },
+                {
+                  "n": 7,
+                  "name": "TRIMINI' LORENZO"
+                },
+                {
+                  "n": 8,
+                  "name": "OTTOLINI FILIPPO"
+                },
+                {
+                  "n": 9,
+                  "name": "SCHENA GIOVANNI"
+                },
+                {
+                  "n": 10,
+                  "name": "RIGHETTI ALESSIO"
+                },
+                {
+                  "n": 17,
+                  "name": "BORDIGNONI MARTINO"
+                },
+                {
+                  "n": 18,
+                  "name": "ZUCCONELLI TOMMASO"
+                },
+                {
+                  "n": 21,
+                  "name": "SCHENA NICOLA"
+                },
+                {
+                  "n": 69,
+                  "name": "MARAGNO PIETRO"
+                },
+                {
+                  "n": 88,
+                  "name": "MAZZI MICHELE"
+                },
+                {
+                  "n": 95,
+                  "name": "GASTALDELLO GIACOMO"
+                }
+              ]
+            },
+            {
+              "name": "CIVICO 93",
+              "players": [
+                {
+                  "n": 1,
+                  "name": "GERVASINI TOMMASO"
+                },
+                {
+                  "n": 1,
+                  "name": "BERNARDI FRANCESCO"
+                },
+                {
+                  "n": 2,
+                  "name": "TOMMASI PAOLO"
+                },
+                {
+                  "n": 4,
+                  "name": "BRAGGIO RICCARDO"
+                },
+                {
+                  "n": 5,
+                  "name": "GUARISE BRIAN"
+                },
+                {
+                  "n": 6,
+                  "name": "PIETROPOLI FEDERICO"
+                },
+                {
+                  "n": 7,
+                  "name": "LUPI PIETRO"
+                },
+                {
+                  "n": 8,
+                  "name": "MASSOCCO LORENZO"
+                },
+                {
+                  "n": 9,
+                  "name": "MERCI MARCO"
+                },
+                {
+                  "n": 10,
+                  "name": "SANI FILIPPO"
+                },
+                {
+                  "n": 11,
+                  "name": "CAPRIOTTI ALBERTO"
+                }
+              ]
+            },
+            {
+              "name": "BORGO SORTE",
+              "players": [
+                {
+                  "n": 1,
+                  "name": "MURA TOMMASO"
+                },
+                {
+                  "n": 5,
+                  "name": "CECCHIN MATTEO"
+                },
+                {
+                  "n": 8,
+                  "name": "FERRO GIACOMO"
+                },
+                {
+                  "n": 13,
+                  "name": "BEGALI ALESSANDRO"
+                },
+                {
+                  "n": 20,
+                  "name": "MARCHESE FEDERICO"
+                },
+                {
+                  "n": 30,
+                  "name": "BIONDANI MATTEO"
+                },
+                {
+                  "n": 27,
+                  "name": "ZANONI MATTEO"
+                },
+                {
+                  "n": 29,
+                  "name": "RAIMONDI LUCA"
+                },
+                {
+                  "n": 6,
+                  "name": "LANZA FABIO"
+                },
+                {
+                  "n": 10,
+                  "name": "COBELLI DAVIDE"
+                }
+              ]
+            }
+          ]
+        },
+        "matches": {},
+        "koTeams": {},
+        "banco": {},
+        "social": {}
+      },
+      "awards": {
+        "podium": [
+          "",
+          "",
+          ""
+        ],
+        "individual": [],
+        "team": []
+      }
+    }
+  },
+  "_wkey": "federicopietropoli",
+  "historicalScorers": {
+    "2024": {
+      "GRIMALDI FERDINANDO": 9,
+      "BORTOLETTO SIMONE": 8,
+      "MASSOCCO LORENZO": 7,
+      "ARABIA DAVIDE": 6,
+      "GJOKA ANIS": 6,
+      "MERCI MARCO": 6,
+      "BERTASINI LORENZO": 5,
+      "LUPI PIETRO": 5,
+      "MARANI SIMONE": 5,
+      "PASINATO PIETRO": 5,
+      "VENERI DAMIANO": 5,
+      "ZANROSSI MATTEO": 5,
+      "BRAGGIO RICCARDO": 4,
+      "FERONI MATTEO": 4,
+      "GANTES GABRIELE": 4,
+      "GHIRLANDA FILIPPO": 4,
+      "PANATO MATTIA": 4,
+      "RICCIOTTI ANDREA": 4,
+      "ZANONI MATTEO": 4,
+      "BERSAN PIETRO": 3,
+      "BONETTI SIMONE": 3,
+      "CASTELLI DAMIANO": 3,
+      "CHANDEPPA DARIO": 3,
+      "DANESE LORENZO": 3,
+      "MALAFA MATTEO": 3,
+      "MORESCHI LORENZO": 3,
+      "MOTTA DAVIDE": 3,
+      "RAIMONDI LUCA": 3,
+      "TOMELLERI CARLO": 3,
+      "TOMMASI PAOLO": 3,
+      "BORDIGNONI MARTINO": 2,
+      "DALPRETE MARCO": 2,
+      "GIARDINI NICOLA": 2,
+      "GUARISE BRIAN": 2,
+      "LANZA FABIO": 2,
+      "LUGOBONI MATTEO": 2,
+      "MASSELLA JACOPO": 2,
+      "OTTOLINI FILIPPO": 2,
+      "PRATO ALBERTO": 2,
+      "SANI FILIPPO": 2,
+      "SAVIGNANO FRANCESCO": 2,
+      "SQURANTI LUCA": 2,
+      "TITTARELLI ALESSANDRO": 2,
+      "ZUCCONELLI TOMMASO": 2,
+      "PERRONE LUIGI": 2,
+      "AVESANI ELIA": 1,
+      "BAZZONI TOMMASO": 1,
+      "BIONDANI MATTEO": 1,
+      "BOCCIANTI FILIPPO": 1,
+      "CECCHIN MATTEO": 1,
+      "CELON AUGUSTO": 1,
+      "CHELIDONIO MATTEO": 1,
+      "COBELLI DAVIDE": 1,
+      "COBELLI MATTIA": 1,
+      "DARRA STEFANO": 1,
+      "GIARDINO LORENZO": 1,
+      "IRPRATI MATTEO": 1,
+      "MACCACARO LORENZO": 1,
+      "MASSOCCO MATTEO": 1,
+      "MURA TOMMASO": 1,
+      "PEGORARO ENRICO": 1,
+      "PIETROPOLI FEDERICO": 1,
+      "RIGHETTI ALESSIO": 1,
+      "TOFFOLI PIETRO": 1,
+      "MAINENTI MICHELE": 1
+    },
+    "2025": {}
+  }
+}

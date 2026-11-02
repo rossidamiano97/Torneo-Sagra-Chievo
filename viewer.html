@@ -426,6 +426,22 @@ tr:last-child td {
   border-color: var(--accent-light);
   color: var(--accent-light);
 }
+
+/* --- Edizioni e Albo d'oro --- */
+.season-bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:9px 1.5rem;background:var(--bg3);border-bottom:1px solid var(--border);color:var(--text2)}
+.season-bar select{width:auto;min-width:105px;padding:6px 10px;font-weight:700;color:var(--yellow)}
+.season-pill{display:inline-flex;align-items:center;padding:4px 10px;border:1px solid var(--border);border-radius:999px;font-size:12px}.season-pill.current{color:#70c97e}.season-pill.archive{color:var(--yellow)}
+.season-back{padding:5px 10px!important;font-size:12px!important}.archive-warning{background:rgba(255,209,102,.10);border:1px solid rgba(255,209,102,.35);color:#ffe6a6;border-radius:8px;padding:9px 12px;font-size:13px;margin-bottom:12px}
+.honors-subnav{display:flex;overflow-x:auto;gap:4px;margin-bottom:14px}.honors-subnav button{border:1px solid var(--border);background:var(--bg3);color:var(--text2);border-radius:7px;padding:8px 12px;cursor:pointer;white-space:nowrap}.honors-subnav button.active{background:var(--accent);border-color:var(--accent);color:white}
+.honors-note{font-size:13px;color:var(--text3);margin:-5px 0 12px}.honors-empty{text-align:center;color:var(--text3);padding:20px}.hidden{display:none!important}
+@media(max-width:640px){.season-bar{padding:8px 12px}.season-label{display:none}.honors-table-wrap{overflow-x:auto}}
+
+
+/* Correzione menu edizione */
+.season-bar select{appearance:auto!important;background-color:var(--bg3)!important;color:var(--yellow)!important;border:1px solid var(--accent)!important;box-shadow:none!important;font-weight:700!important}
+.season-bar select option{background:var(--bg2)!important;color:var(--text)!important}
+.season-back{background:var(--bg3)!important;color:var(--text)!important;border-color:var(--border)!important}
+
 </style>
 </head>
 
@@ -452,6 +468,7 @@ tr:last-child td {
   <button onclick="loadAndRender()">↻ Aggiorna</button>
 </div>
 
+<div class="season-bar"><span class="season-label">Edizione visualizzata</span><select id="season-select" onchange="switchSeason(this.value)"></select><span id="season-pill" class="season-pill"></span><button id="season-back" class="btn season-back hidden" onclick="switchSeason(CURRENT_SEASON)">Torna al 2027</button></div>
 <nav class="nav">
   <button class="nav-btn active" onclick="showTab('gironi',this)">Gironi</button>
   <button class="nav-btn" onclick="showTab('ko',this)">Eliminazione Diretta</button>
@@ -460,6 +477,7 @@ tr:last-child td {
   <button class="nav-btn" onclick="showTab('social',this)">
     <i class="ti ti-brand-instagram ig-icon"></i> Coppa Social
   </button>
+  <button class="nav-btn" onclick="showTab('albo',this)">Albo d'oro</button>
 </nav>
 
 <main class="main">
@@ -468,6 +486,7 @@ tr:last-child td {
   <div id="classifiche" class="section"></div>
   <div id="marcatori" class="section"></div>
   <div id="social" class="section"></div>
+  <div id="albo" class="section"></div>
 </main>
 
 <script src="https://www.gstatic.com/firebasejs/12.2.0/firebase-app-compat.js"></script>
@@ -537,7 +556,12 @@ const FIREBASE_CONFIG = {
 
 const app = firebase.initializeApp(FIREBASE_CONFIG);
 const db = firebase.database();
-const stateRef = db.ref('torneo_ceo');
+const ROOT_REF = db.ref('torneo_ceo_v2');
+const CURRENT_SEASON='2027';
+let selectedSeason=CURRENT_SEASON;
+let stateRef=ROOT_REF.child('seasons/'+selectedSeason+'/tournament');
+let currentSyncHandler=null;
+let ALL_SEASONS={};
 
 let S=null;
 
@@ -717,28 +741,38 @@ function loadAndRender(){
     renders[active.id]&&renders[active.id]();
 }
 
+function populateSeasonMenu(){
+  ROOT_REF.once('value').then(snap=>{
+    const root=snap.val()||{};
+    ALL_SEASONS=root.seasons||{};window.__ROOT_DATA=root;
+    const years=(root.config&&root.config.availableSeasons)||['2027','2026'];
+    const sel=document.getElementById('season-select');
+    sel.innerHTML=years.map(y=>`<option value="${y}">${y}${y===CURRENT_SEASON?' · corrente':''}</option>`).join('');
+    sel.value=selectedSeason;
+    updateSeasonUI();
+  }).catch(err=>{console.error(err);document.getElementById('last-update').textContent='Errore caricamento stagioni';});
+}
+function updateSeasonUI(){
+  const archive=selectedSeason!==CURRENT_SEASON;
+  const pill=document.getElementById('season-pill'),back=document.getElementById('season-back');
+  pill.textContent=archive?'Archivio storico':'Edizione corrente';
+  pill.className='season-pill '+(archive?'archive':'current');
+  back.classList.toggle('hidden',!archive);
+}
+function switchSeason(year){
+  if(!year||year===selectedSeason)return;
+  if(currentSyncHandler)stateRef.off('value',currentSyncHandler);
+  selectedSeason=String(year);
+  stateRef=ROOT_REF.child('seasons/'+selectedSeason+'/tournament');
+  S=null;
+  document.getElementById('season-select').value=selectedSeason;
+  updateSeasonUI();
+  subscribeLive();
+}
 function subscribeLive(){
-
-  stateRef.on(
-    'value',
-
-    snap=>{
-
-      S=normalizeState(snap.val());
-
-      loadAndRender();
-
-    },
-
-    err=>{
-
-      console.error(err);
-
-      document.getElementById('last-update').textContent=
-        'Errore nel caricamento live';
-
-    }
-  );
+  currentSyncHandler=snap=>{S=normalizeState(snap.val());loadAndRender();};
+  stateRef.on('value',currentSyncHandler,err=>{console.error(err);document.getElementById('last-update').textContent='Errore nel caricamento live';});
+  ROOT_REF.child('seasons').once('value').then(s=>{ALL_SEASONS=s.val()||{};if(document.querySelector('.section.active')?.id==='albo')renderAlbo();});
 }
 
 function showTab(t,el){
@@ -1885,7 +1919,25 @@ function renderSocial(){
 }
 
 
+
+function htmlEsc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function canonicalTeam(v){const x=String(v||'').trim().toUpperCase().replace(/\s+/g,' ');return {'ORTI SZ':'ORTI SAN ZENO','C.A. MUZZONI':'CA MUZZONI'}[x]||x;}
+function scorerTotals(t){const out={};const matches=(t&&t.matches)||{};Object.values(matches).forEach(m=>[...toArr(m&&m.evA),...toArr(m&&m.evB)].forEach(e=>{if(!e||e.t!=='gol'||/AUTOGOL|VITTORIA AI RIGORI/i.test(e.p||''))return;const n=String(e.p||'').replace(/^#\d+\s*/,'').trim().replace(/\s+/g,' ').toUpperCase();if(n)out[n]=(out[n]||0)+1;}));return out;}
+function renderAlbo(){
+ const el=document.getElementById('albo'); if(!el)return; const seasons=Object.entries(ALL_SEASONS||{}).sort((a,b)=>Number(b[0])-Number(a[0]));
+ el.innerHTML=`<div class="honors-subnav"><button class="active" onclick="renderAlboSub('podi',this)">Podi per anno</button><button onclick="renderAlboSub('squadre',this)">Titoli e premi squadra</button><button onclick="renderAlboSub('individuali',this)">Premi individuali</button><button onclick="renderAlboSub('marcatori',this)">Marcatori all time</button></div><div id="albo-content"></div>`;
+ window.__honorsSeasons=seasons;renderAlboSub('podi',el.querySelector('button'));
+}
+function renderAlboSub(kind,btn){
+ document.querySelectorAll('.honors-subnav button').forEach(b=>b.classList.toggle('active',b===btn));const el=document.getElementById('albo-content'),seasons=window.__honorsSeasons||[];
+ if(kind==='podi'){el.innerHTML=`<div class="card"><div class="card-title">Podi per edizione</div><div class="honors-table-wrap"><table><thead><tr><th>Edizione</th><th>Campione</th><th>Secondo</th><th>Terzo</th></tr></thead><tbody>${seasons.map(([y,s])=>{const p=(s.awards&&s.awards.podium)||['','',''];return `<tr><td><strong>${y}</strong></td>${[0,1,2].map(i=>`<td>${htmlEsc(p[i]||'Da assegnare')}</td>`).join('')}</tr>`}).join('')}</tbody></table></div></div>`;return;}
+ if(kind==='individuali'){el.innerHTML=seasons.map(([y,s])=>{const a=(s.awards&&s.awards.individual)||[];return `<div class="card"><div class="card-title">${y}</div>${a.length?`<table><thead><tr><th>Premio</th><th>Vincitore</th><th>Squadra</th></tr></thead><tbody>${a.map(x=>`<tr><td>${htmlEsc(x.type)}</td><td><strong>${htmlEsc(x.person)}</strong></td><td>${htmlEsc(x.team)}</td></tr>`).join('')}</tbody></table>`:'<div class="honors-empty">Premi da assegnare</div>'}</div>`}).join('');return;}
+ if(kind==='squadre'){const t={};seasons.forEach(([y,s])=>{const a=s.awards||{};(a.podium||[]).forEach((n,i)=>{n=canonicalTeam(n);if(!n)return;t[n]??={win:0,second:0,third:0,banco:0,social:0};if(i===0)t[n].win++;if(i===1)t[n].second++;if(i===2)t[n].third++;});(a.team||[]).forEach(x=>{const n=canonicalTeam(x.team);if(!n)return;t[n]??={win:0,second:0,third:0,banco:0,social:0};if(x.type==='Coppa Banco')t[n].banco++;if(x.type==='Coppa Social')t[n].social++;});});const rows=Object.entries(t).sort((a,b)=>b[1].win-a[1].win||b[1].banco+b[1].social-a[1].banco-a[1].social);el.innerHTML=`<div class="card"><div class="card-title">Titoli e premi di squadra</div><div class="honors-table-wrap"><table><thead><tr><th>Squadra</th><th>Titoli</th><th>2°</th><th>3°</th><th>Banco</th><th>Social</th></tr></thead><tbody>${rows.map(([n,x])=>`<tr><td><strong>${htmlEsc(n)}</strong></td><td>${x.win}</td><td>${x.second}</td><td>${x.third}</td><td>${x.banco}</td><td>${x.social}</td></tr>`).join('')}</tbody></table></div></div>`;return;}
+ if(kind==='marcatori'){const all={};const hist=(window.__ROOT_DATA&&window.__ROOT_DATA.historicalScorers)||{};Object.values(hist).forEach(year=>Object.entries(year||{}).forEach(([n,v])=>all[String(n).toUpperCase()]=(all[String(n).toUpperCase()]||0)+Number(v||0)));seasons.forEach(([y,s])=>Object.entries(scorerTotals(s.tournament||{})).forEach(([n,v])=>all[n]=(all[n]||0)+v));const rows=Object.entries(all).sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0]));el.innerHTML=`<div class="card"><div class="card-title">Classifica marcatori all time</div><div class="honors-note">Classifica aggregata con i gol completi del 2024 e i gol registrati digitalmente dal 2026. I dati 2025 saranno aggiunti quando disponibili.</div><table><thead><tr><th>#</th><th>Giocatore</th><th>Gol</th></tr></thead><tbody>${rows.map(([n,v],i)=>`<tr class="${i===0?'tr-gold':''}"><td>${i+1}</td><td><strong>${htmlEsc(n)}</strong></td><td>${v}</td></tr>`).join('')}</tbody></table></div>`;}
+}
+
 const renders={
+  albo:renderAlbo,
 
   gironi:renderGironi,
 
@@ -1899,6 +1951,7 @@ const renders={
 
 };
 
+populateSeasonMenu();
 subscribeLive();
 
 </script>
