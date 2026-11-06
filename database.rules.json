@@ -3,7 +3,7 @@
     ".read": true,
     ".write": false,
     "torneo_ceo_v2": {
-      ".write": "auth != null && auth.uid === 'INSERISCI_UID_ADMIN'"
+      ".write": "auth != null && auth.uid === '5bkf45rT18SAP422LORwvpxenyg1'"
     }
   }
 }
