@@ -136,9 +136,9 @@ tr:last-child td { border-bottom: none; }
 <div id="auth-overlay" class="auth-overlay">
   <div class="auth-card">
     <div class="auth-title">Accesso Admin</div>
-    <div class="auth-sub">Inserisci la password per modificare risultati e classifiche.</div>
-    <div class="info-banner">Inserisci la password per accedere.</div>
-    <input type="password" id="admin-password" placeholder="Password" autofocus onkeydown="if(event.key==='Enter') checkPassword()">
+    <div class="auth-sub">Accedi con email e password per modificare risultati e classifiche.</div>
+    <input type="email" id="admin-email" placeholder="Email" autocomplete="username" autofocus style="margin-bottom:.6rem" onkeydown="if(event.key==='Enter') document.getElementById('admin-password').focus()">
+    <input type="password" id="admin-password" placeholder="Password" autocomplete="current-password" onkeydown="if(event.key==='Enter') checkPassword()">
     <div style="display:flex;gap:.6rem; margin-top: .8rem;">
       <button class="btn btn-accent" onclick="checkPassword()">Entra</button>
     </div>
@@ -191,6 +191,7 @@ tr:last-child td { border-bottom: none; }
 
 <script src="https://www.gstatic.com/firebasejs/12.2.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/12.2.0/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/12.2.0/firebase-auth-compat.js"></script>
 <script>
 const GIRONI=['A','B','C'];
 const PAIRS=[[0,1],[2,3],[0,2],[1,3],[0,3],[1,2]];
@@ -238,7 +239,6 @@ const FIREBASE_CONFIG = {
   messagingSenderId: "1006116681466",
   appId: "1:1006116681466:web:9080aa5572363be37c3b43"
 };
-const ADMIN_PASSWORD = 'POLI';
 let appReady = false;
 let hasLoadedInitialState = false;
 const app = firebase.initializeApp(FIREBASE_CONFIG);
@@ -336,7 +336,6 @@ function mergePresetIntoState(base){
   return out;
 }
 function getSafeState(v){ return normalizeState(v); }
-const WRITE_KEY = 'federicopietropoli';
 function isArchive(){return selectedSeason!==CURRENT_SEASON;}
 function requireWritable(){if(isArchive()){alert('Le edizioni storiche sono in sola lettura. Torna al 2027 per apportare modifiche.');return false;}return true;}
 function flagSaveError(err){
@@ -356,7 +355,6 @@ function save(){
   if(!appReady) return Promise.resolve();
   if(!requireWritable()) return Promise.resolve();
   const payload = cloneState(normalizeState(S));
-  payload._wkey = WRITE_KEY; // richiesto dalle regole Firebase per autorizzare la scrittura
   return stateRef.set(payload).catch(flagSaveError); // errore visibile invece di fallire in silenzio
 }
 function showCurrentTab(){ const activeSection = document.querySelector('.section.active'); if(activeSection && renders[activeSection.id]) { renders[activeSection.id](); } else { renderBanco(); } }
@@ -372,26 +370,26 @@ function startFirebaseSync(){
   stateRef.on('value',currentSyncHandler,err=>{const label=document.getElementById('sync-label');if(label)label.textContent='Errore sincronizzazione';console.error(err);});
   ROOT_REF.child('seasons').once('value').then(s=>{ALL_SEASONS=s.val()||{};if(document.querySelector('.section.active')?.id==='albo')renderAlbo();});
 }
-function checkPassword(){
-  const input = document.getElementById('admin-password');
-  const error = document.getElementById('auth-error');
-  if(!input) return;
-  if((input.value || '').trim() !== ADMIN_PASSWORD){
-    if(error) error.textContent = 'Password non corretta';
-    input.value = ''; input.focus(); return;
-  }
-  sessionStorage.setItem('torneo_admin_ok', '1');
+function showApp(){
   document.getElementById('auth-overlay').style.display = 'none';
   document.getElementById('app-shell').classList.remove('app-hidden');
   if(!appReady){ appReady = true; populateSeasonMenu(); startFirebaseSync(); }
 }
-window.addEventListener('load', () => {
-  if(sessionStorage.getItem('torneo_admin_ok') === '1'){
-    document.getElementById('auth-overlay').style.display = 'none';
-    document.getElementById('app-shell').classList.remove('app-hidden');
-    if(!appReady){ appReady = true; populateSeasonMenu(); startFirebaseSync(); }
-  }
-});
+function checkPassword(){
+  const email = document.getElementById('admin-email');
+  const input = document.getElementById('admin-password');
+  const error = document.getElementById('auth-error');
+  if(!email || !input) return;
+  if(error) error.textContent = '';
+  firebase.auth().signInWithEmailAndPassword(email.value.trim(), input.value)
+    .then(() => { input.value = ''; })
+    .catch(() => {
+      if(error) error.textContent = 'Email o password non corretta';
+      input.value = ''; input.focus();
+    });
+}
+// L'accesso resta attivo tra una visita e l'altra finche' non si esce; la scrittura e' autorizzata dalle regole del database
+firebase.auth().onAuthStateChanged(user => { if(user) showApp(); });
 const mkey=(phase,idx)=>`${phase}_${idx}`;
 const mdata=key=>{
   if(!S || typeof S !== 'object') S = initState();
@@ -438,7 +436,7 @@ function counterRef(kind, team){ if(!requireWritable()) throw new Error('Archivi
 // --- Backup / Ripristino ---
 function exportBackup(){
   try{
-    const data = cloneState(normalizeState(S)); // stato pulito, senza _wkey
+    const data = cloneState(normalizeState(S)); // stato pulito
     const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
