@@ -383,8 +383,25 @@ function checkPassword(){
   if(error) error.textContent = '';
   firebase.auth().signInWithEmailAndPassword(email.value.trim(), input.value)
     .then(() => { input.value = ''; })
-    .catch(() => {
-      if(error) error.textContent = 'Email o password non corretta';
+    .catch(err => {
+      console.error('Accesso non riuscito:', err);
+      const code = (err && err.code) || 'errore sconosciuto';
+      const msgs = {
+        'auth/invalid-credential': 'Email o password non corretta',
+        'auth/wrong-password': 'Email o password non corretta',
+        'auth/user-not-found': 'Email o password non corretta',
+        'auth/invalid-email': 'Indirizzo email non valido',
+        'auth/user-disabled': 'Questo utente e\u0027 stato disattivato',
+        'auth/too-many-requests': 'Troppi tentativi: attendi qualche minuto e riprova',
+        'auth/network-request-failed': 'Connessione assente: controlla la rete e riprova',
+        'auth/operation-not-allowed': 'Accesso con email non abilitato nella console Firebase (Authentication \u2192 Metodo di accesso)',
+        'auth/api-key-not-valid.-please-pass-a-valid-api-key.': 'Chiave API del progetto non valida o con restrizioni',
+        'auth/invalid-api-key': 'Chiave API del progetto non valida o con restrizioni',
+        'auth/requests-from-referer-' : ''
+      };
+      let text = msgs[code];
+      if(!text && /referer|api-key/i.test(code + ' ' + (err.message || ''))) text = 'La chiave API del progetto non consente l\u0027accesso da questo sito';
+      if(error) error.textContent = (text || 'Accesso non riuscito') + ' [' + code + ']';
       input.value = ''; input.focus();
     });
 }
