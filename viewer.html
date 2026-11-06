@@ -20,7 +20,7 @@
   --border: #6b3049;
   --text: #fbeef2;
   --text2: #d9b3c1;
-  --text3: #a06880;
+  --text3: #b57d95;
   --white: #ffffff;
   --radius: 10px;
 }
@@ -76,7 +76,7 @@ body {
 }
 
 .header-sub {
-  font-size: 12px;
+  font-size: 13px;
   color: var(--text3);
   letter-spacing: .05em;
   text-transform: uppercase;
@@ -442,6 +442,27 @@ tr:last-child td {
 .season-bar select option{background:var(--bg2)!important;color:var(--text)!important}
 .season-back{background:var(--bg3)!important;color:var(--text)!important;border-color:var(--border)!important}
 
+
+/* ---- UX: telefono, tastiera, stati ---- */
+:focus-visible{outline:3px solid #ffd54a;outline-offset:2px}
+#load-state{max-width:520px;margin:48px auto;padding:0 20px;text-align:center;color:var(--text2)}
+#load-state .spin{width:34px;height:34px;margin:0 auto 14px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:ls-spin 1s linear infinite}
+@keyframes ls-spin{to{transform:rotate(360deg)}}
+#load-state button{margin-top:14px;min-height:44px;padding:10px 22px;border-radius:10px;border:1px solid var(--accent);background:var(--bg3);color:var(--text);font-weight:700;font-size:1rem;cursor:pointer}
+.nav-wrap{position:relative}
+@media(max-width:640px){
+ .header{padding:.7rem 1rem;gap:.7rem}
+ .header-icon img{height:2.4rem}
+ .header-title{font-size:1.3rem;line-height:1.05}
+ .header-badge{font-size:12px;padding:4px 10px}
+ .refresh-bar{padding:6px 12px}
+ .refresh-bar button,.season-bar select,.season-bar .btn{min-height:44px;font-size:15px}
+ .refresh-bar button{padding:8px 16px}
+ .nav{-webkit-mask-image:linear-gradient(to right,#000 90%,transparent);mask-image:linear-gradient(to right,#000 90%,transparent);padding-right:28px}
+ .nav-btn{min-height:44px}
+ .honors-subnav button{min-height:44px}
+}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;animation-duration:.01ms!important;scroll-behavior:auto!important}}
 </style>
 </head>
 
@@ -468,7 +489,7 @@ tr:last-child td {
   <button onclick="loadAndRender()">↻ Aggiorna</button>
 </div>
 
-<div class="season-bar"><span class="season-label">Edizione visualizzata</span><select id="season-select" onchange="switchSeason(this.value)"></select><span id="season-pill" class="season-pill"></span><button id="season-back" class="btn season-back hidden" onclick="switchSeason(CURRENT_SEASON)">Torna al 2027</button></div>
+<div class="season-bar"><span class="season-label">Edizione visualizzata</span><select id="season-select" aria-label="Edizione del torneo" onchange="switchSeason(this.value)"></select><span id="season-pill" class="season-pill"></span><button id="season-back" class="btn season-back hidden" onclick="switchSeason(CURRENT_SEASON)">Torna al 2027</button></div>
 <nav class="nav">
   <button class="nav-btn active" onclick="showTab('gironi',this)">Gironi</button>
   <button class="nav-btn" onclick="showTab('ko',this)">Eliminazione Diretta</button>
@@ -489,6 +510,27 @@ tr:last-child td {
   <div id="albo" class="section"></div>
 </main>
 
+
+<script>
+/* Stato di caricamento: prima i contenuti restavano vuoti senza alcun messaggio */
+(function(){
+  var main=document.querySelector('main.main'); if(!main) return;
+  var box=document.createElement('div'); box.id='load-state'; box.setAttribute('role','status');
+  box.innerHTML='<div class="spin" aria-hidden="true"></div><p>Caricamento dei risultati…</p>';
+  main.insertBefore(box,main.firstChild);
+  function filled(){return [].some.call(main.querySelectorAll('.section'),function(s){return s.childNodes.length>0&&s.textContent.trim().length>0});}
+  function done(){box.remove();mo.disconnect();clearTimeout(t);}
+  var mo=new MutationObserver(function(){if(filled())done();});
+  mo.observe(main,{childList:true,subtree:true,characterData:true});
+  var t=setTimeout(function(){
+    if(!filled()){box.setAttribute('role','alert');box.innerHTML='<p><b>Non riesco a caricare i risultati.</b></p><p>Controlla la connessione e riprova.</p><button type="button" onclick="location.reload()">Riprova</button>';}
+  },10000);
+  /* indica al lettore di schermo la scheda attiva */
+  var nav=document.querySelector('.nav');
+  function sync(){[].forEach.call(nav.querySelectorAll('.nav-btn'),function(b){b.classList.contains('active')?b.setAttribute('aria-current','page'):b.removeAttribute('aria-current');});}
+  if(nav){nav.setAttribute('aria-label','Sezioni del torneo');nav.addEventListener('click',function(){setTimeout(sync,0)});sync();}
+})();
+</script>
 <script src="https://www.gstatic.com/firebasejs/12.2.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/12.2.0/firebase-database-compat.js"></script>
 
