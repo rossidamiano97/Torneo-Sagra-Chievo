@@ -1215,7 +1215,7 @@ function renderHome(){
   const live=list.filter(o=>o.m.live);
   const upcoming=sortMatches(list.filter(o=>!o.m.played&&!o.m.live&&!o.tbd)).slice(0,3);
   const last=sortMatches(played).slice(-4).reverse();
-  let h=hero+stats;
+  let h=hero;
   if(live.length)h+=blk('In corso','',live.map(o=>matchCard(o)).join(''));
   if(upcoming.length&&st!=='done'&&named)h+=blk('Prossime partite','<a href="#partite">Calendario ›</a>',upcoming.map(o=>matchCard(o,{withDate:true})).join(''));
   if(last.length)h+=blk('Ultimi risultati','<a href="#partite">Tutte le partite ›</a>',last.map(o=>matchCard(o,{withDate:true})).join(''));
