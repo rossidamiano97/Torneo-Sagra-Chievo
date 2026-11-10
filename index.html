@@ -4,15 +4,16 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Torneo Sagra del CEO</title>
+<meta name="theme-color" content="#6b1a3a">
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;900&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <style>
 :root {
-  --accent: #b8386c; --accent-light: #e0578e; --accent-dark: #6b1a3a;
-  --yellow: #ffd166; --red: #ff5a5a; --bg: #1a0d12; --bg2: #2e131d;
-  --bg3: #3d1826; --border: #6b3049; --text: #fbeef2; --text2: #ecd0db;
-  --text3: #cf96ac; --white: #ffffff; --radius: 10px;
+  --accent: #8f1f4d; --accent-light: #8f1f4d; --accent-dark: #6b1a3a;
+  --yellow: #8a5a00; --red: #c62828; --bg: #f7f2f4; --bg2: #ffffff;
+  --bg3: #f4eaef; --border: #e4d4dc; --text: #2a1520; --text2: #5e3f4d;
+  --text3: #7a5667; --white: #2a1520; --radius: 14px;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 .ig-icon { background: linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
@@ -34,7 +35,7 @@ body { font-family: 'Barlow', sans-serif; background: var(--bg); color: var(--te
 .grid3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 1rem; }
 .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
 @media(max-width:640px){ .grid3,.grid2 { grid-template-columns: 1fr; } }
-input[type=text], input[type=password], input[type=datetime-local], input[type=number], select { width: 100%; padding: 9px 13px; border: 1px solid var(--border); border-radius: 6px; background: var(--bg3); color: var(--text); font-size: 17px; font-family: 'Barlow', sans-serif; outline: none; transition: border-color .15s; }
+input[type=text], input[type=email], input[type=password], input[type=datetime-local], input[type=number], select { width: 100%; padding: 9px 13px; border: 1px solid var(--border); border-radius: 6px; background: var(--bg3); color: var(--text); font-size: 17px; font-family: 'Barlow', sans-serif; outline: none; transition: border-color .15s; }
 input:focus, select:focus { border-color: var(--accent-light); }
 select option { background: var(--bg2); }
 input[type=datetime-local]::-webkit-calendar-picker-indicator { filter: invert(0.6); cursor: pointer; }
@@ -130,6 +131,37 @@ tr:last-child td { border-bottom: none; }
 /* ---- UX ---- */
 :focus-visible{outline:3px solid #ffd54a;outline-offset:2px}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;animation-duration:.01ms!important;scroll-behavior:auto!important}}
+
+/* ---- Tema chiaro (come pagina pubblica) ---- */
+.header{background:linear-gradient(135deg,#6b1a3a,#8f1f4d);border-bottom:0;padding:.7rem 1rem;position:sticky;top:0;z-index:50}
+.header-title{color:#fff;font-size:1.4rem}.header-sub{color:#f3d3e0}.header-icon img{height:2.4rem}
+.header-badge{background:rgba(255,255,255,.18);color:#fff;border-color:rgba(255,255,255,.4)}
+.season-bar{background:#fff3d6;color:#5a3d00;border-bottom:1px solid #ecd9a4}
+.season-bar select{color:#5a3d00!important;background-color:#fff!important}
+.status-row{background:#fff;flex-wrap:wrap}.status-pill{background:#fff}
+.btn{min-height:44px}.btn-accent:hover{background:var(--accent-dark)}
+.card{box-shadow:0 1px 2px rgba(80,20,50,.06)}
+.score-box{color:var(--text)}.info-banner{background:#e8f0ff;color:#1d3d7a}
+.archive-warning{background:#fff3d6!important;color:#5a3d00!important;border-color:#ecd9a4!important}
+.auth-overlay{background:rgba(42,21,32,.85)}.auth-error{color:#c62828}
+.modal-bg{background:rgba(42,21,32,.55)}
+.nav{position:fixed;left:0;right:0;bottom:0;z-index:100;background:#fff;border-top:1px solid var(--border);border-bottom:0;padding:0 4px env(safe-area-inset-bottom);box-shadow:0 -2px 10px rgba(80,20,50,.1)}
+.nav-btn{font-family:'Barlow',sans-serif;font-size:13px;font-weight:700;text-transform:none;letter-spacing:0;padding:8px 12px;min-height:56px;flex:0 0 auto;border-bottom:0;border-top:3px solid transparent}
+.nav-btn.active{color:var(--accent);border-top-color:var(--accent)}
+.main{padding:1rem 1rem 88px}
+.honors-subnav button.active{color:#fff}.btn-accent{color:#fff}
+@media(min-width:900px){
+ .nav{position:static;box-shadow:none;border-top:0;border-bottom:1px solid var(--border);padding:0 1.2rem}
+ .nav-btn{font-size:16px;min-height:48px;border-top:0;border-bottom:3px solid transparent}.nav-btn.active{border-bottom-color:var(--accent)}
+ .main{padding:1.5rem 2.5rem}
+}
+@media(max-width:640px){
+ .header-title{font-size:1.05rem;white-space:nowrap}.header-badge{display:none}.header-sub{font-size:12px}.header-badge{padding:4px 10px;font-size:13px}
+ .match-row{grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:6px}
+ .team-name{font-size:15px!important;overflow-wrap:anywhere}
+ .score-box{min-width:44px;height:48px;font-size:30px}.score-sep{font-size:20px}.score-display{gap:4px}
+ .card{padding:1rem}.status-row .btn{padding:5px 10px}
+}
 </style>
 </head>
 <body>
