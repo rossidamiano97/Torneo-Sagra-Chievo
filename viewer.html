@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#6b1a3a">
 <title>Torneo Sagra del CEO — Live</title>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;900&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
@@ -463,52 +464,213 @@ tr:last-child td {
  .honors-subnav button{min-height:44px}
 }
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;animation-duration:.01ms!important;scroll-behavior:auto!important}}
+
+/* =========================================================
+   RIORGANIZZAZIONE: tema chiaro con accenti bordeaux,
+   navigazione a barra inferiore su telefono
+   ========================================================= */
+:root{
+  --accent:#8f1f4d;--accent-light:#b8386c;--accent-dark:#6b1a3a;
+  --yellow:#8a5a00;--red:#c62828;
+  --bg:#f7f2f4;--bg2:#ffffff;--bg3:#f4eaef;--border:#e4d4dc;
+  --text:#2a1520;--text2:#5e3f4d;--text3:#7a5667;--white:#ffffff;--radius:12px;
+}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--text);font-size:16px;line-height:1.35}
+.hidden{display:none!important}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+:focus-visible{outline:3px solid var(--accent)!important;outline-offset:2px}
+
+/* testata */
+.topbar{position:sticky;top:0;z-index:30;background:linear-gradient(135deg,#6b1a3a,#8f1f4d);color:#fff}
+.topbar-in{max-width:980px;margin:0 auto;display:flex;align-items:center;gap:10px;padding:8px 16px}
+.brand{display:flex;align-items:center;gap:10px;color:inherit;text-decoration:none;min-width:0;flex:1}
+.brand img{height:34px;width:auto;flex:0 0 auto}
+.brand b{display:block;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:1.05rem;letter-spacing:.03em;text-transform:uppercase;line-height:1.05}
+.brand small{display:block;font-size:.8rem;opacity:.9}
+#season-select{flex:0 0 auto;width:92px;min-height:44px;border-radius:999px;border:1px solid rgba(255,255,255,.5);background:rgba(255,255,255,.14);color:#fff;font:700 .95rem 'Barlow',sans-serif;padding:0 8px;appearance:auto}
+#season-select option{color:#2a1520;background:#fff}
+.archive-banner{background:#fff4d6;color:#5a3d00;border-bottom:1px solid #ecd48e;padding:4px 16px;font-size:.88rem;display:flex;gap:10px;align-items:center;justify-content:center;flex-wrap:wrap}
+.archive-banner button{min-height:44px;padding:0 14px;border-radius:999px;border:1px solid #8a5a00;background:#fff;color:#5a3d00;font:700 .9rem 'Barlow',sans-serif;cursor:pointer}
+
+/* barra inferiore */
+.bottom-nav{position:fixed;left:0;right:0;bottom:0;z-index:40;display:grid;grid-template-columns:repeat(5,1fr);background:#fff;border-top:1px solid var(--border);padding-bottom:env(safe-area-inset-bottom);box-shadow:0 -4px 16px rgba(60,20,40,.08)}
+.bottom-nav a{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-height:58px;color:var(--text3);text-decoration:none;font-size:.74rem;font-weight:700}
+.bottom-nav svg{width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.bottom-nav a.active{color:var(--accent)}
+.bottom-nav a.active svg{stroke-width:2.4}
+
+.main{max-width:980px;margin:0 auto;padding:16px 16px calc(84px + env(safe-area-inset-bottom))}
+.subbar{max-width:980px;margin:0 auto;padding:12px 16px 0;display:flex;align-items:center;gap:8px}
+.subbar a,.backlink{display:inline-flex;align-items:center;min-height:44px;color:var(--accent);font-weight:700;text-decoration:none;font-size:1rem}
+.subbar h1{font-family:'Barlow Condensed',sans-serif;font-size:1.4rem;text-transform:uppercase;letter-spacing:.03em;font-weight:800}
+.foot{max-width:980px;margin:0 auto;padding:0 16px calc(96px + env(safe-area-inset-bottom));color:var(--text3);font-size:.82rem;text-align:center}
+.section{display:none}.section.active{display:block}
+
+/* schede e tabelle esistenti (marcatori, social, albo) */
+.card{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:14px 14px 10px;margin-bottom:14px;box-shadow:none}
+.card-title{font-family:'Barlow Condensed',sans-serif;font-size:1.15rem;letter-spacing:.04em;text-transform:uppercase;color:var(--accent);margin-bottom:8px;font-weight:800}
+.no-data,.empty{text-align:center;color:var(--text3);padding:28px 12px}
+.empty .btn,.btn{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 18px;margin-top:10px;border:0;border-radius:10px;background:var(--accent);color:#fff;font:700 1rem 'Barlow',sans-serif;text-decoration:none;cursor:pointer}
+.btn.sm{margin:0;min-height:40px;padding:0 14px;font-size:.9rem}
+
+/* hero e numeri */
+.hero{background:linear-gradient(135deg,#6b1a3a,#8f1f4d);color:#fff;border-radius:16px;padding:18px;margin-bottom:14px}
+.hero-k{font-size:.8rem;text-transform:uppercase;letter-spacing:.08em;opacity:.9;font-weight:700}
+.hero h1{font-family:'Barlow Condensed',sans-serif;font-size:2.1rem;line-height:1.05;margin:6px 0 4px;text-transform:uppercase;font-weight:800;overflow-wrap:anywhere}
+.hero-sub{opacity:.92;font-size:.98rem}
+.hero.done .hero-sub{font-weight:700;text-transform:uppercase;letter-spacing:.06em;font-size:.82rem;margin-top:8px}
+.podium{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.podium span{background:rgba(255,255,255,.18);border-radius:999px;padding:5px 12px;font-size:.88rem;font-weight:700}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px}
+.stat{background:#fff;border:1px solid var(--border);border-radius:12px;padding:10px 4px;text-align:center}
+.stat b{display:block;font-family:'Barlow Condensed',sans-serif;font-size:1.65rem;line-height:1;color:var(--accent);font-weight:800}
+.stat b small{font-size:1rem;color:var(--text3)}
+.stat span{display:block;margin-top:3px;font-size:.7rem;color:var(--text3);font-weight:700;text-transform:uppercase;letter-spacing:.03em}
+
+/* blocchi e liste */
+.blk{margin-bottom:20px}
+.blk-h{display:flex;justify-content:space-between;align-items:center;margin:0 2px 8px;min-height:28px}
+.blk-h h2{font-family:'Barlow Condensed',sans-serif;font-size:1.3rem;text-transform:uppercase;letter-spacing:.04em;color:var(--text);font-weight:800}
+.blk-h a{font-size:.92rem;font-weight:700;color:var(--accent);text-decoration:none;min-height:44px;display:inline-flex;align-items:center}
+.blk.final .mc{border-color:var(--accent);border-width:2px}
+.list{background:#fff;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+.li{display:flex;align-items:center;gap:12px;min-height:56px;padding:8px 14px;border-top:1px solid var(--border);color:var(--text);text-decoration:none}
+.li:first-child{border-top:0}
+a.li:active{background:var(--bg3)}
+.li .n{flex:1;min-width:0;font-weight:700;overflow-wrap:anywhere}
+.li small{display:block;color:var(--text3);font-weight:500;font-size:.82rem;margin-top:1px}
+.li .v{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:1.3rem;color:var(--accent);white-space:nowrap}
+.li .chev{color:var(--text3);font-size:1.4rem}
+.li .pstat{font-size:.85rem;color:var(--text2);white-space:nowrap}
+.rank{width:24px;text-align:center;color:var(--text3);font-weight:800;flex:0 0 auto}
+.chip-on{font-size:.82rem;font-weight:700;color:var(--accent);background:var(--bg3);border-radius:999px;padding:5px 12px}
+
+/* scheda partita */
+.mc{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px 8px;margin-bottom:10px}
+.mc.live{border-color:var(--accent);box-shadow:0 0 0 3px rgba(143,31,77,.14)}
+.mc.tbd .mc-t{color:var(--text3);font-weight:600}
+.mc-meta{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:.82rem;color:var(--text3);font-weight:700;margin-bottom:8px}
+.mc-badge{font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;border-radius:999px;padding:3px 9px;background:var(--bg3);color:var(--text2);white-space:nowrap}
+.mc-badge.soft{background:transparent;border:1px solid var(--border)}
+.mc-badge.live{background:var(--accent);color:#fff;display:inline-flex;align-items:center;gap:6px}
+.mc-badge.live i{width:7px;height:7px;border-radius:50%;background:#fff;animation:pulse 1.4s infinite}
+@keyframes pulse{50%{opacity:.35}}
+.mc-row{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:center}
+.mc-t{font-weight:600;font-size:.98rem;line-height:1.15;overflow-wrap:break-word;hyphens:manual}
+.mc-t a{display:block;padding:10px 0;margin:-10px 0;color:inherit;text-decoration:none}
+.mc-t.r{text-align:right}
+.mc.played .mc-t:not(.win){color:var(--text2)}
+.mc-t.win{font-weight:800}
+.mc-s{display:flex;align-items:center;gap:6px;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:1.75rem;min-width:76px;justify-content:center;background:var(--bg3);border-radius:10px;padding:2px 10px;line-height:1.25}
+.mc-s span{color:var(--text3);font-size:1.2rem}
+.mc.pending .mc-s b{color:var(--text3)}
+.mc-adv{margin-top:6px;font-size:.88rem;color:var(--accent)}
+.mc-det summary{cursor:pointer;min-height:44px;display:flex;align-items:center;font-size:.88rem;color:var(--accent);font-weight:700;list-style:none}
+.mc-det summary::-webkit-details-marker{display:none}
+.mc-det summary::after{content:'▾';margin-left:6px}
+.mc-det[open] summary::after{content:'▴'}
+.mc-cols{display:grid;grid-template-columns:1fr 1fr;gap:12px;border-top:1px dashed var(--border);padding:8px 0}
+.mc-cols ul{list-style:none;font-size:.88rem;color:var(--text2)}
+.mc-cols ul.r{text-align:right}
+.mc-cols li{padding:2px 0}
+
+/* partite: filtri e giorni */
+.toolbar{position:sticky;top:54px;z-index:20;background:var(--bg);padding:2px 0 6px;margin:0 -16px 6px;padding-left:16px;padding-right:16px}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:2px 0 10px;scrollbar-width:none;-webkit-mask-image:linear-gradient(to right,#000 92%,transparent);mask-image:linear-gradient(to right,#000 92%,transparent);padding-right:24px}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:0 0 auto;min-height:44px;padding:0 16px;border-radius:999px;border:1px solid var(--border);background:#fff;color:var(--text2);font:700 .92rem 'Barlow',sans-serif;cursor:pointer}
+.chip[aria-pressed=true]{background:var(--accent);border-color:var(--accent);color:#fff}
+.search{display:block}
+.search input{width:100%;min-height:48px;font-size:16px;border:1px solid var(--border);border-radius:12px;padding:0 14px;background:#fff;color:var(--text)}
+.day h3{display:flex;justify-content:space-between;align-items:baseline;font-family:'Barlow Condensed',sans-serif;font-size:1.15rem;text-transform:uppercase;letter-spacing:.04em;color:var(--accent);margin:14px 2px 8px;font-weight:800}
+.day h3 span{font-family:'Barlow',sans-serif;font-size:.8rem;color:var(--text3);text-transform:none;letter-spacing:0;font-weight:600}
+
+/* classifiche */
+.seg{display:grid;grid-template-columns:1fr 1fr;background:var(--bg3);border-radius:12px;padding:4px;margin-bottom:14px}
+.seg button{min-height:44px;border:0;border-radius:9px;background:transparent;font:700 .98rem 'Barlow',sans-serif;color:var(--text2);cursor:pointer}
+.seg button[aria-pressed=true]{background:#fff;color:var(--accent);box-shadow:0 1px 4px rgba(60,20,40,.18)}
+.st{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums;margin:0}
+.st th{font-size:.72rem;text-transform:uppercase;color:var(--text3);text-align:center;padding:4px 3px 6px;font-weight:700;border:0;background:none}
+.st td{padding:10px 3px;text-align:center;border:0;border-top:1px solid var(--border);font-size:.96rem;background:none}
+.st th.nm,.st td.nm{text-align:left;padding-left:6px}
+.st td.nm a{display:block;padding:10px 0;margin:-10px 0;color:var(--text);text-decoration:none;font-weight:700;overflow-wrap:break-word}
+.st td.pt{font-weight:800;color:var(--accent);font-size:1.05rem}
+.st td.pos,.st th.pos{width:28px;color:var(--text3);font-weight:800}
+.st tr.q td.pos{box-shadow:inset 3px 0 0 var(--accent);color:var(--accent)}
+.note{font-size:.82rem;color:var(--text3);margin:0 2px 16px}
+.note .dot{display:inline-block;width:10px;height:10px;border-radius:3px;background:var(--accent);margin-right:6px;vertical-align:-1px}
+
+/* adattamento di marcatori, social e albo al tema chiaro */
+.section table:not(.st){width:100%;border-collapse:collapse;font-size:.92rem}
+.section table:not(.st) th{color:var(--text3);font-size:.72rem;text-transform:uppercase;text-align:left;padding:6px 4px;border-bottom:1px solid var(--border);background:none}
+.section table:not(.st) td{padding:9px 4px;border-top:1px solid var(--border);color:var(--text);background:none}
+.section tr:nth-child(even) td{background:none}
+.honors-subnav{display:flex;gap:8px;overflow-x:auto;padding-bottom:10px;scrollbar-width:none}
+.honors-subnav button{flex:0 0 auto;min-height:44px;padding:0 16px;border-radius:999px;border:1px solid var(--border);background:#fff;color:var(--text2);font:700 .92rem 'Barlow',sans-serif;cursor:pointer}
+.honors-subnav button.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.honors-table-wrap{overflow-x:auto}
+#load-state{color:var(--text2)}
+.mq-wrap{margin-bottom:12px}
+.note-sm{font-size:.82rem;color:var(--text3);font-weight:600}
+.more{display:flex;width:100%;align-items:center;justify-content:center;min-height:48px;margin-top:10px;border:1px solid var(--border);border-radius:12px;background:#fff;color:var(--accent);font:700 .95rem 'Barlow',sans-serif;cursor:pointer}
+.disc td:first-child{text-align:left;font-weight:700}
+
+@media(max-width:380px){
+  .mc-s{min-width:72px;font-size:1.5rem}
+  .stat b{font-size:1.4rem}
+  .brand b{font-size:1.05rem}
+}
+@media(min-width:900px){
+  .bottom-nav{position:static;display:flex;gap:4px;background:transparent;border:0;box-shadow:none;padding:0;margin-left:auto}
+  .bottom-nav a{flex-direction:row;color:#fff;opacity:.88;min-height:44px;padding:0 14px;border-radius:999px;font-size:.98rem}
+  .bottom-nav a.active{background:rgba(255,255,255,.2);opacity:1;color:#fff}
+  .bottom-nav svg{display:none}
+  .brand{flex:0 1 auto}
+  .main{padding-bottom:40px}
+  .foot{padding-bottom:32px}
+  .toolbar{top:66px}
+  #home,#partite #plist{max-width:none}
+  .stats{grid-template-columns:repeat(4,1fr);max-width:640px}
+}
+@media(prefers-reduced-motion:reduce){.mc-badge.live i{animation:none}}
 </style>
 </head>
 
 <body>
-
-<div class="header">
-  <div class="header-icon">
-    <img src="logo-bianco.png" alt="Torneo Sagra del CEO">
+<header class="topbar">
+  <div class="topbar-in">
+    <a class="brand" href="#home" aria-label="Torneo Sagra del CEO, vai alla Home">
+      <img src="logo-bianco.png" alt="">
+      <span><b>Torneo Sagra del CEO</b><small id="top-sub">Edizione</small></span>
+    </a>
+    <select id="season-select" aria-label="Edizione del torneo" onchange="switchSeason(this.value)"></select>
+    <nav class="bottom-nav" aria-label="Sezioni del torneo">
+      <a href="#home" data-tab="home"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v10h13V10"/></svg><span>Home</span></a>
+      <a href="#partite" data-tab="partite"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg><span>Partite</span></a>
+      <a href="#classifiche" data-tab="classifiche"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 21h16"/><rect x="5" y="12" width="4" height="9"/><rect x="10" y="5" width="4" height="16"/><rect x="15" y="15" width="4" height="6"/></svg><span>Classifiche</span></a>
+      <a href="#squadre" data-tab="squadre"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-5.5 6-5.5s6 2.2 6 5.5"/><path d="M16 5.2a3 3 0 0 1 0 5.6M18 14.8c2 .7 3.5 2.4 3.5 5.2"/></svg><span>Squadre</span></a>
+      <a href="#altro" data-tab="altro"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg><span>Altro</span></a>
+    </nav>
   </div>
-
-  <div>
-    <div class="header-title">Torneo Sagra del CEO</div>
-    <div class="header-sub">Risultati in tempo reale</div>
-  </div>
-
-  <div class="header-badge">
-    <div class="live-dot"></div>
-    Live
-  </div>
+</header>
+<div id="archive-banner" class="archive-banner hidden" role="status">
+  <span>Stai guardando l'edizione <b id="archive-year"></b>.</span>
+  <button type="button" id="back-current" onclick="switchSeason(CURRENT_SEASON)">Torna all'edizione corrente</button>
 </div>
-
-<div class="refresh-bar">
-  <span id="last-update">—</span>
-  <button onclick="loadAndRender()">↻ Aggiorna</button>
-</div>
-
-<div class="season-bar"><span class="season-label">Edizione visualizzata</span><select id="season-select" aria-label="Edizione del torneo" onchange="switchSeason(this.value)"></select><span id="season-pill" class="season-pill"></span><button id="season-back" class="btn season-back hidden" onclick="switchSeason(CURRENT_SEASON)">Torna al 2027</button></div>
-<nav class="nav">
-  <button class="nav-btn active" onclick="showTab('gironi',this)">Gironi</button>
-  <button class="nav-btn" onclick="showTab('ko',this)">Eliminazione Diretta</button>
-  <button class="nav-btn" onclick="showTab('classifiche',this)">Classifiche</button>
-  <button class="nav-btn" onclick="showTab('marcatori',this)">Marcatori & Cartellini</button>
-  <button class="nav-btn" onclick="showTab('social',this)">
-    <i class="ti ti-brand-instagram ig-icon"></i> Coppa Social
-  </button>
-  <button class="nav-btn" onclick="showTab('albo',this)">Albo d'oro</button>
-</nav>
+<div id="subbar" class="subbar hidden"><a href="#altro" aria-label="Torna ad Altro">‹ Altro</a><h1 id="sub-title"></h1></div>
 
 <main class="main">
-  <div id="gironi" class="section active"></div>
-  <div id="ko" class="section"></div>
+  <div id="home" class="section active"></div>
+  <div id="partite" class="section"></div>
   <div id="classifiche" class="section"></div>
+  <div id="squadre" class="section"></div>
+  <div id="altro" class="section"></div>
   <div id="marcatori" class="section"></div>
   <div id="social" class="section"></div>
   <div id="albo" class="section"></div>
 </main>
+<footer class="foot"><span id="last-update">—</span></footer>
 
 
 <script>
@@ -772,34 +934,16 @@ const statusBadge=m=>
           : '<span class="match-status pending">Da giocare</span>'
       );
 
-function loadAndRender(){
-
-  document.getElementById('last-update').textContent=
-    'Aggiornato: '+new Date().toLocaleTimeString('it-IT');
-
-  const active=document.querySelector('.section.active');
-
-  if(active)
-    renders[active.id]&&renders[active.id]();
-}
-
 function populateSeasonMenu(){
   ROOT_REF.once('value').then(snap=>{
     const root=snap.val()||{};
     ALL_SEASONS=root.seasons||{};window.__ROOT_DATA=root;
     const years=(root.config&&root.config.availableSeasons)||['2027','2026'];
     const sel=document.getElementById('season-select');
-    sel.innerHTML=years.map(y=>`<option value="${y}">${y}${y===CURRENT_SEASON?' · corrente':''}</option>`).join('');
+    sel.innerHTML=years.map(y=>`<option value="${y}">${y}</option>`).join('');
     sel.value=selectedSeason;
     updateSeasonUI();
   }).catch(err=>{console.error(err);document.getElementById('last-update').textContent='Errore caricamento stagioni';});
-}
-function updateSeasonUI(){
-  const archive=selectedSeason!==CURRENT_SEASON;
-  const pill=document.getElementById('season-pill'),back=document.getElementById('season-back');
-  pill.textContent=archive?'Archivio storico':'Edizione corrente';
-  pill.className='season-pill '+(archive?'archive':'current');
-  back.classList.toggle('hidden',!archive);
 }
 function switchSeason(year){
   if(!year||year===selectedSeason)return;
@@ -816,432 +960,6 @@ function subscribeLive(){
   stateRef.on('value',currentSyncHandler,err=>{console.error(err);document.getElementById('last-update').textContent='Errore nel caricamento live';});
   ROOT_REF.child('seasons').once('value').then(s=>{ALL_SEASONS=s.val()||{};if(document.querySelector('.section.active')?.id==='albo')renderAlbo();});
 }
-
-function showTab(t,el){
-
-  document
-    .querySelectorAll('.nav-btn')
-    .forEach(b=>b.classList.remove('active'));
-
-  document
-    .querySelectorAll('.section')
-    .forEach(s=>s.classList.remove('active'));
-
-  if(el)
-    el.classList.add('active');
-
-  document
-    .getElementById(t)
-    .classList.add('active');
-
-  loadAndRender();
-}
-
-
-/* =========================================================
-   GIRONE
-   Le partite vengono ordinate cronologicamente
-   all'interno di ciascun girone.
-   Le partite senza data finiscono in fondo.
-   ========================================================= */
-
-function renderGironi(){
-
-  const el=document.getElementById('gironi');
-
-  el.innerHTML='';
-
-  if(!S){
-
-    el.innerHTML=
-      `<div class="no-data">Nessun dato disponibile</div>`;
-
-    return;
-  }
-
-  GIRONI.forEach(g=>{
-
-    const c=document.createElement('div');
-
-    c.className='card';
-
-    let html=
-      `<div class="card-title">Girone ${g}</div>`;
-
-    /*
-      Creo prima tutte le partite del girone.
-      In questo modo posso ordinarle prima
-      di generare l'HTML.
-    */
-
-    const matches=PAIRS.map(([a,b],i)=>{
-
-      const key=mkey(`G${g}`,i);
-
-      const m=mdata(key);
-
-      return {
-        key,
-        index:i,
-        a,
-        b,
-        m
-      };
-
-    });
-
-    /*
-      ORDINAMENTO CRONOLOGICO
-
-      - Le date valide vengono ordinate dalla più vecchia
-        alla più recente.
-      - Le partite senza data vengono messe alla fine.
-      - Se due partite hanno la stessa data/ora,
-        mantengono il loro ordine originale.
-    */
-
-    matches.sort((x,y)=>{
-
-      const dateX=x.m.dt
-        ? new Date(x.m.dt).getTime()
-        : Infinity;
-
-      const dateY=y.m.dt
-        ? new Date(y.m.dt).getTime()
-        : Infinity;
-
-      if(dateX === dateY)
-        return x.index-y.index;
-
-      return dateX-dateY;
-
-    });
-
-    /*
-      Ora visualizzo le partite già ordinate.
-    */
-
-    matches.forEach(({key,a,b,m})=>{
-
-      const sc=calcScore(m);
-
-      const ta=sqName(g,a);
-      const tb=sqName(g,b);
-
-      const eventsA=(m.evA||[])
-        .map(e=>
-          `<div class="ev-item-view">
-            ${e.t==='gol'
-              ? '⚽'
-              : e.t==='giallo'
-                ? '🟨'
-                : '🟥'
-            } ${e.p}
-          </div>`
-        )
-        .join('');
-
-      const eventsB=(m.evB||[])
-        .map(e=>
-          `<div class="ev-item-view">
-            ${e.t==='gol'
-              ? '⚽'
-              : e.t==='giallo'
-                ? '🟨'
-                : '🟥'
-            } ${e.p}
-          </div>`
-        )
-        .join('');
-
-      html+=`
-
-        <div class="match-block">
-
-          <div class="match-top-row">
-
-            <div class="match-dt-label">
-
-              ${
-                m.dt
-                  ? `📅 ${fmtDt(m.dt)}`
-                  : '📅 Data/ora da definire'
-              }
-
-            </div>
-
-            ${statusBadge(m)}
-
-          </div>
-
-
-          <div class="match-row">
-
-            <span class="team-name">
-              ${ta}
-            </span>
-
-
-            <div class="score-display">
-
-              <div class="score-box ${isVisible(m)?'':'pending'}">
-                ${isVisible(m) ? sc.goA : '–'}
-              </div>
-
-              <span class="score-sep">
-                -
-              </span>
-
-              <div class="score-box ${isVisible(m)?'':'pending'}">
-                ${isVisible(m) ? sc.goB : '–'}
-              </div>
-
-            </div>
-
-
-            <span class="team-name right">
-              ${tb}
-            </span>
-
-          </div>
-
-
-          <div class="cards-info-row">
-
-            <div>
-
-              <span class="cards-info">
-
-                🟨 ${isVisible(m) ? sc.giA : 0}
-                &nbsp;
-                🟥 ${isVisible(m) ? sc.roA : 0}
-
-              </span>
-
-              <div class="ev-list-view">
-                ${eventsA}
-              </div>
-
-            </div>
-
-
-            <div style="text-align:right">
-
-              <span class="cards-info">
-
-                🟨 ${isVisible(m) ? sc.giB : 0}
-                &nbsp;
-                🟥 ${isVisible(m) ? sc.roB : 0}
-
-              </span>
-
-              <div class="ev-list-view">
-                ${eventsB}
-              </div>
-
-            </div>
-
-          </div>
-
-        </div>
-
-      `;
-
-    });
-
-    c.innerHTML=html;
-
-    el.appendChild(c);
-
-  });
-
-}
-
-
-function renderKO(){
-
-  const el=document.getElementById('ko');
-
-  el.innerHTML='';
-
-  if(!S){
-
-    el.innerHTML=
-      `<div class="no-data">Nessun dato disponibile</div>`;
-
-    return;
-  }
-
-  KO_PHASES.forEach(ph=>{
-
-    const c=document.createElement('div');
-
-    c.className='card';
-
-    let html=
-      `<div class="card-title">${ph.label}</div>`;
-
-    for(let i=0;i<ph.n;i++){
-
-      const key=mkey(ph.phase,i);
-
-      const m=mdata(key);
-
-      const sc=calcScore(m);
-
-      const kt=S.koTeams&&S.koTeams[key];
-
-      const parts=ph.hints[i].split(' vs ');
-
-      const ta=kt?.a||parts[0]||'';
-      const tb=kt?.b||parts[1]||'';
-
-      const winner=
-        (
-          m.played &&
-          sc.goA!==sc.goB
-        )
-          ? `<div class="winner-label">
-              Avanza:
-              <strong>
-                ${sc.goA>sc.goB?ta:tb}
-              </strong>
-             </div>`
-          : '';
-
-      const eventsA=(m.evA||[])
-        .map(e=>
-          `<div class="ev-item-view">
-            ${e.t==='gol'
-              ? '⚽'
-              : e.t==='giallo'
-                ? '🟨'
-                : '🟥'
-            } ${e.p}
-          </div>`
-        )
-        .join('');
-
-      const eventsB=(m.evB||[])
-        .map(e=>
-          `<div class="ev-item-view">
-            ${e.t==='gol'
-              ? '⚽'
-              : e.t==='giallo'
-                ? '🟨'
-                : '🟥'
-            } ${e.p}
-          </div>`
-        )
-        .join('');
-
-      html+=`
-
-        <div class="match-block">
-
-          <div class="match-top-row">
-
-            <div class="match-dt-label">
-
-              ${
-                m.dt
-                  ? `📅 ${fmtDt(m.dt)}`
-                  : '📅 Data/ora da definire'
-              }
-
-            </div>
-
-            ${statusBadge(m)}
-
-          </div>
-
-
-          <div class="match-row">
-
-            <span
-              class="team-name"
-              style="font-size:13px"
-            >
-              ${ta||'—'}
-            </span>
-
-
-            <div class="score-display">
-
-              <div class="score-box ${isVisible(m)?'':'pending'}">
-                ${isVisible(m) ? sc.goA : '–'}
-              </div>
-
-              <span class="score-sep">
-                -
-              </span>
-
-              <div class="score-box ${isVisible(m)?'':'pending'}">
-                ${isVisible(m) ? sc.goB : '–'}
-              </div>
-
-            </div>
-
-
-            <span
-              class="team-name right"
-              style="font-size:13px"
-            >
-              ${tb||'—'}
-            </span>
-
-          </div>
-
-
-          <div class="cards-info-row">
-
-            <div>
-
-              <span class="cards-info">
-                🟨 ${isVisible(m) ? sc.giA : 0}
-                &nbsp;
-                🟥 ${isVisible(m) ? sc.roA : 0}
-              </span>
-
-              <div class="ev-list-view">
-                ${eventsA}
-              </div>
-
-            </div>
-
-
-            <div style="text-align:right">
-
-              <span class="cards-info">
-                🟨 ${isVisible(m) ? sc.giB : 0}
-                &nbsp;
-                🟥 ${isVisible(m) ? sc.roB : 0}
-              </span>
-
-              <div class="ev-list-view">
-                ${eventsB}
-              </div>
-
-            </div>
-
-          </div>
-
-          ${winner}
-
-        </div>
-
-      `;
-
-    }
-
-    c.innerHTML=html;
-
-    el.appendChild(c);
-
-  });
-
-}
-
 
 function getStandings(g){
 
@@ -1328,437 +1046,386 @@ function getStandings(g){
 }
 
 
-function renderClassifiche(){
-
-  const el=document.getElementById('classifiche');
-
-  el.innerHTML='';
-
-  if(!S){
-
-    el.innerHTML=
-      `<div class="no-data">Nessun dato disponibile</div>`;
-
-    return;
-  }
-
-  GIRONI.forEach(g=>{
-
-    const st=getStandings(g);
-
-    const c=document.createElement('div');
-
-    c.className='card';
-
-    let h=`
-
-      <div class="card-title">
-        Girone ${g}
-      </div>
-
-      <table>
-
-        <thead>
-
-          <tr>
-            <th>#</th>
-            <th>Squadra</th>
-            <th>Pts</th>
-            <th>PG</th>
-            <th>GF</th>
-            <th>GS</th>
-            <th>±</th>
-            <th>🟨</th>
-            <th>🟥</th>
-          </tr>
-
-        </thead>
-
-        <tbody>
-
-    `;
-
-    st.forEach((t,i)=>{
-
-      const cls=
-        i===0
-          ? 'tr-gold'
-          : i===1
-            ? 'tr-silver'
-            : '';
-
-      h+=`
-
-        <tr class="${cls}">
-
-          <td>
-            ${i+1}
-          </td>
-
-          <td>
-
-            ${t.n}
-
-            ${
-              i<2
-                ? ` <span class="badge badge-qf">QF</span>`
-                : ''
-            }
-
-          </td>
-
-          <td>
-            <strong>${t.pts}</strong>
-          </td>
-
-          <td>${t.pg}</td>
-
-          <td>${t.gs}</td>
-
-          <td>${t.gc}</td>
-
-          <td>
-            ${t.gd>0 ? '+'+t.gd : t.gd}
-          </td>
-
-          <td>${t.gi}</td>
-
-          <td>${t.ro}</td>
-
-        </tr>
-
-      `;
-
-    });
-
-    h+=`
-
-        </tbody>
-
-      </table>
-
-    `;
-
-    c.innerHTML=h;
-
-    el.appendChild(c);
-
-  });
-
-}
-
-
-function renderMarcatori(){
-
-  const el=document.getElementById('marcatori');
-
-  el.innerHTML='';
-
-  if(!S){
-
-    el.innerHTML=
-      `<div class="no-data">Nessun dato disponibile</div>`;
-
-    return;
-  }
-
-  const players={};
-  const teamCards={};
-
-  const allKeys=[
-
-    ...GIRONI.flatMap(
-      g=>PAIRS.map(
-        (_,i)=>mkey(`G${g}`,i)
-      )
-    ),
-
-    ...KO_PHASES.flatMap(
-      ph=>Array.from(
-        {length:ph.n},
-        (_,i)=>mkey(ph.phase,i)
-      )
-    )
-
-  ];
-
-  allKeys.forEach(key=>{
-
-    const m=S.matches&&S.matches[key];
-
-    if(!m || !m.played)
-      return;
-
-    const kt=S.koTeams&&S.koTeams[key];
-
-    const parts=key.split('_');
-
-    const phase=parts[0];
-
-    const idx=parseInt(parts[1]);
-
-    let ta='',tb='';
-
-    if(phase.startsWith('G')){
-
-      const g=phase[1];
-
-      const p=PAIRS[idx];
-
-      if(p){
-
-        ta=sqName(g,p[0]);
-        tb=sqName(g,p[1]);
-
-      }
-
-    }else{
-
-      ta=kt?.a||'';
-      tb=kt?.b||'';
-
+/* =========================================================
+   RIORGANIZZAZIONE: navigazione a sezioni (Home, Partite,
+   Classifiche, Squadre, Altro) sul modello dell'archivio BNC.
+   La logica dei dati (normalizeState, getStandings, ecc.)
+   resta quella di prima.
+   ========================================================= */
+const TABS=['home','partite','classifiche','squadre','altro','marcatori','social','albo'];
+const SUB_TITLES={marcatori:'Marcatori e cartellini',social:'Coppa Social',albo:"Albo d'oro e premi"};
+const UI={pf:'all',q:'',cs:'gironi'};
+const $=id=>document.getElementById(id);
+const enc=s=>encodeURIComponent(s);
+const SHORT_PHASE={QF:'Quarti di finale',SF:'Semifinali',F3:'Finale 3°/4° posto',F:'Finale'};
+
+/* ---------- date e orari ---------- */
+const dayKey=v=>{const d=new Date(v);return isNaN(d)?'':d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');};
+const dayLabel=k=>{
+  if(!k)return 'Da programmare';
+  const d=new Date(k+'T12:00:00');
+  const s=d.toLocaleDateString('it-IT',{weekday:'long',day:'numeric',month:'long'});
+  return s.charAt(0).toUpperCase()+s.slice(1);
+};
+const hm=v=>{const d=new Date(v);return isNaN(d)?'':String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');};
+const ts=v=>{const t=new Date(v).getTime();return isNaN(t)?null:t;};
+
+/* ---------- elenco di tutte le partite ---------- */
+function allMatches(){
+  const out=[];let ord=0;
+  GIRONI.forEach(g=>PAIRS.forEach(([a,b],i)=>{
+    const key=mkey('G'+g,i);
+    out.push({key,phase:'G'+g,label:'Girone '+g,ta:sqName(g,a),tb:sqName(g,b),m:mdata(key),ord:ord++,g});
+  }));
+  KO_PHASES.forEach(ph=>{
+    for(let i=0;i<ph.n;i++){
+      const key=mkey(ph.phase,i);
+      const kt=S.koTeams&&S.koTeams[key];
+      const parts=String(ph.hints[i]||'').split(' vs ');
+      const ta=(kt&&kt.a)||parts[0]||'Da definire';
+      const tb=(kt&&kt.b)||parts[1]||'Da definire';
+      out.push({key,phase:ph.phase,label:SHORT_PHASE[ph.phase]||ph.label,ta,tb,m:mdata(key),ord:ord++,ko:true,tbd:!(kt&&kt.a&&kt.b)});
     }
-
-    [[m.evA||[],ta],[m.evB||[],tb]]
-
-      .forEach(([evs,team])=>{
-
-        if(team&&!teamCards[team])
-          teamCards[team]={
-            gi:0,
-            ro:0
-          };
-
-        evs.forEach(e=>{
-
-          const pk=
-            `${e.p}|||${team||'?'}`;
-
-          if(!players[pk]){
-
-            players[pk]={
-              name:e.p,
-              team:team||'?',
-              gol:0,
-              _matches:new Set()
-            };
-
-          }
-
-          if(e.t==='gol')
-            players[pk].gol++;
-
-          if(e.t==='giallo'){
-
-            if(team)
-              teamCards[team].gi++;
-
-          }
-
-          if(e.t==='rosso'){
-
-            if(team)
-              teamCards[team].ro++;
-
-          }
-
-          players[pk]._matches.add(key);
-
-        });
-
-      });
-
   });
-
-  Object.values(players).forEach(p=>{
-
-    p.pg=p._matches.size;
-
-    delete p._matches;
-
+  return out;
+}
+function sortMatches(list){
+  return list.slice().sort((x,y)=>{
+    const a=ts(x.m.dt),b=ts(y.m.dt);
+    if(a!==null&&b!==null&&a!==b)return a-b;
+    if(a!==null&&b===null)return -1;
+    if(a===null&&b!==null)return 1;
+    return x.ord-y.ord;
   });
-
-  const sorted=
-    Object.values(players)
-      .sort(
-        (a,b)=>
-          b.gol-a.gol ||
-          a.pg-b.pg
-      );
-
-  const c1=document.createElement('div');
-
-  c1.className='card';
-
-  let h1=`
-
-    <div class="card-title">
-      Classifica Marcatori
-    </div>
-
-    <table>
-
-      <thead>
-
-        <tr>
-          <th>#</th>
-          <th>Giocatore</th>
-          <th>Squadra</th>
-          <th style="text-align:center">⚽ Gol</th>
-          <th style="text-align:center">PG</th>
-        </tr>
-
-      </thead>
-
-      <tbody>
-
-  `;
-
-  if(!sorted.length){
-
-    h1+=`
-
-      <tr>
-        <td colspan="5" style="color:var(--text3)">
-          Nessun dato ancora
-        </td>
-      </tr>
-
-    `;
-
-  }
-
-  sorted.forEach((p,i)=>{
-
-    h1+=`
-
-      <tr class="${i===0?'tr-gold':''}">
-
-        <td>${i+1}</td>
-
-        <td>
-          <strong>${p.name}</strong>
-        </td>
-
-        <td style="color:var(--text2)">
-          ${p.team}
-        </td>
-
-        <td style="text-align:center">
-          <strong>${p.gol}</strong>
-        </td>
-
-        <td style="text-align:center">
-          ${p.pg}
-        </td>
-
-      </tr>
-
-    `;
-
-  });
-
-  h1+=`
-
-      </tbody>
-
-    </table>
-
-  `;
-
-  c1.innerHTML=h1;
-
-  el.appendChild(c1);
-
-
-  const c2=document.createElement('div');
-
-  c2.className='card';
-
-  const tc=
-    Object.entries(teamCards)
-      .sort(
-        (a,b)=>
-          (b[1].gi+b[1].ro)-
-          (a[1].gi+a[1].ro)
-      );
-
-  let h2=`
-
-    <div class="card-title">
-      Cartellini per Squadra
-    </div>
-
-    <table>
-
-      <thead>
-
-        <tr>
-          <th>Squadra</th>
-          <th>🟨 Gialli</th>
-          <th>🟥 Rossi</th>
-          <th>Totale</th>
-        </tr>
-
-      </thead>
-
-      <tbody>
-
-  `;
-
-  if(!tc.length){
-
-    h2+=`
-
-      <tr>
-        <td colspan="4" style="color:var(--text3)">
-          Nessun dato ancora
-        </td>
-      </tr>
-
-    `;
-
-  }
-
-  tc.forEach(([n,s])=>{
-
-    h2+=`
-
-      <tr>
-
-        <td>${n}</td>
-
-        <td>${s.gi}</td>
-
-        <td>${s.ro}</td>
-
-        <td>
-          <strong>
-            ${s.gi+s.ro}
-          </strong>
-        </td>
-
-      </tr>
-
-    `;
-
-  });
-
-  h2+=`
-
-      </tbody>
-
-    </table>
-
-  `;
-
-  c2.innerHTML=h2;
-
-  el.appendChild(c2);
-
+}
+function winnerSide(o){
+  if(!o.m.played)return null;
+  const sc=calcScore(o.m);
+  if(sc.goA===sc.goB)return null;
+  return sc.goA>sc.goB?'A':'B';
 }
 
+/* ---------- scheda partita (usata ovunque) ---------- */
+function evSummary(arr){
+  const map={};
+  toArr(arr).forEach(e=>{
+    if(!e)return;
+    const p=String(e.p||'').trim()||'—';
+    const c=map[p]||(map[p]={gol:0,giallo:0,rosso:0});
+    if(c[e.t]!==undefined)c[e.t]++;
+  });
+  return Object.entries(map).map(([p,c])=>{
+    let s='';
+    if(c.gol)s+='⚽'+(c.gol>1?'×'+c.gol:'');
+    if(c.giallo)s+=' 🟨'+(c.giallo>1?'×'+c.giallo:'');
+    if(c.rosso)s+=' 🟥'+(c.rosso>1?'×'+c.rosso:'');
+    return `<li><span class="ev-ic">${s.trim()}</span> ${htmlEsc(p)}</li>`;
+  }).join('');
+}
+function matchCard(o,opt){
+  opt=opt||{};
+  const m=o.m,sc=calcScore(m),vis=isVisible(m),w=winnerSide(o);
+  const status=m.live?'live':(m.played?'played':'pending');
+  const badge=m.live
+    ?'<span class="mc-badge live"><i></i>In corso</span>'
+    :(m.played?'<span class="mc-badge">Terminata</span>':'<span class="mc-badge soft">Da giocare</span>');
+  const meta=[opt.noPhase?'':o.label,m.dt?(opt.withDate?dayLabel(dayKey(m.dt)).replace(/^[^ ]+ /,'')+' ':'')+hm(m.dt):''].filter(Boolean).join(' · ');
+  const A=vis?sc.goA:'–',B=vis?sc.goB:'–';
+  const lA=evSummary(m.evA),lB=evSummary(m.evB);
+  const det=(lA||lB)
+    ?`<details class="mc-det"><summary>Marcatori e cartellini</summary><div class="mc-cols"><ul>${lA}</ul><ul class="r">${lB}</ul></div></details>`:'';
+  let adv='';
+  if(o.ko&&w){
+    const n=w==='A'?o.ta:o.tb;
+    adv=`<div class="mc-adv">${o.phase==='F'?'🏆 Campione':(o.phase==='F3'?'3° posto':'Avanza')}: <b>${htmlEsc(n)}</b></div>`;
+  }
+  const link=n=>(opt.noLinks||o.tbd&&o.ko)?htmlEsc(n):`<a href="#squadre/${enc(n)}">${htmlEsc(n)}</a>`;
+  return `<article class="mc ${status}${o.tbd&&!m.played?' tbd':''}">
+    <div class="mc-meta"><span>${htmlEsc(meta)}</span>${badge}</div>
+    <div class="mc-row">
+      <div class="mc-t${w==='A'?' win':''}">${link(o.ta)}</div>
+      <div class="mc-s"><b>${A}</b><span>:</span><b>${B}</b></div>
+      <div class="mc-t r${w==='B'?' win':''}">${link(o.tb)}</div>
+    </div>${adv}${det}</article>`;
+}
 
+/* ---------- statistiche ---------- */
+function topScorers(){
+  const map={};
+  allMatches().forEach(o=>{
+    [[o.m.evA,o.ta],[o.m.evB,o.tb]].forEach(([arr,team])=>toArr(arr).forEach(e=>{
+      if(!e||e.t!=='gol')return;
+      const raw=String(e.p||'');
+      if(/AUTOGOL|VITTORIA AI RIGORI/i.test(raw))return;
+      const name=raw.replace(/^#\d+\s*/,'').trim().toUpperCase();
+      if(!name)return;
+      const r=map[name]||(map[name]={name,team,g:0});
+      r.g++;
+    }));
+  });
+  return Object.values(map).sort((a,b)=>b.g-a.g||a.name.localeCompare(b.name));
+}
+function seasonMeta(){return (ALL_SEASONS&&ALL_SEASONS[selectedSeason])||{};}
+function podiumNow(){
+  const list=allMatches();
+  const f=list.find(o=>o.phase==='F'),f3=list.find(o=>o.phase==='F3');
+  const out={first:'',second:'',third:''};
+  if(f&&winnerSide(f)){const w=winnerSide(f);out.first=w==='A'?f.ta:f.tb;out.second=w==='A'?f.tb:f.ta;}
+  if(f3&&winnerSide(f3)){out.third=winnerSide(f3)==='A'?f3.ta:f3.tb;}
+  if(!out.first){
+    const p=toArr(seasonMeta().awards&&seasonMeta().awards.podium);
+    if(p[0]){out.first=String(p[0]);out.second=String(p[1]||'');out.third=String(p[2]||'');}
+  }
+  return out.first?out:null;
+}
+function seasonStatus(list){
+  const played=list.filter(o=>o.m.played).length,live=list.some(o=>o.m.live);
+  const fin=list.find(o=>o.phase==='F');
+  if(fin&&fin.m.played)return 'done';
+  if(played>0||live)return 'running';
+  return 'soon';
+}
+
+/* ---------- HOME ---------- */
+function renderHome(){
+  const el=$('home');if(!S){return;}
+  const list=allMatches(),total=list.length;
+  const played=list.filter(o=>o.m.played);
+  const st=seasonStatus(list);
+  const named=GIRONI.reduce((n,g)=>n+S.squadre[g].filter(s=>s.name).length,0);
+  const goals=played.reduce((n,o)=>{const sc=calcScore(o.m);return n+sc.goA+sc.goB;},0);
+  const pod=podiumNow();
+  const stLabel={done:'Conclusa',running:'In corso',soon:'In arrivo'}[st];
+  let hero;
+  if(pod){
+    hero=`<section class="hero done"><div class="hero-k">Edizione ${htmlEsc(selectedSeason)} · ${stLabel}</div>
+      <p class="hero-sub">Campione</p><h1>🏆 ${htmlEsc(pod.first)}</h1>
+      <div class="podium">${pod.second?`<span>2° ${htmlEsc(pod.second)}</span>`:''}${pod.third?`<span>3° ${htmlEsc(pod.third)}</span>`:''}</div></section>`;
+  }else{
+    hero=`<section class="hero"><div class="hero-k">Edizione ${htmlEsc(selectedSeason)} · ${stLabel}</div>
+      <h1>Torneo Sagra del CEO</h1>
+      <p class="hero-sub">${st==='soon'?'Il calendario e le squadre compariranno qui appena disponibili.':'Risultati, classifiche e marcatori in tempo reale.'}</p></section>`;
+  }
+  const stats=`<div class="stats">
+    <div class="stat"><b>${named||GIRONI.length*4}</b><span>Squadre</span></div>
+    <div class="stat"><b>${played.length}<small>/${total}</small></b><span>Partite</span></div>
+    <div class="stat"><b>${goals}</b><span>Gol</span></div>
+    <div class="stat"><b>${played.length?(goals/played.length).toFixed(1).replace('.',','):'–'}</b><span>Gol a partita</span></div></div>`;
+  const blk=(title,link,body)=>`<section class="blk"><div class="blk-h"><h2>${title}</h2>${link||''}</div>${body}</section>`;
+  const live=list.filter(o=>o.m.live);
+  const upcoming=sortMatches(list.filter(o=>!o.m.played&&!o.m.live&&!o.tbd)).slice(0,3);
+  const last=sortMatches(played).slice(-4).reverse();
+  let h=hero+stats;
+  if(live.length)h+=blk('In corso','',live.map(o=>matchCard(o)).join(''));
+  if(upcoming.length&&st!=='done'&&named)h+=blk('Prossime partite','<a href="#partite">Calendario ›</a>',upcoming.map(o=>matchCard(o,{withDate:true})).join(''));
+  if(last.length)h+=blk('Ultimi risultati','<a href="#partite">Tutte le partite ›</a>',last.map(o=>matchCard(o,{withDate:true})).join(''));
+  const sc=topScorers().slice(0,5);
+  if(sc.length)h+=blk('Capocannonieri','<a href="#marcatori">Classifica completa ›</a>',
+    `<div class="list">${sc.map((r,i)=>`<div class="li"><span class="rank">${i+1}</span><span class="n">${htmlEsc(r.name)}<small>${htmlEsc(r.team)}</small></span><span class="v">${r.g}</span></div>`).join('')}</div>`);
+  if(named){
+    const leaders=GIRONI.map(g=>{const t=getStandings(g)[0];return t?{g,t}:null;}).filter(Boolean);
+    if(played.some(o=>!o.ko))h+=blk('Gironi','<a href="#classifiche">Classifiche ›</a>',
+      `<div class="list">${leaders.map(({g,t})=>`<a class="li" href="#squadre/${enc(t.n)}"><span class="rank">${g}</span><span class="n">${htmlEsc(t.n)}<small>Primo nel girone ${g}</small></span><span class="v">${t.pts} pt</span></a>`).join('')}</div>`);
+  }
+  if(!played.length&&!live.length){
+    const prev=Object.keys(ALL_SEASONS||{}).filter(y=>y!==selectedSeason).sort().reverse()[0];
+    if(prev)h+=`<div class="empty"><p>Nessuna partita giocata in questa edizione.</p><button class="btn" onclick="switchSeason('${prev}')">Guarda l'edizione ${prev}</button></div>`;
+  }
+  el.innerHTML=h;
+}
+
+/* ---------- PARTITE ---------- */
+const PF=[['all','Tutte'],['GA','Girone A'],['GB','Girone B'],['GC','Girone C'],['QF','Quarti'],['SF','Semifinali'],['FIN','Finali']];
+function pfMatch(o){
+  const f=UI.pf;
+  if(f==='all')return true;
+  if(f==='FIN')return o.phase==='F'||o.phase==='F3';
+  return o.phase===f;
+}
+function setPF(v){UI.pf=v;renderPartite();}
+function renderPartite(){
+  const el=$('partite');if(!S)return;
+  if(!el.querySelector('.chips')){
+    el.innerHTML=`<div class="toolbar"><div class="chips" role="group" aria-label="Filtra per fase">${PF.map(([k,l])=>`<button type="button" class="chip" data-pf="${k}" onclick="setPF('${k}')">${l}</button>`).join('')}</div>
+      <label class="search"><span class="sr">Cerca una squadra</span><input type="search" id="pq" placeholder="Cerca una squadra" autocomplete="off" enterkeyhint="search"></label></div><div id="plist"></div>`;
+    $('pq').addEventListener('input',e=>{UI.q=e.target.value;renderPartiteList();});
+  }
+  el.querySelectorAll('.chip').forEach(b=>b.setAttribute('aria-pressed',b.dataset.pf===UI.pf?'true':'false'));
+  if($('pq').value!==UI.q)$('pq').value=UI.q;
+  renderPartiteList();
+}
+function renderPartiteList(){
+  const q=UI.q.trim().toUpperCase();
+  const list=sortMatches(allMatches().filter(o=>pfMatch(o)&&(!q||o.ta.toUpperCase().includes(q)||o.tb.toUpperCase().includes(q))));
+  const days={};
+  list.forEach(o=>{const k=o.m.dt?dayKey(o.m.dt):'';(days[k]=days[k]||[]).push(o);});
+  const keys=Object.keys(days).sort((a,b)=>a===''?1:(b===''?-1:a.localeCompare(b)));
+  $('plist').innerHTML=keys.length
+    ?keys.map(k=>`<section class="day"><h3>${dayLabel(k)}<span>${days[k].length} ${days[k].length===1?'partita':'partite'}</span></h3>${days[k].map(o=>matchCard(o)).join('')}</section>`).join('')
+    :'<div class="empty"><p>Nessuna partita corrisponde alla ricerca.</p></div>';
+}
+
+/* ---------- CLASSIFICHE (gironi + tabellone) ---------- */
+function setCS(v){UI.cs=v;renderClassifiche();}
+function renderClassifiche(){
+  const el=$('classifiche');if(!S)return;
+  const gir=GIRONI.map(g=>{
+    const st=getStandings(g);
+    return `<div class="card"><div class="card-title">Girone ${g}</div>
+      <table class="st"><thead><tr><th class="pos">#</th><th class="nm">Squadra</th><th>G</th><th>GF</th><th>GS</th><th>DR</th><th>Pt</th></tr></thead><tbody>
+      ${st.map((t,i)=>`<tr class="${i<2?'q':''}"><td class="pos">${i+1}</td><td class="nm"><a href="#squadre/${enc(t.n)}">${htmlEsc(t.n)}</a></td><td>${t.pg}</td><td>${t.gs}</td><td>${t.gc}</td><td>${t.gd>0?'+'+t.gd:t.gd}</td><td class="pt">${t.pts}</td></tr>`).join('')}
+      </tbody></table></div>`;
+  }).join('')+'<p class="note"><span class="dot"></span> Le prime due di ogni girone passano ai quarti di finale. G = partite giocate, GF/GS = gol fatti/subiti, DR = differenza reti.</p>';
+  const list=allMatches().filter(o=>o.ko);
+  const ko=KO_PHASES.map(ph=>`<section class="blk${ph.phase==='F'?' final':''}"><div class="blk-h"><h2>${ph.label}</h2></div>${list.filter(o=>o.phase===ph.phase).map(o=>matchCard(o,{noPhase:true,withDate:true})).join('')}</section>`).join('');
+  el.innerHTML=`<div class="seg" role="group" aria-label="Vista classifiche">
+      <button type="button" aria-pressed="${UI.cs==='gironi'}" onclick="setCS('gironi')">Gironi</button>
+      <button type="button" aria-pressed="${UI.cs==='ko'}" onclick="setCS('ko')">Tabellone</button></div>
+    <div id="cl-gironi" class="${UI.cs==='gironi'?'':'hidden'}">${gir}</div>
+    <div id="ko" class="${UI.cs==='ko'?'':'hidden'}">${ko}</div>`;
+}
+
+/* ---------- SQUADRE ---------- */
+function teamInfo(name){
+  for(const g of GIRONI){
+    const i=S.squadre[g].findIndex((s,idx)=>sqName(g,idx)===name);
+    if(i>=0)return {g,i,team:S.squadre[g][i]};
+  }
+  return null;
+}
+function renderSquadre(){
+  const el=$('squadre');if(!S)return;
+  const mt=location.hash.match(/^#squadre\/(.+)$/);
+  if(mt)return renderTeam(decodeURIComponent(mt[1]));
+  el.innerHTML=GIRONI.map(g=>{
+    const st=getStandings(g);
+    return `<section class="blk"><div class="blk-h"><h2>Girone ${g}</h2></div><div class="list">${st.map((t,i)=>`<a class="li" href="#squadre/${enc(t.n)}"><span class="rank">${i+1}</span><span class="n">${htmlEsc(t.n)}<small>${t.pg} giocate · ${t.gs}-${t.gc} gol</small></span><span class="v">${t.pts} pt</span><span class="chev" aria-hidden="true">›</span></a>`).join('')}</div></section>`;
+  }).join('');
+}
+function renderTeam(name){
+  const el=$('squadre'),info=teamInfo(name);
+  if(!info){el.innerHTML='<div class="empty"><p>Squadra non trovata in questa edizione.</p><a class="btn" href="#squadre">Tutte le squadre</a></div>';return;}
+  const st=getStandings(info.g),pos=st.findIndex(t=>t.n===name),row=st[pos];
+  const mine=sortMatches(allMatches().filter(o=>o.ta===name||o.tb===name));
+  const stats={};
+  const roster=info.team.players||[];
+  const key=s=>String(s||'').replace(/^#\d+\s*/,'').trim().toUpperCase();
+  mine.forEach(o=>{
+    const arr=o.ta===name?o.m.evA:o.m.evB;
+    toArr(arr).forEach(e=>{if(!e)return;const k=key(e.p);const r=stats[k]||(stats[k]={gol:0,giallo:0,rosso:0});if(r[e.t]!==undefined)r[e.t]++;});
+  });
+  const players=roster.map(p=>({n:p.n,name:p.name,s:stats[key(p.name)]||{gol:0,giallo:0,rosso:0}}));
+  const v=mine.filter(o=>o.m.played&&winnerSide(o)&&((winnerSide(o)==='A')===(o.ta===name))).length;
+  const d=mine.filter(o=>o.m.played&&!winnerSide(o)).length;
+  const p=mine.filter(o=>o.m.played).length-v-d;
+  el.innerHTML=`<a class="backlink" href="#squadre">‹ Tutte le squadre</a>
+    <section class="hero team"><div class="hero-k">Girone ${info.g}</div><h1>${htmlEsc(name)}</h1>
+      <p class="hero-sub">${row&&row.pg?`${pos+1}° posto · ${row.pts} punti`:'Nessuna partita giocata'}</p></section>
+    <div class="stats"><div class="stat"><b>${v}</b><span>Vinte</span></div><div class="stat"><b>${d}</b><span>Pareggiate</span></div><div class="stat"><b>${p}</b><span>Perse</span></div><div class="stat"><b>${row?row.gs+'-'+row.gc:'0-0'}</b><span>Gol</span></div></div>
+    <section class="blk"><div class="blk-h"><h2>Partite</h2></div>${mine.map(o=>matchCard(o,{withDate:true,noLinks:true})).join('')}</section>
+    <section class="blk"><div class="blk-h"><h2>Rosa</h2></div>${players.length?`<div class="list">${players.map(pl=>`<div class="li"><span class="rank">${pl.n===''?'':pl.n}</span><span class="n">${htmlEsc(pl.name)}</span><span class="pstat">${pl.s.gol?`⚽ ${pl.s.gol}`:''} ${pl.s.giallo?`🟨 ${pl.s.giallo}`:''} ${pl.s.rosso?`🟥 ${pl.s.rosso}`:''}</span></div>`).join('')}</div>`:'<div class="empty"><p>Rosa non ancora inserita.</p></div>'}</section>`;
+}
+
+/* ---------- ALTRO (menu + edizioni) ---------- */
+function renderAltro(){
+  const el=$('altro');if(!S)return;
+  const items=[['#marcatori','Marcatori e cartellini','Classifica gol e disciplina per squadra'],['#social','Coppa Social','Classifica dei contenuti social'],['#albo',"Albo d'oro e premi",'Podi, titoli e premi di tutte le edizioni']];
+  const seasons=Object.entries(ALL_SEASONS||{}).sort((a,b)=>Number(b[0])-Number(a[0]));
+  const eds=seasons.map(([y,s])=>{
+    const win=toArr(s.awards&&s.awards.podium)[0];
+    const cur=y===CURRENT_SEASON,sel=y===selectedSeason;
+    return `<div class="li ed"><span class="n"><b>Edizione ${htmlEsc(y)}</b><small>${cur?'Edizione corrente':'Conclusa'}${win?' · Campione: '+htmlEsc(win):''}</small></span>${sel?'<span class="chip-on">Visualizzata</span>':`<button class="btn sm" type="button" onclick="switchSeason('${htmlEsc(y)}');location.hash='#home'">Apri</button>`}</div>`;
+  }).join('');
+  el.innerHTML=`<section class="blk"><div class="blk-h"><h2>Statistiche</h2></div><div class="list">${items.map(([h,t,d])=>`<a class="li" href="${h}"><span class="n">${t}<small>${d}</small></span><span class="chev" aria-hidden="true">›</span></a>`).join('')}</div></section>
+    <section class="blk"><div class="blk-h"><h2>Edizioni</h2></div>${eds?`<div class="list">${eds}</div>`:'<div class="empty"><p>Caricamento edizioni…</p></div>'}</section>`;
+}
+
+/* ---------- navigazione ---------- */
+let lastHash=null;
+function route(fromHash){
+  if(!S)return;
+  const h=(location.hash||'#home').slice(1);
+  const base=h.split('/')[0];
+  const tab=TABS.includes(base)?base:'home';
+  document.querySelectorAll('.section').forEach(s=>s.classList.toggle('active',s.id===tab));
+  const sub=['marcatori','social','albo'].includes(tab);
+  $('subbar').classList.toggle('hidden',!sub);
+  if(sub)$('sub-title').textContent=SUB_TITLES[tab];
+  const navTab=sub?'altro':tab;
+  document.querySelectorAll('.bottom-nav a').forEach(a=>{
+    const on=a.dataset.tab===navTab;
+    a.classList.toggle('active',on);
+    if(on)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current');
+  });
+  (renders[tab]||renders.home)();
+  if(fromHash===true&&location.hash!==lastHash)window.scrollTo(0,0);
+  lastHash=location.hash;
+}
+function showTab(t){location.hash='#'+t;}
+function loadAndRender(){
+  $('last-update').textContent='Dati in tempo reale · aggiornati alle '+new Date().toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});
+  route(false);
+}
+function updateSeasonUI(){
+  const archive=selectedSeason!==CURRENT_SEASON;
+  $('archive-banner').classList.toggle('hidden',!archive);
+  $('archive-year').textContent=selectedSeason;
+  $('back-current').textContent='Torna al '+CURRENT_SEASON;
+  $('top-sub').textContent='Edizione '+selectedSeason+(archive?' · archivio':'');
+}
+window.addEventListener('hashchange',()=>route(true));
+
+function setMQ(v){UI.mq=v;renderScorersList();}
+function showAllScorers(){UI.mall=true;renderScorersList();}
+function scorersData(){
+  const per={},cards={};
+  allMatches().forEach(o=>{
+    if(!o.m.played)return;
+    [[o.m.evA,o.tbd&&o.ko?'':o.ta],[o.m.evB,o.tbd&&o.ko?'':o.tb]].forEach(([arr,team])=>{
+      if(team&&!cards[team])cards[team]={gi:0,ro:0};
+      toArr(arr).forEach(e=>{
+        if(!e)return;
+        if(e.t==='giallo'&&team)cards[team].gi++;
+        if(e.t==='rosso'&&team)cards[team].ro++;
+        if(e.t!=='gol')return;
+        const raw=String(e.p||'');
+        if(/AUTOGOL|VITTORIA AI RIGORI/i.test(raw))return;
+        const name=raw.replace(/^#\d+\s*/,'').trim().toUpperCase();
+        if(!name)return;
+        const k=name+'|'+team;
+        const r=per[k]||(per[k]={name,team,g:0,ms:new Set()});
+        r.g++;r.ms.add(o.key);
+      });
+    });
+  });
+  const list=Object.values(per).map(r=>({name:r.name,team:r.team,g:r.g,pg:r.ms.size})).sort((a,b)=>b.g-a.g||a.name.localeCompare(b.name));
+  let rank=0,prev=null;
+  list.forEach((r,i)=>{if(r.g!==prev){rank=i+1;prev=r.g;}r.rank=rank;});
+  return {list,cards};
+}
+function renderMarcatori(){
+  const el=$('marcatori');if(!S)return;
+  const {cards}=scorersData();
+  const tc=Object.entries(cards).sort((a,b)=>(b[1].gi+b[1].ro)-(a[1].gi+a[1].ro)||a[0].localeCompare(b[0]));
+  if(!el.querySelector('#slist')){
+    el.innerHTML=`<label class="search mq-wrap"><span class="sr">Cerca un giocatore o una squadra</span><input type="search" id="mq" placeholder="Cerca giocatore o squadra" autocomplete="off"></label>
+      <div id="slist"></div><div class="card"><div class="card-title">Cartellini per squadra</div><div id="cards"></div></div>`;
+    $('mq').addEventListener('input',e=>setMQ(e.target.value));
+  }
+  $('cards').innerHTML=tc.length?`<table class="st disc"><thead><tr><th class="nm">Squadra</th><th>🟨</th><th>🟥</th><th>Tot</th></tr></thead><tbody>${tc.map(([n,c])=>`<tr><td class="nm">${htmlEsc(n)}</td><td>${c.gi}</td><td>${c.ro}</td><td class="pt">${c.gi+c.ro}</td></tr>`).join('')}</tbody></table>`:'<div class="empty"><p>Nessun cartellino ancora.</p></div>';
+  renderScorersList();
+}
+function renderScorersList(){
+  const box=$('slist');if(!box||!S)return;
+  const {list}=scorersData();
+  const q=(UI.mq||'').trim().toUpperCase();
+  const f=q?list.filter(r=>r.name.includes(q)||r.team.toUpperCase().includes(q)):list;
+  const LIM=15,cut=!q&&!UI.mall&&f.length>LIM;
+  const rows=(cut?f.slice(0,LIM):f).map(r=>`<div class="li"><span class="rank">${r.rank}</span><span class="n">${htmlEsc(r.name)}<small>${htmlEsc(r.team||'—')} · gol in ${r.pg} ${r.pg===1?'partita':'partite'}</small></span><span class="v">${r.g}</span></div>`).join('');
+  box.innerHTML=`<section class="blk"><div class="blk-h"><h2>Classifica marcatori</h2><span class="note-sm">${f.length} ${f.length===1?'giocatore':'giocatori'}</span></div>
+    ${f.length?`<div class="list">${rows}</div>`:`<div class="empty"><p>${q?'Nessun giocatore trovato.':'Ancora nessun gol segnato.'}</p></div>`}
+    ${cut?`<button type="button" class="more" onclick="showAllScorers()">Mostra tutti (${f.length})</button>`:''}</section>`;
+}
 function socialKey(team){
 
   return String(team || '')
@@ -1978,20 +1645,7 @@ function renderAlboSub(kind,btn){
  if(kind==='marcatori'){const all={};const hist=(window.__ROOT_DATA&&window.__ROOT_DATA.historicalScorers)||{};Object.values(hist).forEach(year=>Object.entries(year||{}).forEach(([n,v])=>all[String(n).toUpperCase()]=(all[String(n).toUpperCase()]||0)+Number(v||0)));seasons.forEach(([y,s])=>Object.entries(scorerTotals(s.tournament||{})).forEach(([n,v])=>all[n]=(all[n]||0)+v));const rows=Object.entries(all).sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0]));el.innerHTML=`<div class="card"><div class="card-title">Classifica marcatori all time</div><div class="honors-note">Classifica aggregata con i gol completi del 2024 e i gol registrati digitalmente dal 2026. I dati 2025 saranno aggiunti quando disponibili.</div><table><thead><tr><th>#</th><th>Giocatore</th><th>Gol</th></tr></thead><tbody>${rows.map(([n,v],i)=>`<tr class="${i===0?'tr-gold':''}"><td>${i+1}</td><td><strong>${htmlEsc(n)}</strong></td><td>${v}</td></tr>`).join('')}</tbody></table></div>`;}
 }
 
-const renders={
-  albo:renderAlbo,
-
-  gironi:renderGironi,
-
-  ko:renderKO,
-
-  classifiche:renderClassifiche,
-
-  marcatori:renderMarcatori,
-
-  social:renderSocial
-
-};
+const renders={home:renderHome,partite:renderPartite,classifiche:renderClassifiche,squadre:renderSquadre,altro:renderAltro,marcatori:renderMarcatori,social:renderSocial,albo:renderAlbo};
 
 populateSeasonMenu();
 subscribeLive();
