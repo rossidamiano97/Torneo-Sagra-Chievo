@@ -115,39 +115,9 @@ body {
   50% { opacity:.3 }
 }
 
-.nav {
-  background: var(--bg2);
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  overflow-x: auto;
-  padding: 0 1rem;
-  gap: 2px;
-}
 
-.nav-btn {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 15px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: .05em;
-  padding: 12px 18px;
-  border: none;
-  background: none;
-  color: var(--text3);
-  cursor: pointer;
-  border-bottom: 3px solid transparent;
-  white-space: nowrap;
-  transition: color .15s;
-}
 
-.nav-btn:hover {
-  color: var(--text2);
-}
 
-.nav-btn.active {
-  color: var(--accent-light);
-  border-bottom-color: var(--accent-light);
-}
 
 .main {
   padding: 1.25rem;
@@ -402,46 +372,16 @@ tr:last-child td {
   font-size: 14px;
 }
 
-.refresh-bar {
-  background: var(--bg3);
-  border-bottom: 1px solid var(--border);
-  padding: 6px 1.5rem;
-  font-size: 12px;
-  color: var(--text3);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
 
-.refresh-bar button {
-  font-size: 11px;
-  padding: 3px 10px;
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  background: none;
-  color: var(--text2);
-  cursor: pointer;
-}
 
-.refresh-bar button:hover {
-  border-color: var(--accent-light);
-  color: var(--accent-light);
-}
 
 /* --- Edizioni e Albo d'oro --- */
-.season-bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:9px 1.5rem;background:var(--bg3);border-bottom:1px solid var(--border);color:var(--text2)}
-.season-bar select{width:auto;min-width:105px;padding:6px 10px;font-weight:700;color:var(--yellow)}
-.season-pill{display:inline-flex;align-items:center;padding:4px 10px;border:1px solid var(--border);border-radius:999px;font-size:12px}.season-pill.current{color:#70c97e}.season-pill.archive{color:var(--yellow)}
-.season-back{padding:5px 10px!important;font-size:12px!important}.archive-warning{background:rgba(255,209,102,.10);border:1px solid rgba(255,209,102,.35);color:#ffe6a6;border-radius:8px;padding:9px 12px;font-size:13px;margin-bottom:12px}
 .honors-subnav{display:flex;overflow-x:auto;gap:4px;margin-bottom:14px}.honors-subnav button{border:1px solid var(--border);background:var(--bg3);color:var(--text2);border-radius:7px;padding:8px 12px;cursor:pointer;white-space:nowrap}.honors-subnav button.active{background:var(--accent);border-color:var(--accent);color:white}
 .honors-note{font-size:13px;color:var(--text3);margin:-5px 0 12px}.honors-empty{text-align:center;color:var(--text3);padding:20px}.hidden{display:none!important}
 @media(max-width:640px){.season-bar{padding:8px 12px}.season-label{display:none}.honors-table-wrap{overflow-x:auto}}
 
 
 /* Correzione menu edizione */
-.season-bar select{appearance:auto!important;background-color:var(--bg3)!important;color:var(--yellow)!important;border:1px solid var(--accent)!important;box-shadow:none!important;font-weight:700!important}
-.season-bar select option{background:var(--bg2)!important;color:var(--text)!important}
-.season-back{background:var(--bg3)!important;color:var(--text)!important;border-color:var(--border)!important}
 
 
 /* ---- UX: telefono, tastiera, stati ---- */
@@ -450,17 +390,11 @@ tr:last-child td {
 #load-state .spin{width:34px;height:34px;margin:0 auto 14px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:ls-spin 1s linear infinite}
 @keyframes ls-spin{to{transform:rotate(360deg)}}
 #load-state button{margin-top:14px;min-height:44px;padding:10px 22px;border-radius:10px;border:1px solid var(--accent);background:var(--bg3);color:var(--text);font-weight:700;font-size:1rem;cursor:pointer}
-.nav-wrap{position:relative}
 @media(max-width:640px){
  .header{padding:.7rem 1rem;gap:.7rem}
  .header-icon img{height:2.4rem}
  .header-title{font-size:1.3rem;line-height:1.05}
  .header-badge{font-size:12px;padding:4px 10px}
- .refresh-bar{padding:6px 12px}
- .refresh-bar button,.season-bar select,.season-bar .btn{min-height:44px;font-size:15px}
- .refresh-bar button{padding:8px 16px}
- .nav{-webkit-mask-image:linear-gradient(to right,#000 90%,transparent);mask-image:linear-gradient(to right,#000 90%,transparent);padding-right:28px}
- .nav-btn{min-height:44px}
  .honors-subnav button{min-height:44px}
 }
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;animation-duration:.01ms!important;scroll-behavior:auto!important}}
@@ -687,10 +621,6 @@ a.li:active{background:var(--bg3)}
   var t=setTimeout(function(){
     if(!filled()){box.setAttribute('role','alert');box.innerHTML='<p><b>Non riesco a caricare i risultati.</b></p><p>Controlla la connessione e riprova.</p><button type="button" onclick="location.reload()">Riprova</button>';}
   },10000);
-  /* indica al lettore di schermo la scheda attiva */
-  var nav=document.querySelector('.nav');
-  function sync(){[].forEach.call(nav.querySelectorAll('.nav-btn'),function(b){b.classList.contains('active')?b.setAttribute('aria-current','page'):b.removeAttribute('aria-current');});}
-  if(nav){nav.setAttribute('aria-label','Sezioni del torneo');nav.addEventListener('click',function(){setTimeout(sync,0)});sync();}
 })();
 </script>
 <script src="https://www.gstatic.com/firebasejs/12.2.0/firebase-app-compat.js"></script>
